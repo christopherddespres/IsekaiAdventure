@@ -3,28 +3,28 @@ local _, addon = ...
 addon.dialogue = {
     seraphine = {
         zone_intro = {
-            { text = "Elwynn welcomes you with open fields and warm sunlight. Stay close, hero; even peaceful roads have teeth.", audio = "zone_intro_01.ogg", duration = 6.2 },
-            { text = "This forest is where your new story takes root. Let us make it a gentle beginning.", audio = "zone_intro_02.ogg", duration = 5.6 },
+            { text = "Elwynn welcomes you with open fields and warm sunlight. Stay close, hero; even peaceful roads have teeth.", audio = "zone_intro_01.mp3", duration = 6.2 },
+            { text = "This forest is where your new story takes root. Let us make it a gentle beginning.", audio = "zone_intro_02.mp3", duration = 5.6 },
         },
         quest_accept = {
-            { text = "A fresh quest beneath the apple trees. How wonderfully heroic.", audio = "quest_accept_01.ogg", duration = 4.4 },
-            { text = "Of course we will help. Elwynn is kind to new souls, so we should be kind in return.", audio = "quest_accept_02.ogg", duration = 5.6 },
-            { text = "Do not worry. I will keep watch while you learn how this world asks for favors.", audio = "quest_accept_03.ogg", duration = 5.4 },
+            { text = "A fresh quest beneath the apple trees. How wonderfully heroic.", audio = "quest_accept_01.mp3", duration = 4.4 },
+            { text = "Of course we will help. Elwynn is kind to new souls, so we should be kind in return.", audio = "quest_accept_02.mp3", duration = 5.6 },
+            { text = "Do not worry. I will keep watch while you learn how this world asks for favors.", audio = "quest_accept_03.mp3", duration = 5.4 },
         },
         kill = {
-            { text = "Well struck. Try not to look too proud; the forest may start expecting more from you.", audio = "kill_01.ogg", duration = 4.3 },
-            { text = "You handled that beautifully. Perhaps reincarnation suits you.", audio = "kill_02.ogg", duration = 4.0 },
+            { text = "Well struck. Try not to look too proud; the forest may start expecting more from you.", audio = "kill_01.mp3", duration = 4.3 },
+            { text = "You handled that beautifully. Perhaps reincarnation suits you.", audio = "kill_02.mp3", duration = 4.0 },
         },
         idle = {
-            { text = "The breeze smells like bread, wildflowers, and just a little bit of trouble.", audio = "idle_01.ogg", duration = 4.8 },
-            { text = "If your first life felt heavy, let Elwynn be gentle with this one.", audio = "idle_02.ogg", duration = 5.2 },
-            { text = "I packed apples for the road. Heroism is easier with snacks.", audio = "idle_03.ogg", duration = 4.2 },
+            { text = "The breeze smells like bread, wildflowers, and just a little bit of trouble.", audio = "idle_01.mp3", duration = 4.8 },
+            { text = "If your first life felt heavy, let Elwynn be gentle with this one.", audio = "idle_02.mp3", duration = 5.2 },
+            { text = "I packed apples for the road. Heroism is easier with snacks.", audio = "idle_03.mp3", duration = 4.2 },
         },
         level_up = {
-            { text = "You are growing stronger already. The Light in you is waking up.", audio = "level_up_01.ogg", duration = 4.4 },
+            { text = "You are growing stronger already. The Light in you is waking up.", audio = "level_up.mp3", duration = 4.4 },
         },
         summon = {
-            { text = "Seraphine Applebrook, at your side. Welcome to Elwynn, reincarnated hero.", audio = "summon_01.ogg", duration = 4.9 },
+            { text = "Seraphine Applebrook, at your side. Welcome to Elwynn, reincarnated hero.", audio = "summon_01.mp3", duration = 4.9 },
         },
     },
     elyria = {
