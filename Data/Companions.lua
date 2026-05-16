@@ -32,6 +32,10 @@ addon.companions = {
         race = "Human",
         gender = "Female",
         color = { 0.95, 0.64, 0.32 },
+        portrait = addon.mediaPath .. "Portraits\\maribel.tga",
+        characterArt = addon.mediaPath .. "Portraits\\maribel_full.tga",
+        characterTexCoord = { 0, 1, 0.08, 1 },
+        characterHeight = 390,
         voicePath = addon.mediaPath .. "Voice\\Maribel\\",
     },
     elyria = {
