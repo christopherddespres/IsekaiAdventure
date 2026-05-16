@@ -211,6 +211,15 @@ function addon:CreateOptionsPanel()
     end), LEFT, y)
     y = y - 54
 
+    controls[#controls + 1] = Place(CreateSlider(panel, "Kill cooldown", 0, 60, 1, function()
+        return addon.db.killCooldownSeconds
+    end, function(value)
+        addon.db.killCooldownSeconds = value
+    end, function(value)
+        return value .. " sec"
+    end), LEFT, y)
+    y = y - 54
+
     controls[#controls + 1] = Place(CreateSlider(panel, "Level chance", 0, 100, 1, function()
         return addon.db.levelChance
     end, function(value)
@@ -303,20 +312,23 @@ function addon:RegisterOptionsPanel()
     end
 
     local panel = self:CreateOptionsPanel()
+    local registered = false
 
     if Settings and Settings.RegisterCanvasLayoutCategory and Settings.RegisterAddOnCategory then
         local category = Settings.RegisterCanvasLayoutCategory(panel, panel.name)
         Settings.RegisterAddOnCategory(category)
         self.optionsCategory = category
+        registered = true
     elseif InterfaceOptions_AddCategory then
         InterfaceOptions_AddCategory(panel)
+        registered = true
     end
 
-    self.optionsRegistered = true
+    self.optionsRegistered = registered
 end
 
 function addon:OpenOptionsPanel()
-    if not self.optionsPanel then
+    if not self.optionsPanel or not self.optionsRegistered then
         self:RegisterOptionsPanel()
     end
 

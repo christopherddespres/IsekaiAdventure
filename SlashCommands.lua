@@ -96,10 +96,18 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
         addon:SayQuestAccepted(nil, "A Very Suspicious Quest")
     elseif command == "zone" then
         addon:RefreshZoneCompanion()
-    elseif command == "status" then
-        addon:Print("enabled=" .. tostring(addon.db.enabled) .. ", muted=" .. tostring(addon.db.muted) .. ", companion=" .. tostring(addon.db.currentCompanionID))
-        addon:Print("idleChatter=" .. tostring(addon.db.idleChatter) .. ", idleInterval=" .. tostring(addon.db.idleMinSeconds) .. "-" .. tostring(addon.db.idleMaxSeconds) .. " sec")
-        addon:Print("questChance=" .. tostring(addon.db.questChance) .. "%, killChance=" .. tostring(addon.db.killChance) .. "%, levelChance=" .. tostring(addon.db.levelChance) .. "%")
+    elseif command == "status" or command == "diagnose" then
+        local mapID = addon:GetMapID()
+        local nextIdle = "none"
+        if addon.nextIdleAt and GetTime then
+            nextIdle = tostring(math.max(0, math.floor(addon.nextIdleAt - GetTime() + 0.5))) .. " sec"
+        end
+
+        addon:Print("started=" .. tostring(addon.started == true) .. ", autostart=" .. tostring(addon.db.autoStartAutomation) .. ", options=" .. tostring(addon.optionsRegistered == true))
+        addon:Print("enabled=" .. tostring(addon.db.enabled) .. ", visible=" .. tostring(addon.db.visible) .. ", muted=" .. tostring(addon.db.muted) .. ", companion=" .. tostring(addon.db.currentCompanionID))
+        addon:Print("mapID=" .. tostring(mapID) .. ", queue=" .. tostring(#addon.queue) .. ", speaking=" .. tostring(addon.isSpeaking == true) .. ", combat=" .. tostring(InCombatLockdown and InCombatLockdown() == true))
+        addon:Print("idleChatter=" .. tostring(addon.db.idleChatter) .. ", idleInterval=" .. tostring(addon.db.idleMinSeconds) .. "-" .. tostring(addon.db.idleMaxSeconds) .. " sec, nextIdle=" .. nextIdle)
+        addon:Print("questChance=" .. tostring(addon.db.questChance) .. "%, killChance=" .. tostring(addon.db.killChance) .. "%, killCooldown=" .. tostring(addon.db.killCooldownSeconds) .. " sec, levelChance=" .. tostring(addon.db.levelChance) .. "%")
     elseif command == "taintlog" then
         local enabled = words[2] ~= "off"
         addon.db.debugTaintLog = enabled

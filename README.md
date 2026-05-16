@@ -34,6 +34,7 @@ Then enable **Isekai Adventure** in the in-game addon list.
 /isekai chance quest 100
 /isekai idleinterval 10 50
 /isekai status
+/isekai diagnose
 /isekai companion seraphine
 ```
 

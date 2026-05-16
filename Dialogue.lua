@@ -10,7 +10,11 @@ end
 function addon:GetLines(trigger, companionID)
     companionID = companionID or self.db.currentCompanionID or "elyria"
     local companionLines = self.dialogue[companionID] or self.dialogue.elyria
-    return companionLines and companionLines[trigger]
+    local lines = companionLines and companionLines[trigger]
+    if (not lines or #lines == 0) and companionID ~= "elyria" and self.dialogue.elyria then
+        lines = self.dialogue.elyria[trigger]
+    end
+    return lines
 end
 
 function addon:GetAudioPath(companion, line)
@@ -39,7 +43,7 @@ function addon:PlayLine(line, trigger)
     self:Print("|cffffd6ff" .. name .. ":|r " .. text)
 
     local audioPath = self:GetAudioPath(companion, line)
-    if audioPath and not self.db.muted then
+    if audioPath and not self.db.muted and PlaySoundFile then
         PlaySoundFile(audioPath, "Dialog")
     end
 
@@ -72,7 +76,12 @@ function addon:QueueLine(line, trigger)
         return
     end
 
-    table.insert(self.queue, { line = line, trigger = trigger })
+    local maxQueuedLines = self.db.maxQueuedLines or 6
+    while #self.queue >= maxQueuedLines do
+        table.remove(self.queue, 1)
+    end
+
+    table.insert(self.queue, { line = line, trigger = trigger, queuedAt = GetTime and GetTime() or 0 })
     self:PlayNextQueuedLine()
 end
 
@@ -119,12 +128,14 @@ function addon:ScheduleIdleChatter()
     local token = self.idleToken
 
     if not self.db.idleChatter or not self.db.enabled then
+        self.nextIdleAt = nil
         return
     end
 
     local minSeconds = self:Clamp(self.db.idleMinSeconds, 5, 3600)
     local maxSeconds = self:Clamp(self.db.idleMaxSeconds, minSeconds, 7200)
     local delay = addon:Random(minSeconds, maxSeconds)
+    self.nextIdleAt = (GetTime and GetTime() or 0) + delay
 
     C_Timer.After(delay, function()
         if addon.idleToken ~= token then
@@ -132,6 +143,7 @@ function addon:ScheduleIdleChatter()
         end
 
         if addon.db.enabled and addon.db.idleChatter and not UnitIsDeadOrGhost("player") and not InCombatLockdown() then
+            addon.lastIdleLineAt = GetTime and GetTime() or 0
             addon:Say("idle")
         end
 

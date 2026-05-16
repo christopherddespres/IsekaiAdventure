@@ -43,7 +43,7 @@ end
 
 local function TryKillChatter()
     local now = GetTime()
-    if now - (addon.lastKillLineAt or 0) < 12 then
+    if now - (addon.lastKillLineAt or 0) < (addon.db.killCooldownSeconds or 12) then
         return
     end
 
@@ -51,6 +51,32 @@ local function TryKillChatter()
         addon.lastKillLineAt = now
         addon:Say("kill")
     end
+end
+
+local function RegisterOptionsPanel()
+    if addon.RegisterOptionsPanel then
+        addon:RegisterOptionsPanel()
+    end
+end
+
+local function QueueStartup(reason)
+    if addon.started or addon.startupScheduled then
+        return
+    end
+
+    addon.startupScheduled = true
+    C_Timer.After(2, function()
+        addon.startupScheduled = false
+        if not addon.db or not addon.db.autoStartAutomation or addon.started then
+            return
+        end
+
+        addon:StartAutomation(reason or "login")
+        if addon.db.visible then
+            addon:EnsureCompanionFrame()
+        end
+        addon:Print("loaded. Type /isekai options for settings.")
+    end)
 end
 
 eventFrame:SetScript("OnEvent", function(_, event, ...)
@@ -62,21 +88,14 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
 
         addon:InitializeDatabase()
     elseif event == "PLAYER_ENTERING_WORLD" then
-        -- Startup stays inert until automation is registered after login.
-    elseif event == "PLAYER_LOGIN" then
-        if addon.RegisterOptionsPanel then
-            addon:RegisterOptionsPanel()
+        if addon.db and addon.db.autoStartAutomation then
+            QueueStartup("entering_world")
         end
+    elseif event == "PLAYER_LOGIN" then
+        RegisterOptionsPanel()
 
-        if addon.db.autoStartAutomation and not addon.startupScheduled then
-            addon.startupScheduled = true
-            C_Timer.After(2, function()
-                addon:StartAutomation("login")
-                if addon.db.visible then
-                    addon:EnsureCompanionFrame()
-                end
-                addon:Print("loaded. Type /isekai options for settings.")
-            end)
+        if addon.db.autoStartAutomation then
+            QueueStartup("login")
         else
             addon:Print("loaded. Type /isekai start to enable quest/kill/idle automation, or /isekai show to open the overlay.")
         end
@@ -134,6 +153,10 @@ function addon:StartAutomation(reason)
     self:Debug("automation start")
     self:RegisterAutomationEvents()
     self:Debug("refresh companion")
+    if self.NormalizeDatabase then
+        self:NormalizeDatabase()
+    end
+
     self.started = true
     self:RefreshZoneCompanion(reason or "login")
     self:Debug("schedule idle")
