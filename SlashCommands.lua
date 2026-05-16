@@ -42,10 +42,14 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
         addon:Print("companion dialogue disabled.")
     elseif command == "lock" then
         addon.db.locked = true
+        addon.dragEnabled = false
+        addon:UpdateFrameMouseState()
         addon:Print("frame locked.")
     elseif command == "unlock" then
         addon.db.locked = false
-        addon:Print("frame unlocked. Drag it with left mouse.")
+        addon.dragEnabled = true
+        addon:UpdateFrameMouseState()
+        addon:Print("frame unlocked for this session. Drag it with left mouse, then use /isekai lock.")
     elseif command == "mute" then
         addon.db.muted = true
         addon:Print("voice playback muted. Subtitles still appear.")

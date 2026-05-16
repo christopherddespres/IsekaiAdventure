@@ -23,7 +23,7 @@ function addon:CreateCompanionFrame()
     frame:SetPoint(self.db.frame.point, UIParent, self.db.frame.relativePoint, self.db.frame.x, self.db.frame.y)
     frame:SetClampedToScreen(true)
     frame:SetMovable(true)
-    frame:EnableMouse(true)
+    frame:EnableMouse(false)
     frame:RegisterForDrag("LeftButton")
     frame:SetScale(self.db.scale or 1)
     frame:SetScript("OnDragStart", function(selfFrame)
@@ -83,7 +83,16 @@ function addon:CreateCompanionFrame()
     frame.hint:SetText("/isekai for commands")
 
     self.frame = frame
+    self:UpdateFrameMouseState()
     self:UpdateCompanionFrame()
+end
+
+function addon:UpdateFrameMouseState()
+    if not self.frame then
+        return
+    end
+
+    self.frame:EnableMouse(not self.db.locked and self.dragEnabled == true)
 end
 
 function addon:UpdateCompanionFrame()
