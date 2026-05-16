@@ -5,43 +5,6 @@ addon.eventFrame = eventFrame
 addon.recentDamage = addon.recentDamage or {}
 addon.automationRegistered = false
 
-local DAMAGE_EVENTS = {
-    SWING_DAMAGE = true,
-    RANGE_DAMAGE = true,
-    SPELL_DAMAGE = true,
-    SPELL_PERIODIC_DAMAGE = true,
-    SPELL_BUILDING_DAMAGE = true,
-    DAMAGE_SHIELD = true,
-    DAMAGE_SPLIT = true,
-}
-
-local DEATH_EVENTS = {
-    PARTY_KILL = true,
-    UNIT_DIED = true,
-    UNIT_DESTROYED = true,
-    UNIT_DISSIPATES = true,
-}
-
-local function IsMine(sourceGUID, sourceFlags)
-    if sourceGUID and sourceGUID == UnitGUID("player") then
-        return true
-    end
-
-    if sourceGUID and UnitGUID("pet") and sourceGUID == UnitGUID("pet") then
-        return true
-    end
-
-    if sourceGUID and UnitGUID("vehicle") and sourceGUID == UnitGUID("vehicle") then
-        return true
-    end
-
-    if sourceFlags and bit and COMBATLOG_OBJECT_AFFILIATION_MINE then
-        return bit.band(sourceFlags, COMBATLOG_OBJECT_AFFILIATION_MINE) ~= 0
-    end
-
-    return false
-end
-
 local function GetQuestTitleFromEvent(questID, questLogIndex)
     if questID and C_QuestLog and C_QuestLog.GetTitleForQuestID then
         local title = C_QuestLog.GetTitleForQuestID(questID)
@@ -90,32 +53,6 @@ local function TryKillChatter()
     end
 end
 
-local function HandleCombatLog()
-    local _, subevent, _, sourceGUID, _, sourceFlags, _, destGUID = CombatLogGetCurrentEventInfo()
-    local now = GetTime()
-
-    if DAMAGE_EVENTS[subevent] and destGUID and IsMine(sourceGUID, sourceFlags) then
-        addon.recentDamage[destGUID] = now
-        return
-    end
-
-    if not DEATH_EVENTS[subevent] or not destGUID then
-        return
-    end
-
-    if subevent == "PARTY_KILL" and IsMine(sourceGUID, sourceFlags) then
-        addon.recentDamage[destGUID] = nil
-        TryKillChatter()
-        return
-    end
-
-    local lastDamageAt = addon.recentDamage[destGUID]
-    if lastDamageAt and now - lastDamageAt <= 30 then
-        addon.recentDamage[destGUID] = nil
-        TryKillChatter()
-    end
-end
-
 eventFrame:SetScript("OnEvent", function(_, event, ...)
     if event == "ADDON_LOADED" then
         local loadedName = ...
@@ -144,13 +81,17 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
         end
     elseif event == "QUEST_ACCEPTED" then
         HandleQuestAccepted(...)
-    elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
-        HandleCombatLog()
     elseif event == "PLAYER_LEVEL_UP" then
         if addon:Chance(addon.db.levelChance) then
             addon:Say("level_up")
         end
+    elseif event == "PLAYER_REGEN_DISABLED" then
+        addon.wasInCombat = true
     elseif event == "PLAYER_REGEN_ENABLED" then
+        if addon.wasInCombat and not UnitIsDeadOrGhost("player") then
+            addon.wasInCombat = false
+            TryKillChatter()
+        end
         addon:ResumeQueuedDialogue()
     end
 end)
@@ -177,6 +118,7 @@ function addon:RegisterAutomationEvents()
     self:RegisterAutomationEvent("ZONE_CHANGED_INDOORS")
     self:RegisterAutomationEvent("QUEST_ACCEPTED")
     self:RegisterAutomationEvent("PLAYER_LEVEL_UP")
+    self:RegisterAutomationEvent("PLAYER_REGEN_DISABLED")
     self:RegisterAutomationEvent("PLAYER_REGEN_ENABLED")
 end
 
@@ -189,9 +131,6 @@ function addon:StartAutomation(reason)
     self:RefreshZoneCompanion(reason or "login")
     self:Debug("schedule idle")
     self:ScheduleIdleChatter()
-    C_Timer.After(5, function()
-        addon:RegisterAutomationEvent("COMBAT_LOG_EVENT_UNFILTERED")
-    end)
 end
 
 eventFrame:RegisterEvent("ADDON_LOADED")
