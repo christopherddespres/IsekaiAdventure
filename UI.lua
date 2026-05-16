@@ -208,14 +208,22 @@ function addon:SetLayoutMode(enabled)
 end
 
 function addon:ResetLayout()
-    self.db.layout.character.x = -18
-    self.db.layout.character.y = 18
-    self.db.layout.namePlate.x = 394
-    self.db.layout.namePlate.y = 138
-    self.db.layout.metaChip.x = 434
-    self.db.layout.metaChip.y = 181
-    self.db.layout.dialogueBox.x = 300
-    self.db.layout.dialogueBox.y = 18
+    self.db.frame.point = "LEFT"
+    self.db.frame.relativePoint = "LEFT"
+    self.db.frame.x = 80.02424621582031
+    self.db.frame.y = 216.8075103759766
+    self.db.layout.character.x = -3.809356689453125
+    self.db.layout.character.y = 20.660888671875
+    self.db.layout.namePlate.x = 112.8471832275391
+    self.db.layout.namePlate.y = 23.5869140625
+    self.db.layout.metaChip.x = 99.63192749023438
+    self.db.layout.metaChip.y = -104.5867919921875
+    self.db.layout.dialogueBox.x = -33.48089981079102
+    self.db.layout.dialogueBox.y = -80.44873046875
+    if self.frame then
+        self.frame:ClearAllPoints()
+        self.frame:SetPoint(self.db.frame.point, UIParent, self.db.frame.relativePoint, self.db.frame.x, self.db.frame.y)
+    end
     self:ApplyLayoutPositions()
 end
 
