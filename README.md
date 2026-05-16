@@ -30,7 +30,7 @@ Then enable **Isekai Adventure** in the in-game addon list.
 /isekai scale 1.2
 /isekai chance kill 20
 /isekai chance quest 100
-/isekai companion elyria
+/isekai companion seraphine
 ```
 
 ## Voice files

@@ -325,7 +325,7 @@ h3 {
 }
 
 .companion-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .companion-grid article {
@@ -348,6 +348,7 @@ h3 {
   border-radius: 8px;
 }
 
+.seraphine { background: #ffd184; }
 .elyria { background: var(--pink); }
 .mika { background: var(--aqua); }
 .sera { background: var(--green); }

@@ -1,6 +1,7 @@
 local _, addon = ...
 
 addon.companionOrder = {
+    "seraphine",
     "elyria",
     "mika",
     "sera",
@@ -10,10 +11,22 @@ addon.companionOrder = {
 }
 
 addon.companions = {
+    seraphine = {
+        id = "seraphine",
+        name = "Seraphine Applebrook",
+        title = "Elwynn Blossom Mage",
+        race = "Human",
+        gender = "Female",
+        color = { 1.00, 0.82, 0.52 },
+        portrait = addon.mediaPath .. "Portraits\\seraphine.tga",
+        voicePath = addon.mediaPath .. "Voice\\Seraphine\\",
+    },
     elyria = {
         id = "elyria",
         name = "Elyria Dawnspell",
         title = "Reincarnation Guide",
+        race = "Human",
+        gender = "Female",
         color = { 1.00, 0.70, 0.95 },
         portrait = addon.mediaPath .. "Portraits\\elyria.tga",
         voicePath = addon.mediaPath .. "Voice\\Elyria\\",
@@ -22,6 +35,8 @@ addon.companions = {
         id = "mika",
         name = "Mika Starbloom",
         title = "Cheerful Field Mage",
+        race = "Draenei",
+        gender = "Female",
         color = { 0.65, 0.90, 1.00 },
         portrait = addon.mediaPath .. "Portraits\\mika.tga",
         voicePath = addon.mediaPath .. "Voice\\Mika\\",
@@ -30,6 +45,8 @@ addon.companions = {
         id = "sera",
         name = "Sera Moonvale",
         title = "Soft-Spoken Ranger",
+        race = "Night Elf",
+        gender = "Female",
         color = { 0.75, 1.00, 0.70 },
         portrait = addon.mediaPath .. "Portraits\\sera.tga",
         voicePath = addon.mediaPath .. "Voice\\Sera\\",
@@ -38,6 +55,8 @@ addon.companions = {
         id = "kaori",
         name = "Kaori Emberheart",
         title = "Battle Senpai",
+        race = "Blood Elf",
+        gender = "Female",
         color = { 1.00, 0.55, 0.45 },
         portrait = addon.mediaPath .. "Portraits\\kaori.tga",
         voicePath = addon.mediaPath .. "Voice\\Kaori\\",
@@ -46,6 +65,8 @@ addon.companions = {
         id = "rin",
         name = "Rin Gearwhisper",
         title = "Inventor Companion",
+        race = "Gnome",
+        gender = "Female",
         color = { 1.00, 0.85, 0.45 },
         portrait = addon.mediaPath .. "Portraits\\rin.tga",
         voicePath = addon.mediaPath .. "Voice\\Rin\\",
@@ -54,6 +75,8 @@ addon.companions = {
         id = "lyra",
         name = "Lyra Ashpetal",
         title = "Mysterious Shrine Maiden",
+        race = "Void Elf",
+        gender = "Female",
         color = { 0.78, 0.68, 1.00 },
         portrait = addon.mediaPath .. "Portraits\\lyra.tga",
         voicePath = addon.mediaPath .. "Voice\\Lyra\\",
@@ -62,6 +85,8 @@ addon.companions = {
 
 -- Explicit zone assignments. Any unmapped zone still gets a stable companion based on mapID.
 addon.mapCompanions = {
+    [37] = "seraphine", -- Elwynn Forest
+    [425] = "seraphine", -- Northshire
     [1409] = "elyria", -- Exile's Reach
     [84] = "elyria", -- Stormwind City
     [85] = "mika", -- Orgrimmar
