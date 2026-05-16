@@ -3,6 +3,7 @@ local _, addon = ...
 local eventFrame = CreateFrame("Frame")
 addon.eventFrame = eventFrame
 addon.recentDamage = addon.recentDamage or {}
+addon.automationRegistered = false
 
 local DAMAGE_EVENTS = {
     SWING_DAMAGE = true,
@@ -124,17 +125,15 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
 
         addon:InitializeDatabase()
     elseif event == "PLAYER_ENTERING_WORLD" then
-        if addon.started then
-            addon:RefreshZoneCompanion("zone")
-            addon:ScheduleIdleChatter()
-        else
-            addon.started = true
-            addon:RefreshZoneCompanion("login")
-            addon:ScheduleIdleChatter()
-            addon:Print("loaded. Type /isekai show to open the overlay.")
-        end
+        -- Startup stays inert until automation is registered after login.
     elseif event == "PLAYER_LOGIN" then
-        -- Keep startup quiet. Options are registered lazily when /isekai options is used.
+        if not addon.startupScheduled then
+            addon.startupScheduled = true
+            C_Timer.After(8, function()
+                addon:StartAutomation("login")
+                addon:Print("loaded. Type /isekai show to open the overlay.")
+            end)
+        end
     elseif event == "ZONE_CHANGED_NEW_AREA" or event == "ZONE_CHANGED" or event == "ZONE_CHANGED_INDOORS" then
         if addon.started then
             addon:RefreshZoneCompanion()
@@ -154,13 +153,28 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
     end
 end)
 
+function addon:RegisterAutomationEvents()
+    if self.automationRegistered then
+        return
+    end
+
+    self.automationRegistered = true
+    eventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+    eventFrame:RegisterEvent("ZONE_CHANGED")
+    eventFrame:RegisterEvent("ZONE_CHANGED_INDOORS")
+    eventFrame:RegisterEvent("QUEST_ACCEPTED")
+    eventFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+    eventFrame:RegisterEvent("PLAYER_LEVEL_UP")
+    eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+end
+
+function addon:StartAutomation(reason)
+    self:RegisterAutomationEvents()
+    self.started = true
+    self:RefreshZoneCompanion(reason or "login")
+    self:ScheduleIdleChatter()
+end
+
 eventFrame:RegisterEvent("ADDON_LOADED")
 eventFrame:RegisterEvent("PLAYER_LOGIN")
 eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-eventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-eventFrame:RegisterEvent("ZONE_CHANGED")
-eventFrame:RegisterEvent("ZONE_CHANGED_INDOORS")
-eventFrame:RegisterEvent("QUEST_ACCEPTED")
-eventFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-eventFrame:RegisterEvent("PLAYER_LEVEL_UP")
-eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")

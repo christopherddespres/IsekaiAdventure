@@ -4,6 +4,7 @@ local function PrintHelp()
     addon:Print("commands:")
     addon:Print("/isekai show | hide | enable | disable | lock | unlock | mute | unmute")
     addon:Print("/isekai options")
+    addon:Print("/isekai start")
     addon:Print("/isekai layout | layout reset")
     addon:Print("/isekai test | idle | kill | quest | zone")
     addon:Print("/isekai scale 0.8-1.6 | chance kill 0-100 | chance quest 0-100")
@@ -34,6 +35,9 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
         addon:Print("companion frame shown.")
     elseif command == "options" or command == "config" then
         addon:OpenOptionsPanel()
+    elseif command == "start" then
+        addon:StartAutomation("manual")
+        addon:Print("automation started.")
     elseif command == "hide" then
         addon:SetShownState(false)
         addon:Print("companion frame hidden.")
