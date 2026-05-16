@@ -33,6 +33,7 @@ local defaults = {
     levelChance = 100,
     portraitAlpha = 1,
     subtitleSeconds = 7,
+    debugTaintLog = false,
 }
 
 addon.db = defaults
@@ -151,8 +152,8 @@ function addon:SetCompanion(companionID, reason)
     end
 end
 
-function addon:RefreshZoneCompanion()
+function addon:RefreshZoneCompanion(reason)
     local mapID = self:GetMapID()
     self.db.lastMapID = mapID
-    self:SetCompanion(self:GetCompanionForMap(mapID), "zone")
+    self:SetCompanion(self:GetCompanionForMap(mapID), reason or "zone")
 end

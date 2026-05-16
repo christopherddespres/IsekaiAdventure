@@ -123,13 +123,22 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
         end
 
         addon:InitializeDatabase()
+        if addon.db.debugTaintLog and SetCVar then
+            SetCVar("taintLog", "1")
+        end
         addon:CreateCompanionFrame()
-        addon:RegisterOptionsPanel()
-        addon:RefreshZoneCompanion()
+        addon:RefreshZoneCompanion("login")
         addon:ScheduleIdleChatter()
         addon:Print("loaded. Type /isekai for commands.")
+    elseif event == "PLAYER_LOGIN" then
+        addon:RegisterOptionsPanel()
     elseif event == "PLAYER_ENTERING_WORLD" then
-        addon:RefreshZoneCompanion()
+        if addon.hasEnteredWorld then
+            addon:RefreshZoneCompanion("zone")
+        else
+            addon.hasEnteredWorld = true
+            addon:RefreshZoneCompanion("login")
+        end
         addon:ScheduleIdleChatter()
     elseif event == "ZONE_CHANGED_NEW_AREA" or event == "ZONE_CHANGED" or event == "ZONE_CHANGED_INDOORS" then
         addon:RefreshZoneCompanion()
@@ -147,6 +156,7 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
 end)
 
 eventFrame:RegisterEvent("ADDON_LOADED")
+eventFrame:RegisterEvent("PLAYER_LOGIN")
 eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 eventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 eventFrame:RegisterEvent("ZONE_CHANGED")
