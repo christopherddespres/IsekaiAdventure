@@ -1,4 +1,4 @@
-## Interface: 120012
+## Interface: 120005
 ## Title: Isekai Adventure
 ## Notes: A voiced isekai companion addon for World of Warcraft Retail.
 ## Author: Astra + Codex
