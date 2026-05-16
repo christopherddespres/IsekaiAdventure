@@ -177,6 +177,22 @@ function addon:CreateOptionsPanel()
     end), LEFT + 260, y)
     y = y - 44
 
+    controls[#controls + 1] = Place(CreateCheck(panel, "Start automatically", "Starts zone, quest, kill, and idle chatter after login.", function()
+        return addon.db.autoStartAutomation
+    end, function(value)
+        addon.db.autoStartAutomation = value
+        if value and not addon.started then
+            addon:StartAutomation("options")
+        end
+    end), LEFT, y)
+
+    controls[#controls + 1] = Place(CreateCheck(panel, "Startup debug messages", "Prints startup diagnostics in chat.", function()
+        return addon.db.debugStartup
+    end, function(value)
+        addon.db.debugStartup = value
+    end), LEFT + 260, y)
+    y = y - ROW_HEIGHT
+
     controls[#controls + 1] = Place(CreateSlider(panel, "Quest chance", 0, 100, 1, function()
         return addon.db.questChance
     end, function(value)
@@ -282,6 +298,10 @@ function addon:RefreshOptionsPanel()
 end
 
 function addon:RegisterOptionsPanel()
+    if self.optionsRegistered then
+        return
+    end
+
     local panel = self:CreateOptionsPanel()
 
     if Settings and Settings.RegisterCanvasLayoutCategory and Settings.RegisterAddOnCategory then
@@ -291,6 +311,8 @@ function addon:RegisterOptionsPanel()
     elseif InterfaceOptions_AddCategory then
         InterfaceOptions_AddCategory(panel)
     end
+
+    self.optionsRegistered = true
 end
 
 function addon:OpenOptionsPanel()

@@ -64,6 +64,10 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
     elseif event == "PLAYER_ENTERING_WORLD" then
         -- Startup stays inert until automation is registered after login.
     elseif event == "PLAYER_LOGIN" then
+        if addon.RegisterOptionsPanel then
+            addon:RegisterOptionsPanel()
+        end
+
         if addon.db.autoStartAutomation and not addon.startupScheduled then
             addon.startupScheduled = true
             C_Timer.After(2, function()

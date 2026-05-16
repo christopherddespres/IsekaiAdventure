@@ -5,7 +5,10 @@ addon.name = addonName
 addon.version = "0.1.0"
 addon.mediaPath = "Interface\\AddOns\\IsekaiAdventure\\Media\\"
 
+local SETTINGS_VERSION = 1
+
 local defaults = {
+    settingsVersion = SETTINGS_VERSION,
     enabled = true,
     visible = true,
     muted = false,
@@ -68,6 +71,11 @@ end
 
 function addon:InitializeDatabase()
     IsekaiAdventureDB = IsekaiAdventureDB or {}
+    if (IsekaiAdventureDB.settingsVersion or 0) < SETTINGS_VERSION then
+        IsekaiAdventureDB.autoStartAutomation = true
+        IsekaiAdventureDB.debugStartup = false
+        IsekaiAdventureDB.settingsVersion = SETTINGS_VERSION
+    end
     CopyDefaults(defaults, IsekaiAdventureDB)
     self.db = IsekaiAdventureDB
 end
