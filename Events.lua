@@ -127,12 +127,14 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
     elseif event == "PLAYER_ENTERING_WORLD" then
         -- Startup stays inert until automation is registered after login.
     elseif event == "PLAYER_LOGIN" then
-        if not addon.startupScheduled then
+        if addon.db.autoStartAutomation and not addon.startupScheduled then
             addon.startupScheduled = true
             C_Timer.After(8, function()
                 addon:StartAutomation("login")
                 addon:Print("loaded. Type /isekai show to open the overlay.")
             end)
+        else
+            addon:Print("loaded. Type /isekai start to enable quest/kill/idle automation, or /isekai show to open the overlay.")
         end
     elseif event == "ZONE_CHANGED_NEW_AREA" or event == "ZONE_CHANGED" or event == "ZONE_CHANGED_INDOORS" then
         if addon.started then
@@ -153,26 +155,43 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
     end
 end)
 
+function addon:RegisterAutomationEvent(eventName)
+    if self.registeredAutomationEvents[eventName] then
+        return
+    end
+
+    self.registeredAutomationEvents[eventName] = true
+    eventFrame:RegisterEvent(eventName)
+    self:Debug("registered " .. eventName)
+end
+
 function addon:RegisterAutomationEvents()
     if self.automationRegistered then
         return
     end
 
     self.automationRegistered = true
-    eventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-    eventFrame:RegisterEvent("ZONE_CHANGED")
-    eventFrame:RegisterEvent("ZONE_CHANGED_INDOORS")
-    eventFrame:RegisterEvent("QUEST_ACCEPTED")
-    eventFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-    eventFrame:RegisterEvent("PLAYER_LEVEL_UP")
-    eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+    self.registeredAutomationEvents = self.registeredAutomationEvents or {}
+    self:RegisterAutomationEvent("ZONE_CHANGED_NEW_AREA")
+    self:RegisterAutomationEvent("ZONE_CHANGED")
+    self:RegisterAutomationEvent("ZONE_CHANGED_INDOORS")
+    self:RegisterAutomationEvent("QUEST_ACCEPTED")
+    self:RegisterAutomationEvent("PLAYER_LEVEL_UP")
+    self:RegisterAutomationEvent("PLAYER_REGEN_ENABLED")
 end
 
 function addon:StartAutomation(reason)
+    self.registeredAutomationEvents = self.registeredAutomationEvents or {}
+    self:Debug("automation start")
     self:RegisterAutomationEvents()
+    self:Debug("refresh companion")
     self.started = true
     self:RefreshZoneCompanion(reason or "login")
+    self:Debug("schedule idle")
     self:ScheduleIdleChatter()
+    C_Timer.After(5, function()
+        addon:RegisterAutomationEvent("COMBAT_LOG_EVENT_UNFILTERED")
+    end)
 end
 
 eventFrame:RegisterEvent("ADDON_LOADED")

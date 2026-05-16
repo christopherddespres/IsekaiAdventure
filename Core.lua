@@ -34,7 +34,15 @@ local defaults = {
     portraitAlpha = 1,
     subtitleSeconds = 7,
     debugTaintLog = false,
+    autoStartAutomation = false,
+    debugStartup = true,
 }
+
+function addon:Debug(message)
+    if self.db and self.db.debugStartup then
+        self:Print("|cffb0ffb0debug:|r " .. tostring(message))
+    end
+end
 
 addon.db = defaults
 addon.companions = {}
