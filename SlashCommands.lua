@@ -63,6 +63,7 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
         addon.db.muted = false
         addon:Print("voice playback unmuted.")
     elseif command == "layout" then
+        addon:EnsureCompanionFrame()
         if words[2] == "reset" then
             addon:SetLayoutMode(false)
             addon:ResetLayout()
@@ -109,6 +110,7 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
     elseif command == "scale" then
         local scale = addon:Clamp(tonumber(words[2]), 0.6, 1.8)
         addon.db.scale = scale
+        addon:EnsureCompanionFrame()
         addon:UpdateCompanionFrame()
         addon:Print("scale set to " .. scale .. ".")
     elseif command == "chance" then

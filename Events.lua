@@ -123,22 +123,15 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
         end
 
         addon:InitializeDatabase()
-        if addon.db.debugTaintLog and SetCVar then
-            SetCVar("taintLog", "1")
-        end
     elseif event == "PLAYER_ENTERING_WORLD" then
         if addon.started then
             addon:RefreshZoneCompanion("zone")
             addon:ScheduleIdleChatter()
-        elseif not addon.startupScheduled then
-            addon.startupScheduled = true
-            C_Timer.After(2, function()
-                addon.started = true
-                addon:CreateCompanionFrame()
-                addon:RefreshZoneCompanion("login")
-                addon:ScheduleIdleChatter()
-                addon:Print("loaded. Type /isekai for commands.")
-            end)
+        else
+            addon.started = true
+            addon:RefreshZoneCompanion("login")
+            addon:ScheduleIdleChatter()
+            addon:Print("loaded. Type /isekai show to open the overlay.")
         end
     elseif event == "PLAYER_LOGIN" then
         -- Keep startup quiet. Options are registered lazily when /isekai options is used.

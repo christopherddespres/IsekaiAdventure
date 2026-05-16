@@ -208,6 +208,7 @@ function addon:CreateOptionsPanel()
         return addon.db.scale
     end, function(value)
         addon.db.scale = value
+        addon:EnsureCompanionFrame()
         addon:UpdateCompanionFrame()
     end, function(value)
         return string.format("%.2f", value)
@@ -249,9 +250,11 @@ function addon:CreateOptionsPanel()
     y = y - 36
 
     controls[#controls + 1] = Place(CreateButton(panel, "Layout Mode", 120, function()
+        addon:EnsureCompanionFrame()
         addon:SetLayoutMode(not addon.layoutMode)
     end), LEFT, y)
     controls[#controls + 1] = Place(CreateButton(panel, "Reset Layout", 120, function()
+        addon:EnsureCompanionFrame()
         addon:SetLayoutMode(false)
         addon:ResetLayout()
     end), LEFT + 130, y)

@@ -66,6 +66,10 @@ local function CreateLayoutHandle(parent, label)
 end
 
 function addon:CreateCompanionFrame()
+    if self.frame then
+        return self.frame
+    end
+
     local frame = CreateFrame("Frame", "IsekaiAdventureCompanionFrame", UIParent, "BackdropTemplate")
     frame:SetSize(760, 430)
     frame:SetPoint(self.db.frame.point, UIParent, self.db.frame.relativePoint, self.db.frame.x, self.db.frame.y)
@@ -146,6 +150,14 @@ function addon:CreateCompanionFrame()
     self.frame = frame
     self:UpdateFrameMouseState()
     self:UpdateCompanionFrame()
+    return frame
+end
+
+function addon:EnsureCompanionFrame()
+    if not self.frame then
+        self:CreateCompanionFrame()
+    end
+    return self.frame
 end
 
 function addon:ApplyLayoutPositions()
@@ -269,5 +281,8 @@ end
 
 function addon:SetShownState(visible)
     self.db.visible = visible
+    if visible then
+        self:EnsureCompanionFrame()
+    end
     self:UpdateCompanionFrame()
 end
