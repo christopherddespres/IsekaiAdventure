@@ -40,6 +40,8 @@ Then enable **Isekai Adventure** in the in-game addon list.
 
 The in-game options panel includes controls for chatter chances/cooldowns, dialogue box opacity and RGB color, subtitle text size, voice playback channel, layout tools, tests, and resetting saved settings.
 
+Companion production status lives in [docs/companion-checklist.md](docs/companion-checklist.md).
+
 ## Voice files
 
 WoW addons cannot call ElevenLabs, OpenAI, or any web API while the game is running. Generate audio ahead of time and put it under:
