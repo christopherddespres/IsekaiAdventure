@@ -36,7 +36,7 @@ addon.companions = {
         characterArt = addon.mediaPath .. "Portraits\\maribel_full.tga",
         characterTexCoord = { 0, 1, 0.08, 1 },
         characterHeight = 390,
-        voicePath = addon.mediaPath .. "Voice\\Maribel\\",
+        voicePath = addon.mediaPath .. "Voice\\Meribel\\",
     },
     elyria = {
         id = "elyria",
