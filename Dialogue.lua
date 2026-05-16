@@ -112,7 +112,7 @@ function addon:ScheduleIdleChatter()
         return
     end
 
-    local minSeconds = self:Clamp(self.db.idleMinSeconds, 60, 3600)
+    local minSeconds = self:Clamp(self.db.idleMinSeconds, 5, 3600)
     local maxSeconds = self:Clamp(self.db.idleMaxSeconds, minSeconds, 7200)
     local delay = addon:Random(minSeconds, maxSeconds)
 

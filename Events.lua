@@ -2,6 +2,44 @@ local _, addon = ...
 
 local eventFrame = CreateFrame("Frame")
 addon.eventFrame = eventFrame
+addon.recentDamage = addon.recentDamage or {}
+
+local DAMAGE_EVENTS = {
+    SWING_DAMAGE = true,
+    RANGE_DAMAGE = true,
+    SPELL_DAMAGE = true,
+    SPELL_PERIODIC_DAMAGE = true,
+    SPELL_BUILDING_DAMAGE = true,
+    DAMAGE_SHIELD = true,
+    DAMAGE_SPLIT = true,
+}
+
+local DEATH_EVENTS = {
+    PARTY_KILL = true,
+    UNIT_DIED = true,
+    UNIT_DESTROYED = true,
+    UNIT_DISSIPATES = true,
+}
+
+local function IsMine(sourceGUID, sourceFlags)
+    if sourceGUID and sourceGUID == UnitGUID("player") then
+        return true
+    end
+
+    if sourceGUID and UnitGUID("pet") and sourceGUID == UnitGUID("pet") then
+        return true
+    end
+
+    if sourceGUID and UnitGUID("vehicle") and sourceGUID == UnitGUID("vehicle") then
+        return true
+    end
+
+    if sourceFlags and bit and COMBATLOG_OBJECT_AFFILIATION_MINE then
+        return bit.band(sourceFlags, COMBATLOG_OBJECT_AFFILIATION_MINE) ~= 0
+    end
+
+    return false
+end
 
 local function GetQuestTitleFromEvent(questID, questLogIndex)
     if questID and C_QuestLog and C_QuestLog.GetTitleForQuestID then
@@ -39,16 +77,7 @@ local function HandleQuestAccepted(...)
     addon:SayQuestAccepted(questID, GetQuestTitleFromEvent(questID, questLogIndex))
 end
 
-local function HandleCombatLog()
-    local _, subevent, _, sourceGUID = CombatLogGetCurrentEventInfo()
-    if subevent ~= "PARTY_KILL" then
-        return
-    end
-
-    if sourceGUID ~= UnitGUID("player") then
-        return
-    end
-
+local function TryKillChatter()
     local now = GetTime()
     if now - (addon.lastKillLineAt or 0) < 12 then
         return
@@ -57,6 +86,32 @@ local function HandleCombatLog()
     if addon:Chance(addon.db.killChance) then
         addon.lastKillLineAt = now
         addon:Say("kill")
+    end
+end
+
+local function HandleCombatLog()
+    local _, subevent, _, sourceGUID, _, sourceFlags, _, destGUID = CombatLogGetCurrentEventInfo()
+    local now = GetTime()
+
+    if DAMAGE_EVENTS[subevent] and destGUID and IsMine(sourceGUID, sourceFlags) then
+        addon.recentDamage[destGUID] = now
+        return
+    end
+
+    if not DEATH_EVENTS[subevent] or not destGUID then
+        return
+    end
+
+    if subevent == "PARTY_KILL" and IsMine(sourceGUID, sourceFlags) then
+        addon.recentDamage[destGUID] = nil
+        TryKillChatter()
+        return
+    end
+
+    local lastDamageAt = addon.recentDamage[destGUID]
+    if lastDamageAt and now - lastDamageAt <= 30 then
+        addon.recentDamage[destGUID] = nil
+        TryKillChatter()
     end
 end
 

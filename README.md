@@ -30,6 +30,8 @@ Then enable **Isekai Adventure** in the in-game addon list.
 /isekai scale 1.2
 /isekai chance kill 20
 /isekai chance quest 100
+/isekai idleinterval 10 50
+/isekai status
 /isekai companion seraphine
 ```
 

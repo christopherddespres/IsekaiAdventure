@@ -6,6 +6,7 @@ local function PrintHelp()
     addon:Print("/isekai layout | layout reset")
     addon:Print("/isekai test | idle | kill | quest | zone")
     addon:Print("/isekai scale 0.8-1.6 | chance kill 0-100 | chance quest 0-100")
+    addon:Print("/isekai idleinterval 10 50 | status")
     addon:Print("/isekai companion seraphine/elyria/mika/sera/kaori/rin/lyra")
 end
 
@@ -80,6 +81,18 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
         addon:SayQuestAccepted(nil, "A Very Suspicious Quest")
     elseif command == "zone" then
         addon:RefreshZoneCompanion()
+    elseif command == "status" then
+        addon:Print("enabled=" .. tostring(addon.db.enabled) .. ", muted=" .. tostring(addon.db.muted) .. ", companion=" .. tostring(addon.db.currentCompanionID))
+        addon:Print("idleChatter=" .. tostring(addon.db.idleChatter) .. ", idleInterval=" .. tostring(addon.db.idleMinSeconds) .. "-" .. tostring(addon.db.idleMaxSeconds) .. " sec")
+        addon:Print("questChance=" .. tostring(addon.db.questChance) .. "%, killChance=" .. tostring(addon.db.killChance) .. "%, levelChance=" .. tostring(addon.db.levelChance) .. "%")
+    elseif command == "idleinterval" then
+        local minSeconds = addon:Clamp(tonumber(words[2]), 5, 3600)
+        local maxSeconds = addon:Clamp(tonumber(words[3]), minSeconds, 7200)
+        addon.db.idleMinSeconds = minSeconds
+        addon.db.idleMaxSeconds = maxSeconds
+        addon.db.idleChatter = true
+        addon:ScheduleIdleChatter()
+        addon:Print("idle chatter interval set to " .. minSeconds .. "-" .. maxSeconds .. " seconds.")
     elseif command == "scale" then
         local scale = addon:Clamp(tonumber(words[2]), 0.6, 1.8)
         addon.db.scale = scale
