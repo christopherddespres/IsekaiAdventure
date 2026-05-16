@@ -27,6 +27,42 @@ addon.dialogue = {
             { text = "Seraphine Applebrook, at your side. Welcome to Elwynn, reincarnated hero.", audio = "summon_01.mp3", duration = 4.9 },
         },
     },
+    maribel = {
+        zone_intro = {
+            { text = "Welcome to Westfall, hero. Keep your hood low and your eyes open; hunger makes honest folk desperate.", audio = "zone_intro_01.mp3", duration = 6.2 },
+            { text = "Dust, broken fences, and trouble on every road. Still, this place is home, and I am not letting it die quiet.", audio = "zone_intro_02.mp3", duration = 6.4 },
+            { text = "The fields look empty, but do not trust them. Westfall has a way of hiding teeth under straw.", audio = "zone_intro_03.mp3", duration = 5.7 },
+        },
+        quest_accept = {
+            { text = "Another job from someone with tired eyes. All right, hero, let us see what they need and what they are not saying.", audio = "quest_accept_01.mp3", duration = 6.2 },
+            { text = "If there is coin in it, good. If there is food in it, better. If there is trouble, well, that is usually where we come in.", audio = "quest_accept_02.mp3", duration = 6.3 },
+            { text = "Careful now. In Westfall, a simple errand can lead you straight into a knife fight.", audio = "quest_accept_03.mp3", duration = 5.2 },
+            { text = "We will help. Just do not go promising miracles unless you packed a few in that bag.", audio = "quest_accept_04.mp3", duration = 5.2 },
+            { text = "You take the lead. I will watch the ditches, rooftops, and anyone smiling too politely.", audio = "quest_accept_05.mp3", duration = 5.4 },
+        },
+        kill = {
+            { text = "Nice work. Quick and clean is how you live long out here.", audio = "kill_01.mp3", duration = 3.7 },
+            { text = "That one will not be bothering the roads again. Try not to look too pleased with yourself.", audio = "kill_02.mp3", duration = 4.6 },
+            { text = "Good hit. Westfall rewards hesitation with bruises, so do not start now.", audio = "kill_03.mp3", duration = 4.5 },
+            { text = "Hah. Maybe that second life of yours came with sharper instincts.", audio = "kill_04.mp3", duration = 4.1 },
+        },
+        idle = {
+            { text = "Smell that? Dust, sun-baked wheat, and somebody cooking soup thin enough to see through.", audio = "idle_01.mp3", duration = 5.8 },
+            { text = "I used to think the wind here sounded lonely. Turns out it just learned to complain from the rest of us.", audio = "idle_02.mp3", duration = 6.1 },
+            { text = "If I tell you to duck, duck first and ask charming reincarnated-hero questions later.", audio = "idle_03.mp3", duration = 5.4 },
+            { text = "Westfall is cracked, not dead. Remember that when the fields start looking hopeless.", audio = "idle_04.mp3", duration = 5.0 },
+            { text = "I have half a biscuit, two bolts, and a plan I would generously call flexible.", audio = "idle_05.mp3", duration = 5.1 },
+            { text = "You keep walking like that and someone will think you are important. Unfortunately, they might be right.", audio = "idle_06.mp3", duration = 5.5 },
+        },
+        level_up = {
+            { text = "Look at you, getting stronger. Try not to let it go to your head; I still need you able to fit through barn doors.", audio = "level_up_01.mp3", duration = 5.4 },
+            { text = "That is real progress. Westfall hits hard, but you are starting to hit back harder.", audio = "level_up_02.mp3", duration = 4.7 },
+        },
+        summon = {
+            { text = "Maribel Dustwhisper. I know the roads, the farms, and which smiles mean trouble. Stick close, hero.", audio = "summon_01.mp3", duration = 6.0 },
+            { text = "You got yourself reborn into a rough stretch of dirt. Lucky for you, I know how to survive it.", audio = "summon_02.mp3", duration = 5.5 },
+        },
+    },
     elyria = {
         zone_intro = {
             { text = "Another new land, another chapter in your second life. I will stay close, hero.", audio = "zone_intro_01.ogg", duration = 5.5 },

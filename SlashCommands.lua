@@ -10,7 +10,7 @@ local function PrintHelp()
     addon:Print("/isekai scale 0.8-1.6 | chance kill 0-100 | chance quest 0-100")
     addon:Print("/isekai idleinterval 10 50 | status")
     addon:Print("/isekai taintlog on | off")
-    addon:Print("/isekai companion seraphine/elyria/mika/sera/kaori/rin/lyra")
+    addon:Print("/isekai companion seraphine/maribel/elyria/mika/sera/kaori/rin/lyra")
 end
 
 local function Split(input)
@@ -150,7 +150,7 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
             addon:Say("summon")
             addon:Print("companion set to " .. addon.companions[companionID].name .. ".")
         else
-            addon:Print("unknown companion. Try seraphine, elyria, mika, sera, kaori, rin, or lyra.")
+            addon:Print("unknown companion. Try seraphine, maribel, elyria, mika, sera, kaori, rin, or lyra.")
         end
     else
         PrintHelp()

@@ -2,6 +2,7 @@ local _, addon = ...
 
 addon.companionOrder = {
     "seraphine",
+    "maribel",
     "elyria",
     "mika",
     "sera",
@@ -23,6 +24,15 @@ addon.companions = {
         characterTexCoord = { 0, 1, 0.226562, 1 },
         characterHeight = 390,
         voicePath = addon.mediaPath .. "Voice\\Seraphine\\",
+    },
+    maribel = {
+        id = "maribel",
+        name = "Maribel Dustwhisper",
+        title = "Westfall Survival Scout",
+        race = "Human",
+        gender = "Female",
+        color = { 0.95, 0.64, 0.32 },
+        voicePath = addon.mediaPath .. "Voice\\Maribel\\",
     },
     elyria = {
         id = "elyria",
@@ -90,6 +100,7 @@ addon.companions = {
 addon.mapCompanions = {
     [37] = "seraphine", -- Elwynn Forest
     [425] = "seraphine", -- Northshire
+    [52] = "maribel", -- Westfall
     [1409] = "elyria", -- Exile's Reach
     [84] = "elyria", -- Stormwind City
     [85] = "mika", -- Orgrimmar
