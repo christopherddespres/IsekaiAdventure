@@ -1,0 +1,14 @@
+## Interface: 120012
+## Title: Isekai Adventure
+## Notes: A voiced isekai companion addon for World of Warcraft Retail.
+## Author: Astra + Codex
+## Version: 0.1.0
+## SavedVariables: IsekaiAdventureDB
+
+Core.lua
+Data\Companions.lua
+Data\Dialogue.lua
+UI.lua
+Dialogue.lua
+Events.lua
+SlashCommands.lua
