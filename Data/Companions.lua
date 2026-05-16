@@ -15,7 +15,7 @@ addon.companions = {
         name = "Elyria Dawnspell",
         title = "Reincarnation Guide",
         color = { 1.00, 0.70, 0.95 },
-        portrait = "Interface\\Icons\\Achievement_Character_Human_Female",
+        portrait = addon.mediaPath .. "Portraits\\elyria.tga",
         voicePath = addon.mediaPath .. "Voice\\Elyria\\",
     },
     mika = {
@@ -23,7 +23,7 @@ addon.companions = {
         name = "Mika Starbloom",
         title = "Cheerful Field Mage",
         color = { 0.65, 0.90, 1.00 },
-        portrait = "Interface\\Icons\\Achievement_Character_Draenei_Female",
+        portrait = addon.mediaPath .. "Portraits\\mika.tga",
         voicePath = addon.mediaPath .. "Voice\\Mika\\",
     },
     sera = {
@@ -31,7 +31,7 @@ addon.companions = {
         name = "Sera Moonvale",
         title = "Soft-Spoken Ranger",
         color = { 0.75, 1.00, 0.70 },
-        portrait = "Interface\\Icons\\Achievement_Character_Nightelf_Female",
+        portrait = addon.mediaPath .. "Portraits\\sera.tga",
         voicePath = addon.mediaPath .. "Voice\\Sera\\",
     },
     kaori = {
@@ -39,7 +39,7 @@ addon.companions = {
         name = "Kaori Emberheart",
         title = "Battle Senpai",
         color = { 1.00, 0.55, 0.45 },
-        portrait = "Interface\\Icons\\Achievement_Character_Bloodelf_Female",
+        portrait = addon.mediaPath .. "Portraits\\kaori.tga",
         voicePath = addon.mediaPath .. "Voice\\Kaori\\",
     },
     rin = {
@@ -47,7 +47,7 @@ addon.companions = {
         name = "Rin Gearwhisper",
         title = "Inventor Companion",
         color = { 1.00, 0.85, 0.45 },
-        portrait = "Interface\\Icons\\Achievement_Character_Gnome_Female",
+        portrait = addon.mediaPath .. "Portraits\\rin.tga",
         voicePath = addon.mediaPath .. "Voice\\Rin\\",
     },
     lyra = {
@@ -55,7 +55,7 @@ addon.companions = {
         name = "Lyra Ashpetal",
         title = "Mysterious Shrine Maiden",
         color = { 0.78, 0.68, 1.00 },
-        portrait = "Interface\\Icons\\Achievement_Character_Voidelf_Female",
+        portrait = addon.mediaPath .. "Portraits\\lyra.tga",
         voicePath = addon.mediaPath .. "Voice\\Lyra\\",
     },
 }
@@ -75,4 +75,3 @@ addon.mapCompanions = {
     [2255] = "kaori", -- Azj-Kahet
     [2248] = "rin", -- Isle of Dorn
 }
-

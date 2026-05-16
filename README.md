@@ -49,7 +49,7 @@ Recommended export format: `.ogg` or `.mp3`.
 
 ## Portraits
 
-The first version uses built-in WoW icon textures as placeholders. To use custom art, drop files into:
+The first version includes generated `.tga` placeholder portraits. To use custom art, replace or add files in:
 
 ```text
 Media\Portraits\
