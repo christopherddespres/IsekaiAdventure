@@ -34,8 +34,8 @@ local defaults = {
     portraitAlpha = 1,
     subtitleSeconds = 7,
     debugTaintLog = false,
-    autoStartAutomation = false,
-    debugStartup = true,
+    autoStartAutomation = true,
+    debugStartup = false,
 }
 
 function addon:Debug(message)

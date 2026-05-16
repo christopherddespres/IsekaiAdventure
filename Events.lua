@@ -66,9 +66,12 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
     elseif event == "PLAYER_LOGIN" then
         if addon.db.autoStartAutomation and not addon.startupScheduled then
             addon.startupScheduled = true
-            C_Timer.After(8, function()
+            C_Timer.After(2, function()
                 addon:StartAutomation("login")
-                addon:Print("loaded. Type /isekai show to open the overlay.")
+                if addon.db.visible then
+                    addon:EnsureCompanionFrame()
+                end
+                addon:Print("loaded. Type /isekai options for settings.")
             end)
         else
             addon:Print("loaded. Type /isekai start to enable quest/kill/idle automation, or /isekai show to open the overlay.")

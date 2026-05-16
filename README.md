@@ -19,6 +19,7 @@ Then enable **Isekai Adventure** in the in-game addon list.
 ```text
 /isekai
 /isekai options
+/isekai start
 /isekai test
 /isekai show
 /isekai hide
