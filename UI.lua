@@ -41,7 +41,7 @@ function addon:CreateCompanionFrame()
 
     frame.character = frame:CreateTexture(nil, "ARTWORK")
     frame.character:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", -18, 18)
-    frame.character:SetSize(500, 390)
+    frame.character:SetSize(390, 390)
 
     frame.namePlate = CreateFrame("Frame", nil, frame, "BackdropTemplate")
     frame.namePlate:SetSize(220, 34)
@@ -116,7 +116,12 @@ function addon:UpdateCompanionFrame()
         self.frame.character:SetTexCoord(texCoord[1], texCoord[2], texCoord[3], texCoord[4])
     else
         self.frame.character:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+        texCoord = { 0.08, 0.92, 0.08, 0.92 }
     end
+
+    local characterHeight = companion.characterHeight or 390
+    local characterAspect = (texCoord[2] - texCoord[1]) / (texCoord[4] - texCoord[3])
+    self.frame.character:SetSize(characterHeight * characterAspect, characterHeight)
 
     self.frame.namePlate:SetBackdropBorderColor(color[1], color[2], color[3], 0.86)
     self.frame.metaChip:SetBackdropBorderColor(color[1], color[2], color[3], 0.62)
