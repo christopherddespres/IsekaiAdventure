@@ -124,6 +124,7 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
 
         addon:InitializeDatabase()
         addon:CreateCompanionFrame()
+        addon:RegisterOptionsPanel()
         addon:RefreshZoneCompanion()
         addon:ScheduleIdleChatter()
         addon:Print("loaded. Type /isekai for commands.")

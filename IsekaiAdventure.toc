@@ -11,4 +11,5 @@ Data\Dialogue.lua
 UI.lua
 Dialogue.lua
 Events.lua
+Options.lua
 SlashCommands.lua
