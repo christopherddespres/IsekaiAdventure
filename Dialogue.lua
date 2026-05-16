@@ -44,7 +44,7 @@ function addon:PlayLine(line, trigger)
 
     local audioPath = self:GetAudioPath(companion, line)
     if audioPath and not self.db.muted and PlaySoundFile then
-        PlaySoundFile(audioPath, "Dialog")
+        PlaySoundFile(audioPath, self.db.voiceChannel or "Dialog")
     end
 
     C_Timer.After(duration, function()

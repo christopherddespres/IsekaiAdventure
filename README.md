@@ -38,6 +38,8 @@ Then enable **Isekai Adventure** in the in-game addon list.
 /isekai companion seraphine
 ```
 
+The in-game options panel includes controls for chatter chances/cooldowns, dialogue box opacity and RGB color, subtitle text size, voice playback channel, layout tools, tests, and resetting saved settings.
+
 ## Voice files
 
 WoW addons cannot call ElevenLabs, OpenAI, or any web API while the game is running. Generate audio ahead of time and put it under:

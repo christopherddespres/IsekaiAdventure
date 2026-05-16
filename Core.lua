@@ -5,7 +5,7 @@ addon.name = addonName
 addon.version = "0.1.0"
 addon.mediaPath = "Interface\\AddOns\\IsekaiAdventure\\Media\\"
 
-local SETTINGS_VERSION = 2
+local SETTINGS_VERSION = 3
 
 local DEFAULT_FRAME = {
     point = "LEFT",
@@ -33,6 +33,19 @@ local VALID_POINTS = {
     BOTTOMRIGHT = true,
 }
 
+local VOICE_CHANNELS = {
+    { value = "Dialog", label = "Dialog" },
+    { value = "Master", label = "Master" },
+    { value = "SFX", label = "Sound Effects" },
+    { value = "Ambience", label = "Ambience" },
+    { value = "Music", label = "Music" },
+}
+
+local VALID_VOICE_CHANNELS = {}
+for _, channel in ipairs(VOICE_CHANNELS) do
+    VALID_VOICE_CHANNELS[channel.value] = channel.label
+end
+
 local defaults = {
     settingsVersion = SETTINGS_VERSION,
     enabled = true,
@@ -52,8 +65,13 @@ local defaults = {
     killCooldownSeconds = 12,
     levelChance = 100,
     maxQueuedLines = 6,
+    idleCooldownSeconds = 240,
     portraitAlpha = 1,
     subtitleSeconds = 7,
+    subtitleFontSize = 14,
+    dialogueBoxAlpha = 0.90,
+    dialogueBoxColor = { r = 0.02, g = 0.018, b = 0.014 },
+    voiceChannel = "Dialog",
     debugTaintLog = false,
     autoStartAutomation = true,
     debugStartup = false,
@@ -85,6 +103,18 @@ local function CopyDefaults(source, target)
             target[key] = value
         end
     end
+end
+
+local function CopyTable(source)
+    local target = {}
+    for key, value in pairs(source) do
+        if type(value) == "table" then
+            target[key] = CopyTable(value)
+        else
+            target[key] = value
+        end
+    end
+    return target
 end
 
 function addon:InitializeDatabase()
@@ -128,8 +158,26 @@ function addon:NormalizeDatabase()
     db.levelChance = self:Clamp(db.levelChance, 0, 100)
     db.killCooldownSeconds = self:Clamp(db.killCooldownSeconds, 0, 300)
     db.maxQueuedLines = self:Clamp(db.maxQueuedLines, 1, 20)
+    db.idleCooldownSeconds = self:Clamp(db.idleCooldownSeconds or db.idleMinSeconds, 5, 3600)
+    if db.idleMinSeconds < db.idleCooldownSeconds then
+        db.idleMinSeconds = db.idleCooldownSeconds
+    end
+    if db.idleMaxSeconds < db.idleMinSeconds then
+        db.idleMaxSeconds = db.idleMinSeconds
+    end
     db.portraitAlpha = self:Clamp(db.portraitAlpha, 0, 1)
     db.subtitleSeconds = self:Clamp(db.subtitleSeconds, 1, 30)
+    db.subtitleFontSize = self:Clamp(db.subtitleFontSize, 10, 24)
+    db.dialogueBoxAlpha = self:Clamp(db.dialogueBoxAlpha, 0.2, 1)
+    if type(db.voiceChannel) ~= "string" or not VALID_VOICE_CHANNELS[db.voiceChannel] then
+        db.voiceChannel = defaults.voiceChannel
+    end
+
+    if type(db.dialogueBoxColor) ~= "table" then db.dialogueBoxColor = {} end
+    CopyDefaults(defaults.dialogueBoxColor, db.dialogueBoxColor)
+    db.dialogueBoxColor.r = self:Clamp(db.dialogueBoxColor.r, 0, 1)
+    db.dialogueBoxColor.g = self:Clamp(db.dialogueBoxColor.g, 0, 1)
+    db.dialogueBoxColor.b = self:Clamp(db.dialogueBoxColor.b, 0, 1)
 
     if type(db.frame) ~= "table" then db.frame = {} end
     CopyDefaults(DEFAULT_FRAME, db.frame)
@@ -149,6 +197,34 @@ function addon:NormalizeDatabase()
     if db.currentCompanionID and not self.companions[db.currentCompanionID] then
         db.currentCompanionID = nil
     end
+end
+
+function addon:GetVoiceChannels()
+    return VOICE_CHANNELS
+end
+
+function addon:GetVoiceChannelLabel(channel)
+    return VALID_VOICE_CHANNELS[channel or ""] or tostring(channel or "Dialog")
+end
+
+function addon:ResetSavedSettings()
+    IsekaiAdventureDB = CopyTable(defaults)
+    self.db = IsekaiAdventureDB
+    self:NormalizeDatabase()
+    self.queue = {}
+    self.isSpeaking = false
+    self.idleToken = (self.idleToken or 0) + 1
+
+    if self.frame then
+        self.frame:ClearAllPoints()
+        self.frame:SetPoint(self.db.frame.point, UIParent, self.db.frame.relativePoint, self.db.frame.x, self.db.frame.y)
+        self:ApplyLayoutPositions()
+        self:ApplyDialogueStyle()
+        self:UpdateCompanionFrame()
+    end
+
+    self:RefreshZoneCompanion("reset")
+    self:ScheduleIdleChatter()
 end
 
 function addon:Print(message)

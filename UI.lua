@@ -16,6 +16,11 @@ local function ApplyPanelBackdrop(frame, r, g, b, alpha)
     end
 end
 
+local function GetDialogueColor()
+    local color = addon.db.dialogueBoxColor or {}
+    return color.r or 0.02, color.g or 0.018, color.b or 0.014
+end
+
 local function SetRelativePoint(region, x, y)
     region:ClearAllPoints()
     region:SetPoint("BOTTOMLEFT", addon.frame, "BOTTOMLEFT", x, y)
@@ -127,7 +132,8 @@ function addon:CreateCompanionFrame()
     frame.dialogueBox:SetSize(560, 108)
     frame.dialogueBox:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", self.db.layout.dialogueBox.x, self.db.layout.dialogueBox.y)
     AttachMover(frame.dialogueBox, "dialogueBox")
-    ApplyPanelBackdrop(frame.dialogueBox, 0.02, 0.018, 0.014, 0.90)
+    local dialogueR, dialogueG, dialogueB = GetDialogueColor()
+    ApplyPanelBackdrop(frame.dialogueBox, dialogueR, dialogueG, dialogueB, self.db.dialogueBoxAlpha or 0.90)
 
     frame.subtitle = frame.dialogueBox:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     frame.subtitle:SetPoint("TOPLEFT", frame.dialogueBox, "TOPLEFT", 24, -20)
@@ -151,6 +157,7 @@ function addon:CreateCompanionFrame()
     frame.dialogueHandle = CreateLayoutHandle(frame.dialogueBox, "Dialogue")
 
     self.frame = frame
+    self:ApplyDialogueStyle()
     self:UpdateFrameMouseState()
     self:UpdateCompanionFrame()
     return frame
@@ -172,6 +179,24 @@ function addon:ApplyLayoutPositions()
     SetRelativePoint(self.frame.namePlate, self.db.layout.namePlate.x, self.db.layout.namePlate.y)
     SetRelativePoint(self.frame.metaChip, self.db.layout.metaChip.x, self.db.layout.metaChip.y)
     SetRelativePoint(self.frame.dialogueBox, self.db.layout.dialogueBox.x, self.db.layout.dialogueBox.y)
+end
+
+function addon:ApplyDialogueStyle()
+    if not self.frame then
+        return
+    end
+
+    local r, g, b = GetDialogueColor()
+    ApplyPanelBackdrop(self.frame.dialogueBox, r, g, b, self.db.dialogueBoxAlpha or 0.90)
+    local companion = self:GetCompanion(self.db.currentCompanionID)
+    local borderColor = companion and companion.color or { 1, 0.8, 1 }
+    self.frame.dialogueBox:SetBackdropBorderColor(borderColor[1], borderColor[2], borderColor[3], 0.74)
+
+    local fontPath = STANDARD_TEXT_FONT or "Fonts\\FRIZQT__.TTF"
+    self.frame.subtitle:SetFont(fontPath, self.db.subtitleFontSize or 14, "")
+    self.frame.subtitle:SetTextColor(1.00, 0.88, 0.62)
+    self.frame.subtitle:SetShadowColor(0, 0, 0, 0.95)
+    self.frame.subtitle:SetShadowOffset(1, -1)
 end
 
 function addon:UpdateFrameMouseState()
@@ -263,7 +288,7 @@ function addon:UpdateCompanionFrame()
 
     self.frame.namePlate:SetBackdropBorderColor(color[1], color[2], color[3], 0.86)
     self.frame.metaChip:SetBackdropBorderColor(color[1], color[2], color[3], 0.62)
-    self.frame.dialogueBox:SetBackdropBorderColor(color[1], color[2], color[3], 0.74)
+    self:ApplyDialogueStyle()
     self.frame:SetScale(self.db.scale or 1)
 
     if self.db.enabled and self.db.visible then
