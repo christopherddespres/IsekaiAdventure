@@ -19,6 +19,8 @@ addon.companions = {
         gender = "Female",
         color = { 1.00, 0.82, 0.52 },
         portrait = addon.mediaPath .. "Portraits\\seraphine.tga",
+        characterArt = addon.mediaPath .. "Portraits\\seraphine_full.tga",
+        characterTexCoord = { 0, 1, 0.43, 1 },
         voicePath = addon.mediaPath .. "Voice\\Seraphine\\",
     },
     elyria = {
