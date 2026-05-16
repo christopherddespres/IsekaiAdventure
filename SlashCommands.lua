@@ -3,6 +3,7 @@ local _, addon = ...
 local function PrintHelp()
     addon:Print("commands:")
     addon:Print("/isekai show | hide | enable | disable | lock | unlock | mute | unmute")
+    addon:Print("/isekai layout | layout reset")
     addon:Print("/isekai test | idle | kill | quest | zone")
     addon:Print("/isekai scale 0.8-1.6 | chance kill 0-100 | chance quest 0-100")
     addon:Print("/isekai companion seraphine/elyria/mika/sera/kaori/rin/lyra")
@@ -56,6 +57,19 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
     elseif command == "unmute" then
         addon.db.muted = false
         addon:Print("voice playback unmuted.")
+    elseif command == "layout" then
+        if words[2] == "reset" then
+            addon:SetLayoutMode(false)
+            addon:ResetLayout()
+            addon:Print("visual novel layout reset.")
+        else
+            addon:SetLayoutMode(not addon.layoutMode)
+            if addon.layoutMode then
+                addon:Print("layout mode enabled. Drag Character, Name, Title, or Dialogue, then run /isekai layout again.")
+            else
+                addon:Print("layout mode disabled.")
+            end
+        end
     elseif command == "test" or command == "summon" then
         addon:Say("summon")
     elseif command == "idle" then

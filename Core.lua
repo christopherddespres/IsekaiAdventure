@@ -17,6 +17,12 @@ local defaults = {
         x = 360,
         y = -20,
     },
+    layout = {
+        character = { x = -18, y = 18 },
+        namePlate = { x = 394, y = 138 },
+        metaChip = { x = 434, y = 181 },
+        dialogueBox = { x = 300, y = 18 },
+    },
     currentCompanionID = nil,
     lastMapID = nil,
     idleChatter = true,

@@ -16,6 +16,55 @@ local function ApplyPanelBackdrop(frame, r, g, b, alpha)
     end
 end
 
+local function SetRelativePoint(region, x, y)
+    region:ClearAllPoints()
+    region:SetPoint("BOTTOMLEFT", addon.frame, "BOTTOMLEFT", x, y)
+end
+
+local function SaveLayoutPosition(key, region)
+    local frameLeft = addon.frame:GetLeft()
+    local frameBottom = addon.frame:GetBottom()
+    local regionLeft = region:GetLeft()
+    local regionBottom = region:GetBottom()
+
+    if not frameLeft or not frameBottom or not regionLeft or not regionBottom then
+        return
+    end
+
+    addon.db.layout[key].x = regionLeft - frameLeft
+    addon.db.layout[key].y = regionBottom - frameBottom
+    addon:ApplyLayoutPositions()
+end
+
+local function AttachMover(region, key)
+    region:SetMovable(true)
+    region:EnableMouse(false)
+    region:RegisterForDrag("LeftButton")
+    region:SetScript("OnDragStart", function(self)
+        if addon.layoutMode then
+            self:StartMoving()
+        end
+    end)
+    region:SetScript("OnDragStop", function(self)
+        self:StopMovingOrSizing()
+        SaveLayoutPosition(key, self)
+    end)
+end
+
+local function CreateLayoutHandle(parent, label)
+    local handle = CreateFrame("Frame", nil, parent, "BackdropTemplate")
+    handle:SetAllPoints(parent)
+    handle:SetFrameLevel(parent:GetFrameLevel() + 8)
+    ApplyPanelBackdrop(handle, 0.12, 0.10, 0.18, 0.35)
+    handle:Hide()
+
+    handle.text = handle:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    handle.text:SetPoint("CENTER", handle, "CENTER", 0, 0)
+    handle.text:SetText(label)
+
+    return handle
+end
+
 function addon:CreateCompanionFrame()
     local frame = CreateFrame("Frame", "IsekaiAdventureCompanionFrame", UIParent, "BackdropTemplate")
     frame:SetSize(760, 430)
@@ -40,12 +89,18 @@ function addon:CreateCompanionFrame()
     end)
 
     frame.character = frame:CreateTexture(nil, "ARTWORK")
-    frame.character:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", -18, 18)
-    frame.character:SetSize(390, 390)
+
+    frame.characterMover = CreateFrame("Frame", nil, frame)
+    frame.characterMover:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", self.db.layout.character.x, self.db.layout.character.y)
+    frame.characterMover:SetSize(390, 390)
+    AttachMover(frame.characterMover, "character")
+
+    frame.character:SetAllPoints(frame.characterMover)
 
     frame.namePlate = CreateFrame("Frame", nil, frame, "BackdropTemplate")
     frame.namePlate:SetSize(220, 34)
-    frame.namePlate:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 248, 118)
+    frame.namePlate:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", self.db.layout.namePlate.x, self.db.layout.namePlate.y)
+    AttachMover(frame.namePlate, "namePlate")
     ApplyPanelBackdrop(frame.namePlate, 0.10, 0.08, 0.18, 0.94)
 
     frame.name = frame.namePlate:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
@@ -55,7 +110,8 @@ function addon:CreateCompanionFrame()
 
     frame.metaChip = CreateFrame("Frame", nil, frame, "BackdropTemplate")
     frame.metaChip:SetSize(250, 28)
-    frame.metaChip:SetPoint("BOTTOMLEFT", frame.namePlate, "TOPLEFT", 28, 7)
+    frame.metaChip:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", self.db.layout.metaChip.x, self.db.layout.metaChip.y)
+    AttachMover(frame.metaChip, "metaChip")
     ApplyPanelBackdrop(frame.metaChip, 0.08, 0.07, 0.13, 0.88)
 
     frame.title = frame.metaChip:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
@@ -65,7 +121,8 @@ function addon:CreateCompanionFrame()
 
     frame.dialogueBox = CreateFrame("Frame", nil, frame, "BackdropTemplate")
     frame.dialogueBox:SetSize(560, 108)
-    frame.dialogueBox:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 184, 18)
+    frame.dialogueBox:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", self.db.layout.dialogueBox.x, self.db.layout.dialogueBox.y)
+    AttachMover(frame.dialogueBox, "dialogueBox")
     ApplyPanelBackdrop(frame.dialogueBox, 0.96, 0.93, 0.98, 0.92)
 
     frame.subtitle = frame.dialogueBox:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
@@ -81,9 +138,25 @@ function addon:CreateCompanionFrame()
     frame.hint:SetPoint("BOTTOMRIGHT", frame.dialogueBox, "TOPRIGHT", -12, 6)
     frame.hint:SetText("/isekai for commands")
 
+    frame.characterHandle = CreateLayoutHandle(frame.characterMover, "Character")
+    frame.nameHandle = CreateLayoutHandle(frame.namePlate, "Name")
+    frame.titleHandle = CreateLayoutHandle(frame.metaChip, "Title")
+    frame.dialogueHandle = CreateLayoutHandle(frame.dialogueBox, "Dialogue")
+
     self.frame = frame
     self:UpdateFrameMouseState()
     self:UpdateCompanionFrame()
+end
+
+function addon:ApplyLayoutPositions()
+    if not self.frame then
+        return
+    end
+
+    SetRelativePoint(self.frame.characterMover, self.db.layout.character.x, self.db.layout.character.y)
+    SetRelativePoint(self.frame.namePlate, self.db.layout.namePlate.x, self.db.layout.namePlate.y)
+    SetRelativePoint(self.frame.metaChip, self.db.layout.metaChip.x, self.db.layout.metaChip.y)
+    SetRelativePoint(self.frame.dialogueBox, self.db.layout.dialogueBox.x, self.db.layout.dialogueBox.y)
 end
 
 function addon:UpdateFrameMouseState()
@@ -91,7 +164,47 @@ function addon:UpdateFrameMouseState()
         return
     end
 
-    self.frame:EnableMouse(not self.db.locked and self.dragEnabled == true)
+    local canDragMain = not self.db.locked and self.dragEnabled == true
+    self.frame:EnableMouse(canDragMain)
+    self.frame.characterMover:EnableMouse(self.layoutMode == true)
+    self.frame.namePlate:EnableMouse(self.layoutMode == true)
+    self.frame.metaChip:EnableMouse(self.layoutMode == true)
+    self.frame.dialogueBox:EnableMouse(self.layoutMode == true)
+end
+
+function addon:SetLayoutMode(enabled)
+    self.layoutMode = enabled
+
+    if self.frame then
+        local handles = {
+            self.frame.characterHandle,
+            self.frame.nameHandle,
+            self.frame.titleHandle,
+            self.frame.dialogueHandle,
+        }
+
+        for _, handle in ipairs(handles) do
+            if enabled then
+                handle:Show()
+            else
+                handle:Hide()
+            end
+        end
+    end
+
+    self:UpdateFrameMouseState()
+end
+
+function addon:ResetLayout()
+    self.db.layout.character.x = -18
+    self.db.layout.character.y = 18
+    self.db.layout.namePlate.x = 394
+    self.db.layout.namePlate.y = 138
+    self.db.layout.metaChip.x = 434
+    self.db.layout.metaChip.y = 181
+    self.db.layout.dialogueBox.x = 300
+    self.db.layout.dialogueBox.y = 18
+    self:ApplyLayoutPositions()
 end
 
 function addon:UpdateCompanionFrame()
@@ -121,7 +234,8 @@ function addon:UpdateCompanionFrame()
 
     local characterHeight = companion.characterHeight or 390
     local characterAspect = (texCoord[2] - texCoord[1]) / (texCoord[4] - texCoord[3])
-    self.frame.character:SetSize(characterHeight * characterAspect, characterHeight)
+    self.frame.characterMover:SetSize(characterHeight * characterAspect, characterHeight)
+    self:ApplyLayoutPositions()
 
     self.frame.namePlate:SetBackdropBorderColor(color[1], color[2], color[3], 0.86)
     self.frame.metaChip:SetBackdropBorderColor(color[1], color[2], color[3], 0.62)
