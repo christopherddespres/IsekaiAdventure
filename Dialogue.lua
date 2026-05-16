@@ -4,7 +4,7 @@ local function PickLine(lines)
     if not lines or #lines == 0 then
         return nil
     end
-    return lines[math.random(#lines)]
+    return lines[addon:Random(#lines)]
 end
 
 function addon:GetLines(trigger, companionID)
@@ -114,7 +114,7 @@ function addon:ScheduleIdleChatter()
 
     local minSeconds = self:Clamp(self.db.idleMinSeconds, 60, 3600)
     local maxSeconds = self:Clamp(self.db.idleMaxSeconds, minSeconds, 7200)
-    local delay = math.random(minSeconds, maxSeconds)
+    local delay = addon:Random(minSeconds, maxSeconds)
 
     C_Timer.After(delay, function()
         if addon.idleToken ~= token then
@@ -128,4 +128,3 @@ function addon:ScheduleIdleChatter()
         addon:ScheduleIdleChatter()
     end)
 end
-

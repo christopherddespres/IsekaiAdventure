@@ -67,7 +67,6 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
             return
         end
 
-        math.randomseed(time())
         addon:InitializeDatabase()
         addon:CreateCompanionFrame()
         addon:RefreshZoneCompanion()
@@ -97,4 +96,3 @@ eventFrame:RegisterEvent("ZONE_CHANGED_INDOORS")
 eventFrame:RegisterEvent("QUEST_ACCEPTED")
 eventFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 eventFrame:RegisterEvent("PLAYER_LEVEL_UP")
-

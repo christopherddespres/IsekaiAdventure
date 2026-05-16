@@ -74,7 +74,21 @@ end
 
 function addon:Chance(percent)
     percent = self:Clamp(percent or 0, 0, 100)
-    return math.random(100) <= percent
+    return self:Random(100) <= percent
+end
+
+function addon:Random(minValue, maxValue)
+    if maxValue == nil then
+        if random then
+            return random(minValue)
+        end
+        return math.random(minValue)
+    end
+
+    if random then
+        return random(minValue, maxValue)
+    end
+    return math.random(minValue, maxValue)
 end
 
 function addon:GetMapID()
