@@ -126,22 +126,28 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
         if addon.db.debugTaintLog and SetCVar then
             SetCVar("taintLog", "1")
         end
-        addon:CreateCompanionFrame()
-        addon:RefreshZoneCompanion("login")
-        addon:ScheduleIdleChatter()
-        addon:Print("loaded. Type /isekai for commands.")
-    elseif event == "PLAYER_LOGIN" then
-        addon:RegisterOptionsPanel()
     elseif event == "PLAYER_ENTERING_WORLD" then
-        if addon.hasEnteredWorld then
+        if addon.started then
             addon:RefreshZoneCompanion("zone")
+            addon:ScheduleIdleChatter()
+        elseif not addon.startupScheduled then
+            addon.startupScheduled = true
+            C_Timer.After(2, function()
+                addon.started = true
+                addon:CreateCompanionFrame()
+                addon:RefreshZoneCompanion("login")
+                addon:ScheduleIdleChatter()
+                addon:Print("loaded. Type /isekai for commands.")
+            end)
+        end
+    elseif event == "PLAYER_LOGIN" then
+        -- Keep startup quiet. Options are registered lazily when /isekai options is used.
+    elseif event == "ZONE_CHANGED_NEW_AREA" or event == "ZONE_CHANGED" or event == "ZONE_CHANGED_INDOORS" then
+        if addon.started then
+            addon:RefreshZoneCompanion()
         else
-            addon.hasEnteredWorld = true
             addon:RefreshZoneCompanion("login")
         end
-        addon:ScheduleIdleChatter()
-    elseif event == "ZONE_CHANGED_NEW_AREA" or event == "ZONE_CHANGED" or event == "ZONE_CHANGED_INDOORS" then
-        addon:RefreshZoneCompanion()
     elseif event == "QUEST_ACCEPTED" then
         HandleQuestAccepted(...)
     elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
