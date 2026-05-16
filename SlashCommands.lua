@@ -8,6 +8,7 @@ local function PrintHelp()
     addon:Print("/isekai test | idle | kill | quest | zone")
     addon:Print("/isekai scale 0.8-1.6 | chance kill 0-100 | chance quest 0-100")
     addon:Print("/isekai idleinterval 10 50 | status")
+    addon:Print("/isekai taintlog")
     addon:Print("/isekai companion seraphine/elyria/mika/sera/kaori/rin/lyra")
 end
 
@@ -88,6 +89,9 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
         addon:Print("enabled=" .. tostring(addon.db.enabled) .. ", muted=" .. tostring(addon.db.muted) .. ", companion=" .. tostring(addon.db.currentCompanionID))
         addon:Print("idleChatter=" .. tostring(addon.db.idleChatter) .. ", idleInterval=" .. tostring(addon.db.idleMinSeconds) .. "-" .. tostring(addon.db.idleMaxSeconds) .. " sec")
         addon:Print("questChance=" .. tostring(addon.db.questChance) .. "%, killChance=" .. tostring(addon.db.killChance) .. "%, levelChance=" .. tostring(addon.db.levelChance) .. "%")
+    elseif command == "taintlog" then
+        SetCVar("taintLog", "1")
+        addon:Print("taint logging enabled. Reproduce the popup, then check Logs\\taint.log after exiting WoW.")
     elseif command == "idleinterval" then
         local minSeconds = addon:Clamp(tonumber(words[2]), 5, 3600)
         local maxSeconds = addon:Clamp(tonumber(words[3]), minSeconds, 7200)

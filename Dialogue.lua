@@ -54,6 +54,10 @@ function addon:PlayNextQueuedLine()
         return
     end
 
+    if InCombatLockdown and InCombatLockdown() then
+        return
+    end
+
     local queued = table.remove(self.queue, 1)
     if not queued then
         return
@@ -70,6 +74,12 @@ function addon:QueueLine(line, trigger)
 
     table.insert(self.queue, { line = line, trigger = trigger })
     self:PlayNextQueuedLine()
+end
+
+function addon:ResumeQueuedDialogue()
+    if self.db.enabled then
+        self:PlayNextQueuedLine()
+    end
 end
 
 function addon:Say(trigger)

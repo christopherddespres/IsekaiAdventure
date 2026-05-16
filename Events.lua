@@ -141,6 +141,8 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
         if addon:Chance(addon.db.levelChance) then
             addon:Say("level_up")
         end
+    elseif event == "PLAYER_REGEN_ENABLED" then
+        addon:ResumeQueuedDialogue()
     end
 end)
 
@@ -152,3 +154,4 @@ eventFrame:RegisterEvent("ZONE_CHANGED_INDOORS")
 eventFrame:RegisterEvent("QUEST_ACCEPTED")
 eventFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 eventFrame:RegisterEvent("PLAYER_LEVEL_UP")
+eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
