@@ -5,7 +5,7 @@ addon.name = addonName
 addon.version = "0.1.0"
 addon.mediaPath = "Interface\\AddOns\\IsekaiAdventure\\Media\\"
 
-local SETTINGS_VERSION = 5
+local SETTINGS_VERSION = 6
 
 local DEFAULT_FRAME = {
     point = "LEFT",
@@ -85,6 +85,7 @@ local defaults = {
     dialogueBoxColor = { r = 0.02, g = 0.018, b = 0.014 },
     voiceChannel = "Dialog",
     showBond = true,
+    showRomanceButton = true,
     relationships = {},
     debugTaintLog = false,
     autoStartAutomation = true,
@@ -164,6 +165,7 @@ function addon:NormalizeDatabase()
     if type(db.autoStartAutomation) ~= "boolean" then db.autoStartAutomation = defaults.autoStartAutomation end
     if type(db.debugStartup) ~= "boolean" then db.debugStartup = defaults.debugStartup end
     if type(db.showBond) ~= "boolean" then db.showBond = defaults.showBond end
+    if type(db.showRomanceButton) ~= "boolean" then db.showRomanceButton = defaults.showRomanceButton end
     if type(db.companionPreference) ~= "string" or not VALID_COMPANION_PREFERENCES[db.companionPreference] then
         db.companionPreference = defaults.companionPreference
     end

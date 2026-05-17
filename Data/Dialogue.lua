@@ -41,6 +41,27 @@ addon.dialogue = {
         bond_10 = {
             { text = "Whatever fate brought you here, I am grateful. My story is brighter because you are in it.", duration = 6.0 },
         },
+        romance_2 = {
+            { text = "Oh... you mean that kind of closeness. Then let us begin gently, like sunlight through Elwynn leaves.", duration = 6.0 },
+        },
+        romance_4 = {
+            { text = "I have started listening for your footsteps before I hear them. That is probably a dangerous habit for my heart.", duration = 6.2 },
+        },
+        romance_6 = {
+            { text = "When you look at me like that, I forget all my careful mage lessons and remember only that I am happy.", duration = 6.1 },
+        },
+        romance_8 = {
+            { text = "If this world is your second chance, then maybe loving you is mine.", duration = 5.6 },
+        },
+        romance_10 = {
+            { text = "Stay with me, hero. Not because fate wrote it, but because we choose each other, here and now.", duration = 6.3 },
+        },
+        romance_not_ready = {
+            { text = "My heart is listening, but it is not ready to answer yet. Walk with me a little longer?", duration = 5.4 },
+        },
+        romance_repeat = {
+            { text = "We have already shared that moment, silly hero. Do not worry; I am still holding it close.", duration = 5.4 },
+        },
     },
     cedric = {
         zone_intro = {
@@ -83,6 +104,27 @@ addon.dialogue = {
         },
         bond_10 = {
             { text = "Whatever roads wait beyond Elwynn, I will walk them with you. Not from duty now. From my own heart.", duration = 6.3 },
+        },
+        romance_2 = {
+            { text = "You honor me. I am not practiced in matters of the heart, but I would like to learn them beside you.", duration = 6.3 },
+        },
+        romance_4 = {
+            { text = "I thought guarding you would be simple duty. Now I find myself hoping you will smile when I arrive.", duration = 6.0 },
+        },
+        romance_6 = {
+            { text = "If courage means speaking honestly, then here is mine: you have become precious to me.", duration = 5.7 },
+        },
+        romance_8 = {
+            { text = "I would face any road for you. But more than that, I would choose the quiet roads with you too.", duration = 6.1 },
+        },
+        romance_10 = {
+            { text = "My shield, my heart, my future if you will have it. I am yours, not by oath, but by choice.", duration = 6.2 },
+        },
+        romance_not_ready = {
+            { text = "I want to answer you properly, not hastily. Give my heart a little more time to become brave.", duration = 5.8 },
+        },
+        romance_repeat = {
+            { text = "That promise still stands. I have not set it down for even a moment.", duration = 4.8 },
         },
     },
     maribel = {
@@ -134,6 +176,27 @@ addon.dialogue = {
         },
         bond_10 = {
             { text = "Westfall taught me not to count on miracles. Then you arrived, impossible and smiling, and ruined my good cynicism.", duration = 6.5 },
+        },
+        romance_2 = {
+            { text = "Huh. So that is the way the wind is blowing. All right, hero. I am listening.", duration = 4.8 },
+        },
+        romance_4 = {
+            { text = "You are getting under my guard, and I am annoyed to report I do not hate it.", duration = 5.0 },
+        },
+        romance_6 = {
+            { text = "I keep saving the better half of my rations for you. If that is not romance in Westfall, I do not know what is.", duration = 6.0 },
+        },
+        romance_8 = {
+            { text = "Do not make me say something soft in all this dust. Fine. I want you here. I want us.", duration = 5.7 },
+        },
+        romance_10 = {
+            { text = "Westfall can keep its hard roads. I have found my reason to keep walking them, and it is you.", duration = 5.8 },
+        },
+        romance_not_ready = {
+            { text = "Easy there. I am not saying no. I am saying earn a little more trust before you come knocking on that door.", duration = 6.0 },
+        },
+        romance_repeat = {
+            { text = "You already got that piece of my heart. Greedy thing, aren't you?", duration = 4.5 },
         },
     },
     elyria = {

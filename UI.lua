@@ -12,6 +12,8 @@ local BOND_HEART_TEXTURE = "Interface\\AddOns\\IsekaiAdventure\\Media\\UI\\bond_
 local BOND_HEART_COUNT = 10
 local BOND_HEART_SIZE = 16
 local BOND_HEART_SPACING = 3
+local ROMANCE_BUTTON_WIDTH = 220
+local ROMANCE_BUTTON_HEIGHT = 24
 
 local function ApplyPanelBackdrop(frame, r, g, b, alpha)
     if BackdropTemplateMixin then
@@ -145,6 +147,13 @@ function addon:CreateCompanionFrame()
         heart:SetPoint("LEFT", frame.bondFrame, "LEFT", (index - 1) * (BOND_HEART_SIZE + BOND_HEART_SPACING), 0)
         frame.bondHearts[index] = heart
     end
+
+    frame.romanceButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+    frame.romanceButton:SetSize(ROMANCE_BUTTON_WIDTH, ROMANCE_BUTTON_HEIGHT)
+    frame.romanceButton:SetPoint("TOP", frame.bondFrame, "BOTTOM", 0, -6)
+    frame.romanceButton:SetScript("OnClick", function()
+        addon:TryRomanceCurrentCompanion()
+    end)
 
     frame.dialogueBox = CreateFrame("Frame", nil, frame, "BackdropTemplate")
     frame.dialogueBox:SetSize(560, 108)
@@ -301,6 +310,13 @@ function addon:UpdateCompanionFrame()
         self.frame.bondFrame:Show()
     else
         self.frame.bondFrame:Hide()
+    end
+
+    if self.db.showRomanceButton and self.db.showBond and self.TryRomanceCurrentCompanion then
+        self.frame.romanceButton:SetText("Romance " .. (companion.name or "Companion"))
+        self.frame.romanceButton:Show()
+    else
+        self.frame.romanceButton:Hide()
     end
     self.frame.title:SetText(companion.title or "")
     self.frame.character:SetTexture(companion.characterArt or companion.portrait or "Interface\\Icons\\INV_Misc_QuestionMark")

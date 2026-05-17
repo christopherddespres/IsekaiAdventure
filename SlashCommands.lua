@@ -7,7 +7,7 @@ local function PrintHelp()
     addon:Print("/isekai start | autostart on/off | debug on/off")
     addon:Print("/isekai layout | layout reset")
     addon:Print("/isekai test | idle | kill | quest | zone")
-    addon:Print("/isekai bond | bond <companion> | bond add <points>")
+    addon:Print("/isekai bond | bond <companion> | bond add <points> | romance")
     addon:Print("/isekai scale 0.8-1.6 | chance kill 0-100 | chance quest 0-100")
     addon:Print("/isekai route female | male | both")
     addon:Print("/isekai idleinterval 10 50 | status")
@@ -106,6 +106,8 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
         else
             addon:PrintBondStatus(words[2])
         end
+    elseif command == "romance" then
+        addon:TryRomanceCurrentCompanion()
     elseif command == "route" or command == "preference" then
         local preference = words[2]
         local valid = false
@@ -133,6 +135,7 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
 
         addon:Print("started=" .. tostring(addon.started == true) .. ", autostart=" .. tostring(addon.db.autoStartAutomation) .. ", options=" .. tostring(addon.optionsRegistered == true))
         addon:Print("enabled=" .. tostring(addon.db.enabled) .. ", visible=" .. tostring(addon.db.visible) .. ", muted=" .. tostring(addon.db.muted) .. ", route=" .. tostring(addon.db.companionPreference) .. ", companion=" .. tostring(addon.db.currentCompanionID))
+        addon:Print("bond=" .. tostring(addon:GetBondHearts(addon.db.currentCompanionID)) .. " hearts, romanceRank=" .. tostring(addon:GetRomanceRank(addon.db.currentCompanionID)) .. ", nextRomance=" .. tostring(addon:GetNextRomanceThreshold(addon.db.currentCompanionID)))
         addon:Print("mapID=" .. tostring(mapID) .. ", queue=" .. tostring(#addon.queue) .. ", speaking=" .. tostring(addon.isSpeaking == true) .. ", combat=" .. tostring(InCombatLockdown and InCombatLockdown() == true))
         addon:Print("voiceChannel=" .. tostring(addon.db.voiceChannel) .. ", textSize=" .. tostring(addon.db.subtitleFontSize) .. ", boxAlpha=" .. tostring(addon.db.dialogueBoxAlpha))
         addon:Print("idleChatter=" .. tostring(addon.db.idleChatter) .. ", idleCooldown=" .. tostring(addon.db.idleCooldownSeconds) .. " sec, idleInterval=" .. tostring(addon.db.idleMinSeconds) .. "-" .. tostring(addon.db.idleMaxSeconds) .. " sec, nextIdle=" .. nextIdle)

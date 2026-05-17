@@ -4,6 +4,8 @@ local POINTS_PER_HEART = 100
 local MAX_HEARTS = 10
 local MAX_POINTS = POINTS_PER_HEART * MAX_HEARTS
 local BOND_THRESHOLDS = { 2, 4, 6, 8, 10 }
+local ROMANCE_THRESHOLDS = { 2, 4, 6, 8, 10 }
+local ROMANCE_ATTEMPT_COOLDOWN = 8
 
 local BOND_REASONS = {
     quest_complete = 7,
@@ -33,6 +35,9 @@ function addon:GetRelationship(companionID)
 
     local relationship = relationships[companionID]
     relationship.points = self:Clamp(relationship.points or 0, 0, MAX_POINTS)
+    relationship.romanceRank = self:Clamp(relationship.romanceRank or 0, 0, MAX_HEARTS)
+    relationship.romanceAttempts = tonumber(relationship.romanceAttempts) or 0
+    relationship.lastRomanceAttemptAt = tonumber(relationship.lastRomanceAttemptAt) or 0
     if type(relationship.unlocked) ~= "table" then
         relationship.unlocked = {}
     end
@@ -74,6 +79,91 @@ end
 function addon:GetDisplayedBondHearts(companionID)
     local hearts = self:GetBondHearts(companionID)
     return self:Clamp(hearts, 0, MAX_HEARTS)
+end
+
+function addon:GetRomanceRank(companionID)
+    local relationship = self:GetRelationship(companionID)
+    return relationship and relationship.romanceRank or 0
+end
+
+function addon:GetNextRomanceThreshold(companionID)
+    local rank = self:GetRomanceRank(companionID)
+    for _, threshold in ipairs(ROMANCE_THRESHOLDS) do
+        if rank < threshold then
+            return threshold
+        end
+    end
+    return nil
+end
+
+local function QueueRomanceFallback(key, threshold)
+    if key == "romance_not_ready" then
+        addon:SayText("I'm not ready for that yet. Stay with me a little longer, okay?", 5.2, key)
+    elseif key == "romance_repeat" then
+        addon:SayText("We've already shared that moment. Let us keep walking forward together.", 5.2, key)
+    else
+        addon:SayText("My heart is trying to find the words. Give me just a little more time.", 5.0, key or ("romance_" .. tostring(threshold or "")))
+    end
+end
+
+function addon:TryRomanceCurrentCompanion()
+    if not self.db.enabled then
+        self:Print("companion dialogue is disabled.")
+        return
+    end
+
+    local companionID = self.db.currentCompanionID
+    local companion = self:GetCompanion(companionID)
+    if not companion then
+        return
+    end
+
+    local relationship = self:GetRelationship(companionID)
+    local now = GetTime and GetTime() or 0
+    if now - (relationship.lastRomanceAttemptAt or 0) < ROMANCE_ATTEMPT_COOLDOWN then
+        self:Print("give " .. companion.name .. " a moment before trying again.")
+        return
+    end
+
+    relationship.romanceAttempts = (relationship.romanceAttempts or 0) + 1
+    relationship.lastRomanceAttemptAt = now
+
+    local nextThreshold = self:GetNextRomanceThreshold(companionID)
+    if not nextThreshold then
+        local line = self:ChooseLine("romance_repeat", companionID)
+        if line then
+            self:QueueLine(line, "romance_repeat")
+        else
+            QueueRomanceFallback("romance_repeat")
+        end
+        return
+    end
+
+    local hearts = self:GetBondHearts(companionID)
+    if hearts < nextThreshold then
+        local line = self:ChooseLine("romance_not_ready", companionID)
+        if line then
+            self:QueueLine(line, "romance_not_ready")
+        else
+            QueueRomanceFallback("romance_not_ready", nextThreshold)
+        end
+        return
+    end
+
+    local key = "romance_" .. tostring(nextThreshold)
+    relationship.romanceRank = nextThreshold
+    relationship.lastRomanceAt = GetServerTime and GetServerTime() or 0
+
+    local line = self:ChooseLine(key, companionID)
+    if line then
+        self:QueueLine(line, key)
+    else
+        QueueRomanceFallback(key, nextThreshold)
+    end
+
+    if self.UpdateCompanionFrame then
+        self:UpdateCompanionFrame()
+    end
 end
 
 function addon:UnlockBondDialogue(companionID, oldHearts, newHearts)

@@ -229,6 +229,13 @@ function addon:CreateOptionsPanel()
         addon.db.showBond = value
         addon:UpdateCompanionFrame()
     end), LEFT, y)
+
+    controls[#controls + 1] = Place(CreateCheck(content, "Show romance button", "Shows the romance progression button below the hearts.", function()
+        return addon.db.showRomanceButton
+    end, function(value)
+        addon.db.showRomanceButton = value
+        addon:UpdateCompanionFrame()
+    end), LEFT + 260, y)
     y = y - ROW_HEIGHT
 
     controls[#controls + 1] = Place(CreateCheck(content, "Mute voice playback", "Keeps subtitles but stops audio playback.", function()

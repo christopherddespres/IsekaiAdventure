@@ -7,6 +7,10 @@ local function PickLine(lines)
     return lines[addon:Random(#lines)]
 end
 
+function addon:ChooseLine(trigger, companionID)
+    return PickLine(self:GetLines(trigger, companionID))
+end
+
 function addon:GetLines(trigger, companionID)
     companionID = companionID or self.db.currentCompanionID or "elyria"
     local companionLines = self.dialogue[companionID] or self.dialogue.elyria
@@ -96,8 +100,19 @@ function addon:Say(trigger)
         return
     end
 
-    local line = PickLine(self:GetLines(trigger))
+    local line = self:ChooseLine(trigger)
     self:QueueLine(line, trigger)
+end
+
+function addon:SayText(text, duration, trigger)
+    if not self.db.enabled or not text or text == "" then
+        return
+    end
+
+    self:QueueLine({
+        text = text,
+        duration = duration or self.db.subtitleSeconds or 7,
+    }, trigger or "manual")
 end
 
 function addon:SayQuestAccepted(questID, questTitle)
@@ -106,10 +121,10 @@ function addon:SayQuestAccepted(questID, questTitle)
     end
 
     local specificKey = questID and ("quest_" .. tostring(questID))
-    local line = specificKey and PickLine(self:GetLines(specificKey)) or nil
+    local line = specificKey and self:ChooseLine(specificKey) or nil
 
     if not line then
-        line = PickLine(self:GetLines("quest_accept"))
+        line = self:ChooseLine("quest_accept")
     end
 
     if line and questTitle and questTitle ~= "" then
