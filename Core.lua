@@ -5,7 +5,7 @@ addon.name = addonName
 addon.version = "0.1.0"
 addon.mediaPath = "Interface\\AddOns\\IsekaiAdventure\\Media\\"
 
-local SETTINGS_VERSION = 6
+local SETTINGS_VERSION = 7
 
 local DEFAULT_FRAME = {
     point = "LEFT",
@@ -73,9 +73,14 @@ local defaults = {
     idleMinSeconds = 240,
     idleMaxSeconds = 520,
     questChance = 100,
+    questCompleteChance = 100,
     killChance = 12,
     killCooldownSeconds = 12,
     levelChance = 100,
+    lowHealthChance = 100,
+    deathChance = 100,
+    subzoneChance = 100,
+    subzoneCooldownSeconds = 90,
     maxQueuedLines = 6,
     idleCooldownSeconds = 240,
     portraitAlpha = 1,
@@ -87,6 +92,7 @@ local defaults = {
     showBond = true,
     showRomanceButton = true,
     relationships = {},
+    visitedSubzones = {},
     debugTaintLog = false,
     autoStartAutomation = true,
     debugStartup = false,
@@ -102,6 +108,7 @@ addon.db = defaults
 addon.companions = {}
 addon.dialogue = {}
 addon.mapCompanions = {}
+addon.subzones = {}
 addon.queue = {}
 addon.isSpeaking = false
 addon.idleToken = 0
@@ -174,8 +181,13 @@ function addon:NormalizeDatabase()
     db.idleMinSeconds = self:Clamp(db.idleMinSeconds, 5, 3600)
     db.idleMaxSeconds = self:Clamp(db.idleMaxSeconds, db.idleMinSeconds, 7200)
     db.questChance = self:Clamp(db.questChance, 0, 100)
+    db.questCompleteChance = self:Clamp(db.questCompleteChance, 0, 100)
     db.killChance = self:Clamp(db.killChance, 0, 100)
     db.levelChance = self:Clamp(db.levelChance, 0, 100)
+    db.lowHealthChance = self:Clamp(db.lowHealthChance, 0, 100)
+    db.deathChance = self:Clamp(db.deathChance, 0, 100)
+    db.subzoneChance = self:Clamp(db.subzoneChance, 0, 100)
+    db.subzoneCooldownSeconds = self:Clamp(db.subzoneCooldownSeconds, 10, 900)
     db.killCooldownSeconds = self:Clamp(db.killCooldownSeconds, 0, 300)
     db.maxQueuedLines = self:Clamp(db.maxQueuedLines, 1, 20)
     db.idleCooldownSeconds = self:Clamp(db.idleCooldownSeconds or db.idleMinSeconds, 5, 3600)
@@ -219,6 +231,7 @@ function addon:NormalizeDatabase()
     end
 
     if type(db.relationships) ~= "table" then db.relationships = {} end
+    if type(db.visitedSubzones) ~= "table" then db.visitedSubzones = {} end
 end
 
 function addon:GetVoiceChannels()

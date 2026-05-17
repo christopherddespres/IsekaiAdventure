@@ -6,7 +6,7 @@ local function PrintHelp()
     addon:Print("/isekai options")
     addon:Print("/isekai start | autostart on/off | debug on/off")
     addon:Print("/isekai layout | layout reset")
-    addon:Print("/isekai test | idle | kill | quest | zone")
+    addon:Print("/isekai test | idle | kill | quest | questcomplete | lowhealth | death | subzone | zone")
     addon:Print("/isekai bond | bond <companion> | bond add <points> | romance | romance stop")
     addon:Print("/isekai scale 0.8-1.6 | chance kill 0-100 | chance quest 0-100")
     addon:Print("/isekai route female | male | both")
@@ -96,6 +96,14 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
         addon:Say("kill")
     elseif command == "quest" then
         addon:SayQuestAccepted(nil, "A Very Suspicious Quest")
+    elseif command == "questcomplete" or command == "complete" then
+        addon:SayQuestComplete(nil)
+    elseif command == "lowhealth" then
+        addon:Say("low_health")
+    elseif command == "death" then
+        addon:Say("death")
+    elseif command == "subzone" then
+        addon:TrySubzoneVisitLine()
     elseif command == "zone" then
         addon:RefreshZoneCompanion()
     elseif command == "bond" or command == "relationship" then
@@ -145,7 +153,8 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
         addon:Print("mapID=" .. tostring(mapID) .. ", queue=" .. tostring(#addon.queue) .. ", speaking=" .. tostring(addon.isSpeaking == true) .. ", combat=" .. tostring(InCombatLockdown and InCombatLockdown() == true))
         addon:Print("voiceChannel=" .. tostring(addon.db.voiceChannel) .. ", textSize=" .. tostring(addon.db.subtitleFontSize) .. ", boxAlpha=" .. tostring(addon.db.dialogueBoxAlpha))
         addon:Print("idleChatter=" .. tostring(addon.db.idleChatter) .. ", idleCooldown=" .. tostring(addon.db.idleCooldownSeconds) .. " sec, idleInterval=" .. tostring(addon.db.idleMinSeconds) .. "-" .. tostring(addon.db.idleMaxSeconds) .. " sec, nextIdle=" .. nextIdle)
-        addon:Print("questChance=" .. tostring(addon.db.questChance) .. "%, killChance=" .. tostring(addon.db.killChance) .. "%, killCooldown=" .. tostring(addon.db.killCooldownSeconds) .. " sec, levelChance=" .. tostring(addon.db.levelChance) .. "%")
+        addon:Print("questChance=" .. tostring(addon.db.questChance) .. "%, questCompleteChance=" .. tostring(addon.db.questCompleteChance) .. "%, killChance=" .. tostring(addon.db.killChance) .. "%, killCooldown=" .. tostring(addon.db.killCooldownSeconds) .. " sec, levelChance=" .. tostring(addon.db.levelChance) .. "%")
+        addon:Print("lowHealthChance=" .. tostring(addon.db.lowHealthChance) .. "%, deathChance=" .. tostring(addon.db.deathChance) .. "%, subzoneChance=" .. tostring(addon.db.subzoneChance) .. "%")
     elseif command == "taintlog" then
         local enabled = words[2] ~= "off"
         addon.db.debugTaintLog = enabled

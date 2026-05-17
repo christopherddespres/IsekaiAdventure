@@ -2,7 +2,7 @@
 
 A World of Warcraft Retail addon prototype for voiced isekai companions.
 
-The addon shows a companion frame, assigns a companion per zone, reacts when you accept quests, occasionally comments after kills, and plays idle chatter while you adventure.
+The addon shows a companion frame, assigns a companion per zone, reacts when you accept and complete quests, comments after kills, plays idle chatter, reacts to danger/death, and can deliver first-visit lore lines for supported subzones.
 
 ## Install
 
@@ -50,6 +50,8 @@ Companion production status lives in [docs/companion-checklist.md](docs/companio
 Companions also track bond progress from quest completion, leveling, manual summons, and time spent adventuring together. Bond is saved per companion ID, so female and male route companions can be swapped without losing progress. Bond thresholds can unlock special dialogue keys such as `bond_2`, `bond_4`, `bond_6`, `bond_8`, and `bond_10`.
 
 Romance progresses separately from bond. The romance button below the hearts plays the lowest unplayed romance scene that the current bond level allows, from `romance_2` through `romance_10`. If the next scene is still locked, the companion plays `romance_not_ready` instead. Once romance has started, the stop-romance button plays `romance_stop` and resets that companion's romance progress to 0 without changing bond.
+
+Kill and idle chatter also grow with bond. Lines like `bond_kill_4` and `bond_idle_5` are added to the normal random pools once the companion reaches the required heart level.
 
 Voice line production lives in [docs/voice-line-tracker.xlsx](docs/voice-line-tracker.xlsx), with count standards documented in [docs/voice-line-standards.md](docs/voice-line-standards.md).
 

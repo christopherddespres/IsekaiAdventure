@@ -1,0 +1,246 @@
+local _, addon = ...
+
+local function L(text, audio, duration)
+    return { text = text, audio = audio, duration = duration }
+end
+
+local function Set(companionID, key, lines)
+    if addon.dialogue[companionID] then
+        addon.dialogue[companionID][key] = lines
+    end
+end
+
+local function Apply(companionID, linesByKey)
+    for key, lines in pairs(linesByKey) do
+        Set(companionID, key, lines)
+    end
+end
+
+Apply("seraphine", {
+    summon = {
+        L("Seraphine Applebrook, at your side. Welcome to Elwynn, reincarnated hero.", "summon_01.mp3", 4.9),
+    },
+    zone_intro = {
+        L("Elwynn welcomes you with open fields and warm sunlight. Stay close, hero; even peaceful roads have teeth.", "zone_intro_01.mp3", 6.2),
+        L("This forest is where your new story takes root. Let us make it a gentle beginning.", "zone_intro_02.mp3", 5.6),
+    },
+    quest_accept = {
+        L("A fresh quest beneath the apple trees. How wonderfully heroic.", "quest_accept_01.mp3", 4.4),
+        L("Of course we will help. Elwynn is kind to new souls, so we should be kind in return.", "quest_accept_02.mp3", 5.6),
+        L("Do not worry. I will keep watch while you learn how this world asks for favors.", "quest_accept_03.mp3", 5.4),
+    },
+    quest_complete = {
+        L("That helped more than you know. Small kindnesses are how peaceful places stay peaceful.", "quest_complete_01.mp3", 5.3),
+        L("Quest complete. See? Your second life is already leaving gentler footprints.", "quest_complete_02.mp3", 5.0),
+        L("Well done, hero. Elwynn will remember, even if it only says thank you through the breeze.", "quest_complete_03.mp3", 5.7),
+    },
+    kill = {
+        L("Well struck. Try not to look too proud; the forest may start expecting more from you.", "kill_01.mp3", 4.3),
+        L("You handled that beautifully. Perhaps reincarnation suits you.", "kill_02.mp3", 4.0),
+        L("Good. The road is safer, and you are still standing. I like both outcomes.", "kill_03.mp3", 4.5),
+    },
+    bond_kill_2 = { L("You move with more confidence now. I am starting to trust your rhythm.", "bond_kill_02.mp3", 4.6) },
+    bond_kill_4 = { L("I knew you would win that one. Is it too early to say I am proud?", "bond_kill_04.mp3", 4.7) },
+    bond_kill_6 = { L("You and I make a graceful team, even when the work is not graceful at all.", "bond_kill_06.mp3", 5.0) },
+    bond_kill_8 = { L("When danger reaches for you, my heart moves before my magic does.", "bond_kill_08.mp3", 4.9) },
+    bond_kill_10 = { L("Perfectly done, my hero. I will never tire of watching you protect this world.", "bond_kill_10.mp3", 5.2) },
+    idle = {
+        L("The breeze smells like bread, wildflowers, and just a little bit of trouble.", "idle_01.mp3", 4.8),
+        L("If your first life felt heavy, let Elwynn be gentle with this one.", "idle_02.mp3", 5.2),
+        L("I packed apples for the road. Heroism is easier with snacks.", "idle_03.mp3", 4.2),
+    },
+    bond_idle_1 = { L("You seem less lost today. Or maybe I have simply become better at finding you.", "bond_idle_01.mp3", 5.3) },
+    bond_idle_3 = { L("I used to walk these roads alone. They feel brighter with your shadow beside mine.", "bond_idle_03.mp3", 5.5) },
+    bond_idle_5 = { L("If you hear me humming, pretend not to notice. It means I feel safe.", "bond_idle_05.mp3", 5.1) },
+    bond_idle_7 = { L("Sometimes I forget you came from another world. Then you smile, and I wonder how far fate had to travel.", "bond_idle_07.mp3", 6.4) },
+    bond_idle_9 = { L("Whatever road comes after Elwynn, promise we will not let this quiet vanish completely.", "bond_idle_09.mp3", 5.9) },
+    level_up = {
+        L("You are growing stronger already. The Light in you is waking up.", "level_up.mp3", 4.4),
+        L("Another level. I hope your old world can feel how brightly you are becoming yourself here.", "level_up_02.mp3", 5.6),
+    },
+    low_health = {
+        L("Careful! Stay with me, hero. Breathe, move, and do not let this world take you twice.", "low_health_01.mp3", 5.7),
+    },
+    death = {
+        L("No. Not again. When you return to me, I am holding your sleeve until you promise to be careful.", "death_01.mp3", 6.3),
+    },
+    subzone_brackwell_pumpkin_patch = { L("Brackwell looks charming until the fields start rustling back. Elwynn hides danger under very wholesome pumpkins.", "subzone_brackwell_pumpkin_patch.mp3", 6.0) },
+    subzone_crystal_lake = { L("Crystal Lake catches the sky so prettily. Try not to let the murlocs ruin the poetry.", "subzone_crystal_lake.mp3", 5.0) },
+    subzone_eastvale_logging_camp = { L("Eastvale keeps the kingdom supplied one tree at a time. It is honest work, and harder than it looks.", "subzone_eastvale_logging_camp.mp3", 5.5) },
+    subzone_echo_ridge_mine = { L("Echo Ridge is where many young adventurers learn that mines are rarely as empty as promised.", "subzone_echo_ridge_mine.mp3", 5.4) },
+    subzone_fargodeep_mine = { L("Fargodeep goes dark quickly. Stay close, and listen for more than footsteps.", "subzone_fargodeep_mine.mp3", 4.8) },
+    subzone_forests_edge = { L("Forest's Edge feels like Elwynn taking one last breath before the world grows rougher.", "subzone_forests_edge.mp3", 5.3) },
+    subzone_goldshire = { L("Goldshire is Elwynn's hearth. Heroes pass through, gossip blooms, and someone always needs help.", "subzone_goldshire.mp3", 5.8) },
+    subzone_goldtooths_den = { L("Goldtooth picked a gloomy little corner. Let us make sure he does not keep it for long.", "subzone_goldtooths_den.mp3", 5.0) },
+    subzone_hall_of_arms = { L("The Hall of Arms smells like polish, steel, and nervous ambition. Everyone begins somewhere.", "subzone_hall_of_arms.mp3", 5.2) },
+    subzone_heroes_vigil = { L("Heroes' Vigil is a quiet reminder that courage leaves echoes after the battle ends.", "subzone_heroes_vigil.mp3", 5.1) },
+    subzone_hogger_hill = { L("Hogger Hill has a reputation for a reason. Hold your weapon ready and your confidence steadier.", "subzone_hogger_hill.mp3", 5.2) },
+    subzone_jasperlode_mine = { L("Jasperlode is older and stranger than it looks. Mines in Azeroth almost always have opinions.", "subzone_jasperlode_mine.mp3", 5.3) },
+    subzone_jerods_landing = { L("Jerod's Landing is peaceful in that watch-the-water-and-check-behind-you sort of way.", "subzone_jerods_landing.mp3", 5.1) },
+    subzone_library_wing = { L("The Library Wing is dangerous to me. I always mean to read one page and lose an afternoon.", "subzone_library_wing.mp3", 5.6) },
+    subzone_lions_pride_inn = { L("The Lion's Pride Inn is warm, loud, and full of stories pretending to be rumors.", "subzone_lions_pride_inn.mp3", 5.2) },
+    subzone_maclure_vineyards = { L("Maclure Vineyards should smell like harvest and peace. Somehow even grapes find drama here.", "subzone_maclure_vineyards.mp3", 5.4) },
+    subzone_main_hall = { L("The Main Hall carries every anxious first step. Be gentle with the beginners you pass.", "subzone_main_hall.mp3", 5.0) },
+    subzone_mirror_lake = { L("Mirror Lake shows you the sky, but I suspect it keeps a few secrets beneath the reflection.", "subzone_mirror_lake.mp3", 5.4) },
+    subzone_mirror_lake_orchard = { L("Mirror Lake Orchard is lovely enough to make even chores feel romantic. Almost.", "subzone_mirror_lake_orchard.mp3", 5.1) },
+    subzone_northshire_abbey = { L("Northshire Abbey has sent so many brave hearts into the world. Today, it sends you.", "subzone_northshire_abbey.mp3", 5.5) },
+    subzone_northshire_valley = { L("Northshire Valley is a soft beginning, but beginnings are sacred things.", "subzone_northshire_valley.mp3", 4.8) },
+    subzone_northshire_vineyards = { L("The Northshire Vineyards look peaceful. That is usually when someone hands you a problem.", "subzone_northshire_vineyards.mp3", 5.0) },
+    subzone_ridgepoint_tower = { L("Ridgepoint Tower watches the road like an old guard who has seen too much and slept too little.", "subzone_ridgepoint_tower.mp3", 5.8) },
+    subzone_stone_cairn_lake = { L("Stone Cairn Lake feels ancient around the edges. Some places remember more than people do.", "subzone_stone_cairn_lake.mp3", 5.5) },
+    subzone_stonefield_farm = { L("Stonefield Farm is proof that family quarrels can be more dangerous than kobolds.", "subzone_stonefield_farm.mp3", 5.0) },
+    subzone_stormwind_city = { L("Stormwind rises like a promise in stone. Try not to look too dazzled. I already noticed.", "subzone_stormwind_city.mp3", 5.6) },
+    subzone_stormwind_gate = { L("The Stormwind Gate makes every traveler feel small for a moment. Then the road asks who you will become.", "subzone_stormwind_gate.mp3", 5.8) },
+    subzone_thunder_falls = { L("Thunder Falls speaks louder than most nobles. I find that refreshing.", "subzone_thunder_falls.mp3", 4.7) },
+    subzone_tower_of_azora = { L("The Tower of Azora is full of magic and questions. Please keep me from answering both at once.", "subzone_tower_of_azora.mp3", 5.5) },
+    subzone_westbrook_garrison = { L("Westbrook Garrison stands where Elwynn starts baring its teeth. The guards here know it.", "subzone_westbrook_garrison.mp3", 5.4) },
+})
+
+Apply("cedric", {
+    summon = {
+        L("Cedric Applebrook, at your service. If this second life needs a shield, I would be honored to stand beside you.", "summon_01.mp3", 6.5),
+    },
+    zone_intro = {
+        L("Elwynn Forest, bright as a prayer and twice as easy to underestimate. I will keep my shield near, my friend.", "zone_intro_01.mp3", 6.2),
+        L("These roads raised me. They are gentle when they can be, and dangerous when they must. Stay close.", "zone_intro_02.mp3", 5.8),
+    },
+    quest_accept = {
+        L("A villager asks, and we answer. That is how small kindness becomes something larger.", "quest_accept_01.mp3", 5.4),
+        L("Leave the worrying to me. You handle the heroics, and I will make sure trouble reaches you second.", "quest_accept_02.mp3", 5.6),
+        L("Another task for Elwynn. Come on, reincarnated hero. Let us do this properly.", "quest_accept_03.mp3", 4.9),
+    },
+    quest_complete = {
+        L("That is one more burden lifted. It may not make a ballad, but it matters.", "quest_complete_01.mp3", 5.0),
+        L("Well done. Protecting a place is often just answering when someone calls.", "quest_complete_02.mp3", 5.2),
+        L("You did right by them. Hold onto that feeling. It is stronger than applause.", "quest_complete_03.mp3", 5.1),
+    },
+    kill = {
+        L("Clean strike. The road is safer for it.", "kill_01.mp3", 3.4),
+        L("Well fought. You move like someone destiny is still trying to understand.", "kill_02.mp3", 4.5),
+        L("That was brave work. Do not forget to breathe after the brave part.", "kill_03.mp3", 4.2),
+    },
+    bond_kill_2 = { L("Good form. I am starting to read your movements before the enemy can.", "bond_kill_02.mp3", 4.8) },
+    bond_kill_4 = { L("I trusted you to handle that. It is a fine thing, trusting someone in battle.", "bond_kill_04.mp3", 5.2) },
+    bond_kill_6 = { L("My shield feels lighter when I know you are beside it.", "bond_kill_06.mp3", 4.4) },
+    bond_kill_8 = { L("If danger wants you, it will have to go through both of us.", "bond_kill_08.mp3", 4.6) },
+    bond_kill_10 = { L("You were magnificent. I would follow that courage anywhere.", "bond_kill_10.mp3", 4.5) },
+    idle = {
+        L("The abbey bells sound different from the road. Softer, somehow. Like home is waving from a distance.", "idle_01.mp3", 6.0),
+        L("If you ever miss your old world, tell me what it was like. I would like to know the place that made you.", "idle_02.mp3", 6.4),
+        L("I packed bread, bandages, and a deeply unreasonable amount of optimism.", "idle_03.mp3", 4.7),
+    },
+    bond_idle_1 = { L("You are growing steadier. I can see it in the way you look at the road.", "bond_idle_01.mp3", 5.0) },
+    bond_idle_3 = { L("I find myself speaking more honestly around you. That is either trust or terrible discipline.", "bond_idle_03.mp3", 5.6) },
+    bond_idle_5 = { L("If I seem quiet, it is because I am happy. I am still learning what to do with that.", "bond_idle_05.mp3", 5.7) },
+    bond_idle_7 = { L("You make even patrol feel like a story I want to keep reading.", "bond_idle_07.mp3", 4.8) },
+    bond_idle_9 = { L("Whatever waits beyond this forest, I hope I am still the one walking at your side.", "bond_idle_09.mp3", 5.7) },
+    level_up = {
+        L("There it is. You are stronger, steadier. Azeroth is starting to recognize you.", "level_up_01.mp3", 4.7),
+        L("Another step forward. I hope you can feel how much you have changed.", "level_up_02.mp3", 4.7),
+    },
+    low_health = {
+        L("Fall back to me! I have you. One breath, one guard, one more chance.", "low_health_01.mp3", 5.0),
+    },
+    death = {
+        L("I failed to guard you. Come back, and I swear I will stand closer next time.", "death_01.mp3", 5.8),
+    },
+    subzone_brackwell_pumpkin_patch = { L("Brackwell Pumpkin Patch looks simple. That is exactly why a protector checks the corners.", "subzone_brackwell_pumpkin_patch.mp3", 5.4) },
+    subzone_crystal_lake = { L("Crystal Lake is peaceful, but water carries sound. Keep your ears open.", "subzone_crystal_lake.mp3", 4.8) },
+    subzone_eastvale_logging_camp = { L("Eastvale's workers keep Stormwind warm and roofed. That deserves more respect than it gets.", "subzone_eastvale_logging_camp.mp3", 5.7) },
+    subzone_echo_ridge_mine = { L("Echo Ridge taught many recruits that bravery echoes loudest underground.", "subzone_echo_ridge_mine.mp3", 5.1) },
+    subzone_fargodeep_mine = { L("Fargodeep Mine. Shields up, eyes sharp, and no wandering off after glittering rocks.", "subzone_fargodeep_mine.mp3", 5.0) },
+    subzone_forests_edge = { L("Forest's Edge is where easy roads begin to test their travelers.", "subzone_forests_edge.mp3", 4.6) },
+    subzone_goldshire = { L("Goldshire is loud, warm, and impossible to defend from gossip. I still love it.", "subzone_goldshire.mp3", 5.3) },
+    subzone_goldtooths_den = { L("Goldtooth's Den is not much of a fortress. Unfortunately, trouble does not need good architecture.", "subzone_goldtooths_den.mp3", 5.5) },
+    subzone_hall_of_arms = { L("The Hall of Arms makes me stand straighter. Old training habits die stubbornly.", "subzone_hall_of_arms.mp3", 5.0) },
+    subzone_heroes_vigil = { L("Heroes' Vigil reminds me that duty is not always loud. Sometimes it is a name remembered.", "subzone_heroes_vigil.mp3", 5.8) },
+    subzone_hogger_hill = { L("Hogger Hill. I would prefer not to underestimate anything with a hill named after it.", "subzone_hogger_hill.mp3", 5.1) },
+    subzone_jasperlode_mine = { L("Jasperlode is a place for careful steps. The earth here has been disturbed too often.", "subzone_jasperlode_mine.mp3", 5.4) },
+    subzone_jerods_landing = { L("Jerod's Landing gives the road a moment to breathe. We should take one too.", "subzone_jerods_landing.mp3", 4.8) },
+    subzone_library_wing = { L("The Library Wing is proof that not every weapon has an edge.", "subzone_library_wing.mp3", 4.6) },
+    subzone_lions_pride_inn = { L("The Lion's Pride Inn has fed half the kingdom and heard the other half boast.", "subzone_lions_pride_inn.mp3", 5.1) },
+    subzone_maclure_vineyards = { L("Maclure Vineyards. A good harvest needs patience, weather, and fewer family arguments.", "subzone_maclure_vineyards.mp3", 5.5) },
+    subzone_main_hall = { L("The Main Hall feels different after you leave it. Smaller, and somehow dearer.", "subzone_main_hall.mp3", 5.0) },
+    subzone_mirror_lake = { L("Mirror Lake is beautiful. Still, I never trust water that watches back.", "subzone_mirror_lake.mp3", 4.9) },
+    subzone_mirror_lake_orchard = { L("Mirror Lake Orchard is the sort of place people fight to keep ordinary.", "subzone_mirror_lake_orchard.mp3", 5.0) },
+    subzone_northshire_abbey = { L("Northshire Abbey raised me to serve. Meeting you here feels like that lesson coming alive.", "subzone_northshire_abbey.mp3", 5.9) },
+    subzone_northshire_valley = { L("Northshire Valley is a beginning, yes, but no beginning is small to the one living it.", "subzone_northshire_valley.mp3", 5.6) },
+    subzone_northshire_vineyards = { L("The vineyards look calm. I have learned calm places usually need guards too.", "subzone_northshire_vineyards.mp3", 5.1) },
+    subzone_ridgepoint_tower = { L("Ridgepoint Tower sees trouble before the farms do. That is lonely work.", "subzone_ridgepoint_tower.mp3", 5.0) },
+    subzone_stone_cairn_lake = { L("Stone Cairn Lake has an old hush to it. Speak softly here.", "subzone_stone_cairn_lake.mp3", 4.7) },
+    subzone_stonefield_farm = { L("Stonefield Farm proves that home can be both shelter and battlefield.", "subzone_stonefield_farm.mp3", 4.9) },
+    subzone_stormwind_city = { L("Stormwind City. Stone, banners, and the weight of everyone expecting it to stand forever.", "subzone_stormwind_city.mp3", 5.5) },
+    subzone_stormwind_gate = { L("The Stormwind Gate always makes me want to be worthy of walking through it.", "subzone_stormwind_gate.mp3", 5.0) },
+    subzone_thunder_falls = { L("Thunder Falls has a fine voice. It almost makes a man forget his own thoughts.", "subzone_thunder_falls.mp3", 5.0) },
+    subzone_tower_of_azora = { L("The Tower of Azora watches Elwynn with a mage's patience. I find that both comforting and worrying.", "subzone_tower_of_azora.mp3", 5.8) },
+    subzone_westbrook_garrison = { L("Westbrook Garrison marks the edge of easy comfort. Keep your guard ready.", "subzone_westbrook_garrison.mp3", 4.9) },
+})
+
+Apply("maribel", {
+    summon = {
+        L("Maribel Dustwhisper. I know the roads, the farms, and which smiles mean trouble. Stick close, hero.", "summon_01.mp3", 6.0),
+    },
+    zone_intro = {
+        L("Welcome to Westfall, hero. Keep your hood low and your eyes open; hunger makes honest folk desperate.", "zone_intro_01.mp3", 6.2),
+        L("Dust, broken fences, and trouble on every road. Still, this place is home, and I am not letting it die quiet.", "zone_intro_02.mp3", 6.4),
+    },
+    quest_accept = {
+        L("Another job from someone with tired eyes. All right, hero, let us see what they need and what they are not saying.", "quest_accept_01.mp3", 6.2),
+        L("If there is coin in it, good. If there is food in it, better. If there is trouble, well, that is usually where we come in.", "quest_accept_02.mp3", 6.3),
+        L("Careful now. In Westfall, a simple errand can lead you straight into a knife fight.", "quest_accept_03.mp3", 5.2),
+    },
+    quest_complete = {
+        L("That is one less problem chewing on this place. Not bad, hero.", "quest_complete_01.mp3", 4.6),
+        L("Done and done. Westfall does not hand out easy wins, so take this one.", "quest_complete_02.mp3", 5.0),
+        L("You helped someone who needed it. Out here, that is worth more than shiny speeches.", "quest_complete_03.mp3", 5.4),
+    },
+    kill = {
+        L("Nice work. Quick and clean is how you live long out here.", "kill_01.mp3", 3.7),
+        L("That one will not be bothering the roads again. Try not to look too pleased with yourself.", "kill_02.mp3", 4.6),
+        L("Good hit. Westfall rewards hesitation with bruises, so do not start now.", "kill_03.mp3", 4.5),
+    },
+    bond_kill_2 = { L("You are getting quicker. I might stop pretending to be surprised.", "bond_kill_02.mp3", 4.2) },
+    bond_kill_4 = { L("Good. You watched the flank this time. I like a hero who learns.", "bond_kill_04.mp3", 4.6) },
+    bond_kill_6 = { L("Hah. We are getting dangerous together. Westfall should worry less about us and more about them.", "bond_kill_06.mp3", 5.6) },
+    bond_kill_8 = { L("Nobody corners you while I am here. I have gotten attached to keeping you breathing.", "bond_kill_08.mp3", 5.3) },
+    bond_kill_10 = { L("That is my hero. Do not grin like that. Fine, grin a little.", "bond_kill_10.mp3", 4.4) },
+    idle = {
+        L("Smell that? Dust, sun-baked wheat, and somebody cooking soup thin enough to see through.", "idle_01.mp3", 5.8),
+        L("I used to think the wind here sounded lonely. Turns out it just learned to complain from the rest of us.", "idle_02.mp3", 6.1),
+        L("If I tell you to duck, duck first and ask charming reincarnated-hero questions later.", "idle_03.mp3", 5.4),
+    },
+    bond_idle_1 = { L("You are still here. Either you are loyal, stubborn, or lost. I can work with all three.", "bond_idle_01.mp3", 5.5) },
+    bond_idle_3 = { L("I started packing extra food without thinking about it. Do not make that weird.", "bond_idle_03.mp3", 5.0) },
+    bond_idle_5 = { L("Westfall feels less empty when you are walking beside me. That is all I am saying.", "bond_idle_05.mp3", 5.3) },
+    bond_idle_7 = { L("If anyone asks, I am keeping you alive for practical reasons. Mostly.", "bond_idle_07.mp3", 4.8) },
+    bond_idle_9 = { L("You have become part of how I picture the road ahead. Annoying, but true.", "bond_idle_09.mp3", 5.1) },
+    level_up = {
+        L("Look at you, getting stronger. Try not to let it go to your head; I still need you able to fit through barn doors.", "level_up_01.mp3", 5.4),
+        L("That is real progress. Westfall hits hard, but you are starting to hit back harder.", "level_up_02.mp3", 4.7),
+    },
+    low_health = {
+        L("Hey! Eyes open, hero. Bleed later, move now!", "low_health_01.mp3", 3.7),
+    },
+    death = {
+        L("No. No, get back up. Westfall does not get to take you from me too.", "death_01.mp3", 5.0),
+    },
+    subzone_alexston_farmstead = { L("Alexston Farmstead used to mean work and supper. Now it mostly means watching your back.", "subzone_alexston_farmstead.mp3", 5.4) },
+    subzone_dagger_hills = { L("The Dagger Hills earned that name. Keep low and do not trust a ridge line.", "subzone_dagger_hills.mp3", 4.8) },
+    subzone_dawning_wood_catacombs = { L("Dawning Wood Catacombs. Great. Nothing says safe like stairs into old bones.", "subzone_dawning_wood_catacombs.mp3", 5.1) },
+    subzone_dead_acre = { L("Dead Acre is what happens when a place runs out of chances. We keep moving.", "subzone_dead_acre.mp3", 4.8) },
+    subzone_demonts_place = { L("Demont's Place has the kind of quiet that makes my fingers look for a blade.", "subzone_demonts_place.mp3", 5.0) },
+    subzone_dust_plains = { L("The Dust Plains get into your boots, your throat, and eventually your mood.", "subzone_dust_plains.mp3", 4.8) },
+    subzone_furlbrows_pumpkin_farm = { L("Furlbrow's farm should have been simple. In Westfall, even pumpkins come with grief.", "subzone_furlbrows_pumpkin_farm.mp3", 5.3) },
+    subzone_gold_coast_quarry = { L("Gold Coast Quarry is all hard edges and harder work. Easy place to miss trouble until it echoes.", "subzone_gold_coast_quarry.mp3", 5.6) },
+    subzone_jansen_stead = { L("The Jansen Stead still feels like someone left in a hurry and hoped to come back.", "subzone_jansen_stead.mp3", 5.2) },
+    subzone_jangolode_mine = { L("Jangolode Mine. If the tunnels start sounding too quiet, that is your warning.", "subzone_jangolode_mine.mp3", 5.0) },
+    subzone_molsen_farm = { L("The Molsen Farm has seen better harvests. Most of Westfall has.", "subzone_molsen_farm.mp3", 4.5) },
+    subzone_moonbrook = { L("Moonbrook has too many windows and not enough honest faces. Stay sharp.", "subzone_moonbrook.mp3", 4.7) },
+    subzone_raging_chasm = { L("The Raging Chasm looks like the land finally got tired of holding itself together.", "subzone_raging_chasm.mp3", 5.2) },
+    subzone_saldeans_farm = { L("Saldean's Farm still fights to feed people. That makes it worth protecting.", "subzone_saldeans_farm.mp3", 4.9) },
+    subzone_sentinel_hill = { L("Sentinel Hill is where Westfall tries to stand up straight, even with empty pockets.", "subzone_sentinel_hill.mp3", 5.1) },
+    subzone_shattered_strand = { L("The Shattered Strand is all wreckage and salt wind. Watch where the tide hides teeth.", "subzone_shattered_strand.mp3", 5.2) },
+    subzone_sludge_fields = { L("The Sludge Fields smell like every bad decision someone tried to bury.", "subzone_sludge_fields.mp3", 4.8) },
+    subzone_writhing_haunt = { L("The Writhing Haunt is exactly as welcoming as it sounds. Do not wander.", "subzone_writhing_haunt.mp3", 4.7) },
+    subzone_westfall_lighthouse = { L("Westfall Lighthouse keeps shining even when nobody thanks it. I respect that.", "subzone_westfall_lighthouse.mp3", 4.8) },
+})

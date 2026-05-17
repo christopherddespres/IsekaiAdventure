@@ -292,6 +292,15 @@ function addon:CreateOptionsPanel()
     end), LEFT, y)
     y = y - 54
 
+    controls[#controls + 1] = Place(CreateSlider(content, "Quest complete chance", 0, 100, 1, function()
+        return addon.db.questCompleteChance
+    end, function(value)
+        addon.db.questCompleteChance = value
+    end, function(value)
+        return value .. "%"
+    end), LEFT, y)
+    y = y - 54
+
     controls[#controls + 1] = Place(CreateSlider(content, "Kill chance", 0, 100, 1, function()
         return addon.db.killChance
     end, function(value)
@@ -332,6 +341,42 @@ function addon:CreateOptionsPanel()
         addon.db.levelChance = value
     end, function(value)
         return value .. "%"
+    end), LEFT, y)
+    y = y - 54
+
+    controls[#controls + 1] = Place(CreateSlider(content, "Low health chance", 0, 100, 1, function()
+        return addon.db.lowHealthChance
+    end, function(value)
+        addon.db.lowHealthChance = value
+    end, function(value)
+        return value .. "%"
+    end), LEFT, y)
+    y = y - 54
+
+    controls[#controls + 1] = Place(CreateSlider(content, "Death chance", 0, 100, 1, function()
+        return addon.db.deathChance
+    end, function(value)
+        addon.db.deathChance = value
+    end, function(value)
+        return value .. "%"
+    end), LEFT, y)
+    y = y - 54
+
+    controls[#controls + 1] = Place(CreateSlider(content, "Subzone chance", 0, 100, 1, function()
+        return addon.db.subzoneChance
+    end, function(value)
+        addon.db.subzoneChance = value
+    end, function(value)
+        return value .. "%"
+    end), LEFT, y)
+    y = y - 54
+
+    controls[#controls + 1] = Place(CreateSlider(content, "Subzone cooldown", 10, 900, 10, function()
+        return addon.db.subzoneCooldownSeconds
+    end, function(value)
+        addon.db.subzoneCooldownSeconds = value
+    end, function(value)
+        return value .. " sec"
     end), LEFT, y)
     y = y - 54
 

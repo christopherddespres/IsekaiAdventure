@@ -7,7 +7,9 @@
 
 Core.lua
 Data\Companions.lua
+Data\Subzones.lua
 Data\Dialogue.lua
+Data\DialogueStandards.lua
 UI.lua
 Dialogue.lua
 Relationships.lua

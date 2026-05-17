@@ -8,7 +8,7 @@ local function PickLine(lines)
 end
 
 function addon:ChooseLine(trigger, companionID)
-    return PickLine(self:GetLines(trigger, companionID))
+    return PickLine(self:GetLinePool(trigger, companionID))
 end
 
 function addon:GetLines(trigger, companionID)
@@ -19,6 +19,49 @@ function addon:GetLines(trigger, companionID)
         lines = self.dialogue.elyria[trigger]
     end
     return lines
+end
+
+local function AddLines(pool, lines)
+    if not lines then
+        return
+    end
+
+    for _, line in ipairs(lines) do
+        pool[#pool + 1] = line
+    end
+end
+
+function addon:GetBondLineKeys(trigger, companionID)
+    local hearts = self.GetBondHearts and self:GetBondHearts(companionID) or 0
+    local keys = {}
+
+    if trigger == "kill" then
+        for _, threshold in ipairs({ 2, 4, 6, 8, 10 }) do
+            if hearts >= threshold then
+                keys[#keys + 1] = "bond_kill_" .. threshold
+            end
+        end
+    elseif trigger == "idle" then
+        for _, threshold in ipairs({ 1, 3, 5, 7, 9 }) do
+            if hearts >= threshold then
+                keys[#keys + 1] = "bond_idle_" .. threshold
+            end
+        end
+    end
+
+    return keys
+end
+
+function addon:GetLinePool(trigger, companionID)
+    companionID = companionID or self.db.currentCompanionID or "elyria"
+    local pool = {}
+    AddLines(pool, self:GetLines(trigger, companionID))
+
+    for _, key in ipairs(self:GetBondLineKeys(trigger, companionID)) do
+        AddLines(pool, self:GetLines(key, companionID))
+    end
+
+    return pool
 end
 
 function addon:GetAudioPath(companion, line)
@@ -62,11 +105,16 @@ function addon:PlayNextQueuedLine()
         return
     end
 
-    if InCombatLockdown and InCombatLockdown() then
+    local queued = self.queue[1]
+    if not queued then
         return
     end
 
-    local queued = table.remove(self.queue, 1)
+    if InCombatLockdown and InCombatLockdown() and queued.trigger ~= "low_health" and queued.trigger ~= "death" then
+        return
+    end
+
+    queued = table.remove(self.queue, 1)
     if not queued then
         return
     end
@@ -85,7 +133,12 @@ function addon:QueueLine(line, trigger)
         table.remove(self.queue, 1)
     end
 
-    table.insert(self.queue, { line = line, trigger = trigger, queuedAt = GetTime and GetTime() or 0 })
+    local queued = { line = line, trigger = trigger, queuedAt = GetTime and GetTime() or 0 }
+    if trigger == "low_health" or trigger == "death" then
+        table.insert(self.queue, 1, queued)
+    else
+        table.insert(self.queue, queued)
+    end
     self:PlayNextQueuedLine()
 end
 
@@ -138,6 +191,21 @@ function addon:SayQuestAccepted(questID, questTitle)
     self:QueueLine(line, "quest_accept")
 end
 
+function addon:SayQuestComplete(questID)
+    if not self.db.enabled or not self:Chance(self.db.questCompleteChance) then
+        return
+    end
+
+    local specificKey = questID and ("quest_complete_" .. tostring(questID))
+    local line = specificKey and self:ChooseLine(specificKey) or nil
+
+    if not line then
+        line = self:ChooseLine("quest_complete")
+    end
+
+    self:QueueLine(line, "quest_complete")
+end
+
 function addon:ScheduleIdleChatter()
     self.idleToken = self.idleToken + 1
     local token = self.idleToken
@@ -164,4 +232,64 @@ function addon:ScheduleIdleChatter()
 
         addon:ScheduleIdleChatter()
     end)
+end
+
+function addon:GetSubzoneDialogueKey(mapID, subzoneName)
+    if not mapID or not subzoneName or subzoneName == "" then
+        return nil
+    end
+
+    local mapSubzones = self.subzones and self.subzones[mapID]
+    return mapSubzones and mapSubzones[subzoneName] or nil
+end
+
+function addon:MarkSubzoneVisited(companionID, mapID, key)
+    self.db.visitedSubzones = self.db.visitedSubzones or {}
+    local companionVisits = self.db.visitedSubzones[companionID]
+    if type(companionVisits) ~= "table" then
+        companionVisits = {}
+        self.db.visitedSubzones[companionID] = companionVisits
+    end
+
+    local mapVisits = companionVisits[mapID]
+    if type(mapVisits) ~= "table" then
+        mapVisits = {}
+        companionVisits[mapID] = mapVisits
+    end
+
+    if mapVisits[key] then
+        return false
+    end
+
+    mapVisits[key] = true
+    return true
+end
+
+function addon:TrySubzoneVisitLine()
+    if not self.db.enabled or not self:Chance(self.db.subzoneChance) then
+        return
+    end
+
+    local now = GetTime and GetTime() or 0
+    if now - (self.lastSubzoneLineAt or 0) < (self.db.subzoneCooldownSeconds or 90) then
+        return
+    end
+
+    local mapID = self:GetMapID()
+    local subzoneName = GetSubZoneText and GetSubZoneText() or nil
+    local key = self:GetSubzoneDialogueKey(mapID, subzoneName)
+    if not key then
+        return
+    end
+
+    local companionID = self.db.currentCompanionID
+    if not self:MarkSubzoneVisited(companionID, mapID, key) then
+        return
+    end
+
+    local line = self:ChooseLine(key, companionID)
+    if line then
+        self.lastSubzoneLineAt = now
+        self:QueueLine(line, key)
+    end
 end

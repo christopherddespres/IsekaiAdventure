@@ -53,6 +53,32 @@ local function TryKillChatter()
     end
 end
 
+local function TryLowHealthChatter()
+    if UnitIsDeadOrGhost("player") then
+        return
+    end
+
+    local maxHealth = UnitHealthMax("player")
+    if not maxHealth or maxHealth <= 0 then
+        return
+    end
+
+    local healthPercent = UnitHealth("player") / maxHealth
+    if healthPercent > 0.50 then
+        addon.lowHealthSpokenRecently = false
+        return
+    end
+
+    if addon.lowHealthSpokenRecently then
+        return
+    end
+
+    if healthPercent <= 0.25 and addon:Chance(addon.db.lowHealthChance) then
+        addon.lowHealthSpokenRecently = true
+        addon:Say("low_health")
+    end
+end
+
 local function RegisterOptionsPanel()
     if addon.RegisterOptionsPanel then
         addon:RegisterOptionsPanel()
@@ -105,6 +131,9 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
         else
             addon:RefreshZoneCompanion("login")
         end
+        if addon.started and addon.TrySubzoneVisitLine then
+            addon:TrySubzoneVisitLine()
+        end
     elseif event == "QUEST_ACCEPTED" then
         HandleQuestAccepted(...)
     elseif event == "PLAYER_LEVEL_UP" then
@@ -114,6 +143,7 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
         end
     elseif event == "QUEST_TURNED_IN" then
         addon:AddBondForCurrentCompanion("quest_complete")
+        addon:SayQuestComplete(...)
     elseif event == "PLAYER_REGEN_DISABLED" then
         addon.wasInCombat = true
     elseif event == "PLAYER_REGEN_ENABLED" then
@@ -121,7 +151,19 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
             addon.wasInCombat = false
             TryKillChatter()
         end
+        TryLowHealthChatter()
         addon:ResumeQueuedDialogue()
+    elseif event == "UNIT_HEALTH" then
+        local unit = ...
+        if unit == "player" then
+            TryLowHealthChatter()
+        end
+    elseif event == "PLAYER_DEAD" then
+        addon.wasInCombat = false
+        addon.lowHealthSpokenRecently = false
+        if addon:Chance(addon.db.deathChance) then
+            addon:Say("death")
+        end
     end
 end)
 
@@ -150,6 +192,8 @@ function addon:RegisterAutomationEvents()
     self:RegisterAutomationEvent("PLAYER_LEVEL_UP")
     self:RegisterAutomationEvent("PLAYER_REGEN_DISABLED")
     self:RegisterAutomationEvent("PLAYER_REGEN_ENABLED")
+    self:RegisterAutomationEvent("UNIT_HEALTH")
+    self:RegisterAutomationEvent("PLAYER_DEAD")
 end
 
 function addon:StartAutomation(reason)
@@ -163,6 +207,11 @@ function addon:StartAutomation(reason)
 
     self.started = true
     self:RefreshZoneCompanion(reason or "login")
+    if self.TrySubzoneVisitLine then
+        C_Timer.After(3, function()
+            addon:TrySubzoneVisitLine()
+        end)
+    end
     self:Debug("schedule idle")
     self:ScheduleIdleChatter()
     if self.ScheduleBondTimeTick then
