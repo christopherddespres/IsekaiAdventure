@@ -8,6 +8,11 @@ local PANEL_BACKDROP = {
     insets = { left = 4, right = 4, top = 4, bottom = 4 },
 }
 
+local BOND_HEART_TEXTURE = "Interface\\AddOns\\IsekaiAdventure\\Media\\UI\\bond_heart.tga"
+local BOND_HEART_COUNT = 10
+local BOND_HEART_SIZE = 16
+local BOND_HEART_SPACING = 3
+
 local function ApplyPanelBackdrop(frame, r, g, b, alpha)
     if BackdropTemplateMixin then
         frame:SetBackdrop(PANEL_BACKDROP)
@@ -128,14 +133,18 @@ function addon:CreateCompanionFrame()
     frame.title:SetWidth(222)
     frame.title:SetJustifyH("CENTER")
 
-    frame.bond = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-    frame.bond:SetPoint("TOP", frame.metaChip, "BOTTOM", 0, -4)
-    frame.bond:SetWidth(250)
-    frame.bond:SetJustifyH("CENTER")
-    frame.bond:SetTextColor(1.00, 0.32, 0.42)
-    frame.bond:SetShadowColor(0, 0, 0, 0.95)
-    frame.bond:SetShadowOffset(1, -1)
-    frame.bond:SetText("")
+    frame.bondFrame = CreateFrame("Frame", nil, frame)
+    frame.bondFrame:SetSize((BOND_HEART_COUNT * BOND_HEART_SIZE) + ((BOND_HEART_COUNT - 1) * BOND_HEART_SPACING), BOND_HEART_SIZE)
+    frame.bondFrame:SetPoint("TOP", frame.metaChip, "BOTTOM", 0, -5)
+    frame.bondHearts = {}
+
+    for index = 1, BOND_HEART_COUNT do
+        local heart = frame.bondFrame:CreateTexture(nil, "OVERLAY")
+        heart:SetTexture(BOND_HEART_TEXTURE)
+        heart:SetSize(BOND_HEART_SIZE, BOND_HEART_SIZE)
+        heart:SetPoint("LEFT", frame.bondFrame, "LEFT", (index - 1) * (BOND_HEART_SIZE + BOND_HEART_SPACING), 0)
+        frame.bondHearts[index] = heart
+    end
 
     frame.dialogueBox = CreateFrame("Frame", nil, frame, "BackdropTemplate")
     frame.dialogueBox:SetSize(560, 108)
@@ -278,11 +287,20 @@ function addon:UpdateCompanionFrame()
     local color = companion.color or { 1, 0.8, 1 }
     self.frame.name:SetText(companion.name or "Unknown Companion")
     self.frame.name:SetTextColor(color[1], color[2], color[3])
-    if self.db.showBond and self.GetBondHeartText then
-        self.frame.bond:SetText(self:GetBondHeartText(companion.id))
-        self.frame.bond:Show()
+    if self.db.showBond and self.GetDisplayedBondHearts then
+        local filledHearts = self:GetDisplayedBondHearts(companion.id)
+        for index, heart in ipairs(self.frame.bondHearts) do
+            if index <= filledHearts then
+                heart:SetVertexColor(1, 1, 1, 1)
+                heart:SetAlpha(1)
+            else
+                heart:SetVertexColor(0.28, 0.20, 0.22, 1)
+                heart:SetAlpha(0.46)
+            end
+        end
+        self.frame.bondFrame:Show()
     else
-        self.frame.bond:Hide()
+        self.frame.bondFrame:Hide()
     end
     self.frame.title:SetText(companion.title or "")
     self.frame.character:SetTexture(companion.characterArt or companion.portrait or "Interface\\Icons\\INV_Misc_QuestionMark")

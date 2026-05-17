@@ -72,19 +72,9 @@ function addon:GetBondLabel(companionID)
     return "Bond: " .. hearts .. "/10 hearts - " .. intoHeart .. "/" .. pointsPerHeart
 end
 
-function addon:GetBondHeartText(companionID)
+function addon:GetDisplayedBondHearts(companionID)
     local hearts = self:GetBondHearts(companionID)
-    local text = ""
-
-    for index = 1, MAX_HEARTS do
-        if index <= hearts then
-            text = text .. "♥"
-        else
-            text = text .. "♡"
-        end
-    end
-
-    return text
+    return self:Clamp(hearts, 1, MAX_HEARTS)
 end
 
 function addon:UnlockBondDialogue(companionID, oldHearts, newHearts)
@@ -105,7 +95,6 @@ function addon:UnlockBondDialogue(companionID, oldHearts, newHearts)
         end
     end
 end
-
 function addon:AddBondPoints(companionID, points, reason)
     if not companionID or not self.companions[companionID] then
         return
