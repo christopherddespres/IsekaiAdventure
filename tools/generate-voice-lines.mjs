@@ -221,6 +221,12 @@ async function main() {
     }
   }
 
+  async function saveTracker() {
+    range.values = values;
+    const output = await SpreadsheetFile.exportXlsx(workbook);
+    await output.save(trackerPath);
+  }
+
   let jobs = values
     .slice(1)
     .map((row, index) => rowToJob(row, index + 2, indexes))
@@ -276,6 +282,7 @@ async function main() {
       job.row[indexes["Created"]] = "Yes";
       job.row[indexes["Voice Status"]] = "Audio exists";
       console.log(`Skipped existing file for row ${job.excelRow}: ${toDisplayPath(job.outputPath)}`);
+      await saveTracker();
       continue;
     }
 
@@ -289,11 +296,10 @@ async function main() {
       const destination = await copyToLive(job, args.liveAddonPath);
       console.log(`Copied to live addon: ${destination}`);
     }
+
+    await saveTracker();
   }
 
-  range.values = values;
-  const output = await SpreadsheetFile.exportXlsx(workbook);
-  await output.save(trackerPath);
   console.log("Updated docs\\voice-line-tracker.xlsx");
 }
 
