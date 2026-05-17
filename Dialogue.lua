@@ -272,6 +272,10 @@ function addon:GetSubzoneDialogueKey(mapID, subzoneName)
 end
 
 function addon:MarkSubzoneVisited(companionID, mapID, key)
+    if not companionID or not mapID or not key then
+        return false
+    end
+
     self.db.visitedSubzones = self.db.visitedSubzones or {}
     local companionVisits = self.db.visitedSubzones[companionID]
     if type(companionVisits) ~= "table" then
@@ -293,30 +297,56 @@ function addon:MarkSubzoneVisited(companionID, mapID, key)
     return true
 end
 
+function addon:IsSubzoneVisited(companionID, mapID, key)
+    if not companionID or not mapID or not key then
+        return false
+    end
+
+    local visits = self.db.visitedSubzones
+    local companionVisits = visits and visits[companionID]
+    local mapVisits = companionVisits and companionVisits[mapID]
+    return mapVisits and mapVisits[key] == true
+end
+
 function addon:TrySubzoneVisitLine()
-    if not self.db.enabled or not self:Chance(self.db.subzoneChance) then
+    if not self.db.enabled then
         return
     end
 
     local now = GetTime and GetTime() or 0
-    if now - (self.lastSubzoneLineAt or 0) < (self.db.subzoneCooldownSeconds or 90) then
-        return
-    end
-
     local mapID = self:GetMapID()
     local subzoneName = GetSubZoneText and GetSubZoneText() or nil
     local key = self:GetSubzoneDialogueKey(mapID, subzoneName)
     if not key then
+        self.currentSubzoneEntryKey = nil
         return
     end
 
     local companionID = self.db.currentCompanionID
-    if not self:MarkSubzoneVisited(companionID, mapID, key) then
+    local entryKey = tostring(companionID or "") .. ":" .. tostring(mapID or "") .. ":" .. tostring(key or "")
+    if self.currentSubzoneEntryKey == entryKey then
+        return
+    end
+    self.currentSubzoneEntryKey = entryKey
+
+    local line = self:ChooseLine(key, companionID)
+    if not line then
         return
     end
 
-    local line = self:ChooseLine(key, companionID)
-    if line then
+    local visited = self:IsSubzoneVisited(companionID, mapID, key)
+    if not visited then
+        self:MarkSubzoneVisited(companionID, mapID, key)
+        self.lastSubzoneLineAt = now
+        self:QueueLine(line, key)
+        return
+    end
+
+    if now - (self.lastSubzoneLineAt or 0) < (self.db.subzoneCooldownSeconds or 90) then
+        return
+    end
+
+    if self:Chance(self.db.subzoneChance) then
         self.lastSubzoneLineAt = now
         self:QueueLine(line, key)
     end

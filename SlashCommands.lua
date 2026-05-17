@@ -155,7 +155,7 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
         addon:Print("lastAudioPlayed=" .. tostring(addon.lastAudioPlayed) .. ", lastAudioChannel=" .. tostring(addon.lastAudioChannel) .. ", lastAudio=" .. tostring(addon.lastAudioPath))
         addon:Print("idleChatter=" .. tostring(addon.db.idleChatter) .. ", idleCooldown=" .. tostring(addon.db.idleCooldownSeconds) .. " sec, idleInterval=" .. tostring(addon.db.idleMinSeconds) .. "-" .. tostring(addon.db.idleMaxSeconds) .. " sec, nextIdle=" .. nextIdle)
         addon:Print("questChance=" .. tostring(addon.db.questChance) .. "%, questCompleteChance=" .. tostring(addon.db.questCompleteChance) .. "%, killChance=" .. tostring(addon.db.killChance) .. "%, killCooldown=" .. tostring(addon.db.killCooldownSeconds) .. " sec, levelChance=" .. tostring(addon.db.levelChance) .. "%")
-        addon:Print("lowHealthChance=" .. tostring(addon.db.lowHealthChance) .. "%, deathChance=" .. tostring(addon.db.deathChance) .. "%, subzoneChance=" .. tostring(addon.db.subzoneChance) .. "%")
+        addon:Print("lowHealthChance=" .. tostring(addon.db.lowHealthChance) .. "%, deathChance=" .. tostring(addon.db.deathChance) .. "%, subzoneRepeatChance=" .. tostring(addon.db.subzoneChance) .. "%")
     elseif command == "taintlog" then
         local enabled = words[2] ~= "off"
         addon.db.debugTaintLog = enabled

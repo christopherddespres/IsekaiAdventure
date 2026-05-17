@@ -362,7 +362,7 @@ function addon:CreateOptionsPanel()
     end), LEFT, y)
     y = y - 54
 
-    controls[#controls + 1] = Place(CreateSlider(content, "Subzone chance", 0, 100, 1, function()
+    controls[#controls + 1] = Place(CreateSlider(content, "Subzone repeat chance", 0, 100, 1, function()
         return addon.db.subzoneChance
     end, function(value)
         addon.db.subzoneChance = value
