@@ -37,6 +37,7 @@ function addon:GetRelationship(companionID)
     relationship.points = self:Clamp(relationship.points or 0, 0, MAX_POINTS)
     relationship.romanceRank = self:Clamp(relationship.romanceRank or 0, 0, MAX_HEARTS)
     relationship.romanceAttempts = tonumber(relationship.romanceAttempts) or 0
+    relationship.romanceStopCount = tonumber(relationship.romanceStopCount) or 0
     relationship.lastRomanceAttemptAt = tonumber(relationship.lastRomanceAttemptAt) or 0
     if type(relationship.unlocked) ~= "table" then
         relationship.unlocked = {}
@@ -101,6 +102,8 @@ local function QueueRomanceFallback(key, threshold)
         addon:SayText("I'm not ready for that yet. Stay with me a little longer, okay?", 5.2, key)
     elseif key == "romance_repeat" then
         addon:SayText("We've already shared that moment. Let us keep walking forward together.", 5.2, key)
+    elseif key == "romance_stop" then
+        addon:SayText("I understand. Let us take a step back, and keep walking as companions.", 5.4, key)
     else
         addon:SayText("My heart is trying to find the words. Give me just a little more time.", 5.0, key or ("romance_" .. tostring(threshold or "")))
     end
@@ -159,6 +162,40 @@ function addon:TryRomanceCurrentCompanion()
         self:QueueLine(line, key)
     else
         QueueRomanceFallback(key, nextThreshold)
+    end
+
+    if self.UpdateCompanionFrame then
+        self:UpdateCompanionFrame()
+    end
+end
+
+function addon:StopRomanceCurrentCompanion()
+    if not self.db.enabled then
+        self:Print("companion dialogue is disabled.")
+        return
+    end
+
+    local companionID = self.db.currentCompanionID
+    local companion = self:GetCompanion(companionID)
+    if not companion then
+        return
+    end
+
+    local relationship = self:GetRelationship(companionID)
+    if (relationship.romanceRank or 0) <= 0 then
+        self:Print("you are not currently romancing " .. companion.name .. ".")
+        return
+    end
+
+    relationship.romanceRank = 0
+    relationship.romanceStopCount = (relationship.romanceStopCount or 0) + 1
+    relationship.lastRomanceStoppedAt = GetServerTime and GetServerTime() or 0
+
+    local line = self:ChooseLine("romance_stop", companionID)
+    if line then
+        self:QueueLine(line, "romance_stop")
+    else
+        QueueRomanceFallback("romance_stop")
     end
 
     if self.UpdateCompanionFrame then

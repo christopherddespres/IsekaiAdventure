@@ -4,7 +4,7 @@ Use `docs/voice-line-tracker.xlsx` as the working production sheet. One row equa
 
 ## Full Companion Target
 
-Default launch target: **25 core lines per companion**, plus **7 romance lines** for romance-enabled companions.
+Default launch target: **25 core lines per companion**, plus **8 romance lines** for romance-enabled companions.
 
 | Category | Target | Purpose | Filename pattern |
 | --- | ---: | --- | --- |
@@ -33,6 +33,7 @@ Romance is gated by bond, but progresses separately when the player clicks the r
 | `romance_10` | 1 | Commitment / capstone romance scene | `romance_10_01.mp3` |
 | `romance_not_ready` | 1 | Response when bond is too low for the next romance rank | `romance_not_ready_01.mp3` |
 | `romance_repeat` | 1 | Response after all romance ranks are complete | `romance_repeat_01.mp3` |
+| `romance_stop` | 1 | Response when the player ends the romance route | `romance_stop_01.mp3` |
 
 ## Optional / Future Categories
 
@@ -46,4 +47,4 @@ Romance is gated by bond, but progresses separately when the player clicks the r
 
 For a prototype companion, write enough to feel alive: 1 summon, 1 zone intro, 3 quest lines, 2 kill lines, 3 idle lines, 1 level-up line, and the five bond scenes.
 
-For a finished route companion, fill the full 25-line core target before generating voice. For romance-enabled companions, add the 7 romance lines before calling the route complete.
+For a finished route companion, fill the full 25-line core target before generating voice. For romance-enabled companions, add the 8 romance lines before calling the route complete.

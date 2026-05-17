@@ -7,7 +7,7 @@ local function PrintHelp()
     addon:Print("/isekai start | autostart on/off | debug on/off")
     addon:Print("/isekai layout | layout reset")
     addon:Print("/isekai test | idle | kill | quest | zone")
-    addon:Print("/isekai bond | bond <companion> | bond add <points> | romance")
+    addon:Print("/isekai bond | bond <companion> | bond add <points> | romance | romance stop")
     addon:Print("/isekai scale 0.8-1.6 | chance kill 0-100 | chance quest 0-100")
     addon:Print("/isekai route female | male | both")
     addon:Print("/isekai idleinterval 10 50 | status")
@@ -107,7 +107,13 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
             addon:PrintBondStatus(words[2])
         end
     elseif command == "romance" then
-        addon:TryRomanceCurrentCompanion()
+        if words[2] == "stop" or words[2] == "reset" then
+            addon:StopRomanceCurrentCompanion()
+        else
+            addon:TryRomanceCurrentCompanion()
+        end
+    elseif command == "stopromance" then
+        addon:StopRomanceCurrentCompanion()
     elseif command == "route" or command == "preference" then
         local preference = words[2]
         local valid = false

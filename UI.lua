@@ -155,6 +155,13 @@ function addon:CreateCompanionFrame()
         addon:TryRomanceCurrentCompanion()
     end)
 
+    frame.stopRomanceButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+    frame.stopRomanceButton:SetSize(ROMANCE_BUTTON_WIDTH, ROMANCE_BUTTON_HEIGHT)
+    frame.stopRomanceButton:SetPoint("TOP", frame.romanceButton, "BOTTOM", 0, -4)
+    frame.stopRomanceButton:SetScript("OnClick", function()
+        addon:StopRomanceCurrentCompanion()
+    end)
+
     frame.dialogueBox = CreateFrame("Frame", nil, frame, "BackdropTemplate")
     frame.dialogueBox:SetSize(560, 108)
     frame.dialogueBox:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", self.db.layout.dialogueBox.x, self.db.layout.dialogueBox.y)
@@ -317,6 +324,13 @@ function addon:UpdateCompanionFrame()
         self.frame.romanceButton:Show()
     else
         self.frame.romanceButton:Hide()
+    end
+
+    if self.db.showRomanceButton and self.db.showBond and self.StopRomanceCurrentCompanion and self:GetRomanceRank(companion.id) > 0 then
+        self.frame.stopRomanceButton:SetText("Stop Romancing " .. (companion.name or "Companion"))
+        self.frame.stopRomanceButton:Show()
+    else
+        self.frame.stopRomanceButton:Hide()
     end
     self.frame.title:SetText(companion.title or "")
     self.frame.character:SetTexture(companion.characterArt or companion.portrait or "Interface\\Icons\\INV_Misc_QuestionMark")

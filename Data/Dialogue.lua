@@ -62,6 +62,9 @@ addon.dialogue = {
         romance_repeat = {
             { text = "We have already shared that moment, silly hero. Do not worry; I am still holding it close.", duration = 5.4 },
         },
+        romance_stop = {
+            { text = "I understand. I will tuck those feelings away gently, and stay beside you as your companion.", duration = 5.8 },
+        },
     },
     cedric = {
         zone_intro = {
@@ -125,6 +128,9 @@ addon.dialogue = {
         },
         romance_repeat = {
             { text = "That promise still stands. I have not set it down for even a moment.", duration = 4.8 },
+        },
+        romance_stop = {
+            { text = "Then I will step back with grace. My care for you remains, even if its shape must change.", duration = 5.8 },
         },
     },
     maribel = {
@@ -197,6 +203,9 @@ addon.dialogue = {
         },
         romance_repeat = {
             { text = "You already got that piece of my heart. Greedy thing, aren't you?", duration = 4.5 },
+        },
+        romance_stop = {
+            { text = "Yeah. All right. I can do that. Give me a minute, then we keep moving.", duration = 5.0 },
         },
     },
     elyria = {
