@@ -107,22 +107,15 @@ function addon:CreateCompanionFrame()
     frame.character:SetAllPoints(frame.characterMover)
 
     frame.namePlate = CreateFrame("Frame", nil, frame, "BackdropTemplate")
-    frame.namePlate:SetSize(240, 44)
+    frame.namePlate:SetSize(220, 34)
     frame.namePlate:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", self.db.layout.namePlate.x, self.db.layout.namePlate.y)
     AttachMover(frame.namePlate, "namePlate")
     ApplyPanelBackdrop(frame.namePlate, 0.10, 0.08, 0.18, 0.94)
 
     frame.name = frame.namePlate:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-    frame.name:SetPoint("TOP", frame.namePlate, "TOP", 0, -6)
-    frame.name:SetWidth(210)
+    frame.name:SetPoint("CENTER", frame.namePlate, "CENTER", 0, 0)
+    frame.name:SetWidth(190)
     frame.name:SetJustifyH("CENTER")
-
-    frame.bond = frame.namePlate:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-    frame.bond:SetPoint("BOTTOM", frame.namePlate, "BOTTOM", 0, 6)
-    frame.bond:SetWidth(210)
-    frame.bond:SetJustifyH("CENTER")
-    frame.bond:SetTextColor(1.00, 0.74, 0.44)
-    frame.bond:SetText("")
 
     frame.metaChip = CreateFrame("Frame", nil, frame, "BackdropTemplate")
     frame.metaChip:SetSize(250, 28)
@@ -134,6 +127,15 @@ function addon:CreateCompanionFrame()
     frame.title:SetPoint("CENTER", frame.metaChip, "CENTER", 0, 0)
     frame.title:SetWidth(222)
     frame.title:SetJustifyH("CENTER")
+
+    frame.bond = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    frame.bond:SetPoint("TOP", frame.metaChip, "BOTTOM", 0, -4)
+    frame.bond:SetWidth(250)
+    frame.bond:SetJustifyH("CENTER")
+    frame.bond:SetTextColor(1.00, 0.32, 0.42)
+    frame.bond:SetShadowColor(0, 0, 0, 0.95)
+    frame.bond:SetShadowOffset(1, -1)
+    frame.bond:SetText("")
 
     frame.dialogueBox = CreateFrame("Frame", nil, frame, "BackdropTemplate")
     frame.dialogueBox:SetSize(560, 108)
@@ -276,8 +278,8 @@ function addon:UpdateCompanionFrame()
     local color = companion.color or { 1, 0.8, 1 }
     self.frame.name:SetText(companion.name or "Unknown Companion")
     self.frame.name:SetTextColor(color[1], color[2], color[3])
-    if self.db.showBond and self.GetBondLabel then
-        self.frame.bond:SetText(self:GetBondLabel(companion.id))
+    if self.db.showBond and self.GetBondHeartText then
+        self.frame.bond:SetText(self:GetBondHeartText(companion.id))
         self.frame.bond:Show()
     else
         self.frame.bond:Hide()

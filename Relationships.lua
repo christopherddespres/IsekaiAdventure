@@ -72,6 +72,21 @@ function addon:GetBondLabel(companionID)
     return "Bond: " .. hearts .. "/10 hearts - " .. intoHeart .. "/" .. pointsPerHeart
 end
 
+function addon:GetBondHeartText(companionID)
+    local hearts = self:GetBondHearts(companionID)
+    local text = ""
+
+    for index = 1, MAX_HEARTS do
+        if index <= hearts then
+            text = text .. "♥"
+        else
+            text = text .. "♡"
+        end
+    end
+
+    return text
+end
+
 function addon:UnlockBondDialogue(companionID, oldHearts, newHearts)
     local relationship = self:GetRelationship(companionID)
     if not relationship then
