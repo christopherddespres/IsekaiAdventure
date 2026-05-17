@@ -74,7 +74,7 @@ end
 
 function addon:GetDisplayedBondHearts(companionID)
     local hearts = self:GetBondHearts(companionID)
-    return self:Clamp(hearts, 1, MAX_HEARTS)
+    return self:Clamp(hearts, 0, MAX_HEARTS)
 end
 
 function addon:UnlockBondDialogue(companionID, oldHearts, newHearts)
