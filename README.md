@@ -49,6 +49,8 @@ Companion production status lives in [docs/companion-checklist.md](docs/companio
 
 Companions also track bond progress from quest completion, leveling, manual summons, and time spent adventuring together. Bond is saved per companion ID, so female and male route companions can be swapped without losing progress. Bond thresholds can unlock special dialogue keys such as `bond_2`, `bond_4`, `bond_6`, `bond_8`, and `bond_10`.
 
+Voice line production lives in [docs/voice-line-tracker.xlsx](docs/voice-line-tracker.xlsx), with count standards documented in [docs/voice-line-standards.md](docs/voice-line-standards.md).
+
 ## Voice files
 
 WoW addons cannot call ElevenLabs, OpenAI, or any web API while the game is running. Generate audio ahead of time and put it under:
