@@ -6,8 +6,7 @@ local MAX_POINTS = POINTS_PER_HEART * MAX_HEARTS
 local BOND_THRESHOLDS = { 2, 4, 6, 8, 10 }
 
 local BOND_REASONS = {
-    quest_accept = 2,
-    quest_complete = 5,
+    quest_complete = 7,
     level_up = 20,
     time_together = 5,
     manual_summon = 1,

@@ -39,7 +39,6 @@ local function HandleQuestAccepted(...)
     end
 
     addon:SayQuestAccepted(questID, GetQuestTitleFromEvent(questID, questLogIndex))
-    addon:AddBondForCurrentCompanion("quest_accept")
 end
 
 local function TryKillChatter()
