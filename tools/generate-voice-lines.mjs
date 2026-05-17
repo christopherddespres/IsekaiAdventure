@@ -12,6 +12,7 @@ function parseArgs(argv) {
     dryRun: false,
     force: false,
     copyLive: false,
+    noTrackerSave: false,
     liveAddonPath: defaultLiveAddonPath,
     limit: null,
     row: null,
@@ -26,6 +27,7 @@ function parseArgs(argv) {
     if (arg === "--dry-run") args.dryRun = true;
     else if (arg === "--force") args.force = true;
     else if (arg === "--copy-live") args.copyLive = true;
+    else if (arg === "--no-tracker-save") args.noTrackerSave = true;
     else if (arg === "--live-addon-path") args.liveAddonPath = next();
     else if (arg === "--limit") args.limit = Number(next());
     else if (arg === "--row") args.row = Number(next());
@@ -50,6 +52,7 @@ Options:
   --category <key>             Filter by Category, for example kill or subzone_goldshire.
   --force                      Overwrite existing files and regenerate Created=Yes rows.
   --copy-live                  Copy generated files to the live Retail addon folder.
+  --no-tracker-save            Generate/copy audio without saving tracker changes.
   --live-addon-path <path>     Override live addon path for --copy-live.
   --help                       Show this help.
 
@@ -222,6 +225,7 @@ async function main() {
   }
 
   async function saveTracker() {
+    if (args.noTrackerSave) return;
     range.values = values;
     const output = await SpreadsheetFile.exportXlsx(workbook);
     await output.save(trackerPath);
@@ -262,7 +266,7 @@ async function main() {
   }
 
   if (args.dryRun || jobs.length === 0) {
-    if (!args.dryRun) {
+    if (!args.dryRun && !args.noTrackerSave) {
       range.values = values;
       const output = await SpreadsheetFile.exportXlsx(workbook);
       await output.save(trackerPath);
@@ -300,7 +304,11 @@ async function main() {
     await saveTracker();
   }
 
-  console.log("Updated docs\\voice-line-tracker.xlsx");
+  if (args.noTrackerSave) {
+    console.log("Skipped tracker save because --no-tracker-save was set.");
+  } else {
+    console.log("Updated docs\\voice-line-tracker.xlsx");
+  }
 }
 
 main().catch((error) => {
