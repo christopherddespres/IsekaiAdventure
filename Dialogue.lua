@@ -76,6 +76,15 @@ function addon:GetAudioPath(companion, line)
     return (companion.voicePath or "") .. line.audio
 end
 
+local function TryPlaySoundFile(audioPath, channel)
+    if not audioPath or audioPath == "" or not PlaySoundFile then
+        return false
+    end
+
+    local ok, willPlay = pcall(PlaySoundFile, audioPath, channel)
+    return ok and willPlay == true
+end
+
 function addon:PlayLine(line, trigger)
     if not line then
         return
@@ -90,8 +99,27 @@ function addon:PlayLine(line, trigger)
     self:Print("|cffffd6ff" .. name .. ":|r " .. text)
 
     local audioPath = self:GetAudioPath(companion, line)
+    self.lastAudioPath = audioPath
+    self.lastAudioTrigger = trigger
+    self.lastAudioPlayed = nil
     if audioPath and not self.db.muted and PlaySoundFile then
-        PlaySoundFile(audioPath, self.db.voiceChannel or "Dialog")
+        local channel = self.db.voiceChannel or "Dialog"
+        local played = TryPlaySoundFile(audioPath, channel)
+        local playedChannel = played and channel or nil
+        if not played and channel ~= "Master" then
+            played = TryPlaySoundFile(audioPath, "Master")
+            if played then
+                playedChannel = "Master"
+            end
+        end
+        self.lastAudioPlayed = played
+        self.lastAudioChannel = playedChannel or channel
+        if not played then
+            self:Debug("audio did not play for " .. tostring(trigger or "unknown") .. ": " .. tostring(audioPath))
+        end
+    elseif audioPath and self.db.muted then
+        self.lastAudioPlayed = false
+        self.lastAudioChannel = "muted"
     end
 
     C_Timer.After(duration, function()
