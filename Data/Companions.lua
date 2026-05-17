@@ -3,6 +3,7 @@ local _, addon = ...
 addon.companionOrder = {
     "seraphine",
     "maribel",
+    "rowan",
     "elyria",
     "mika",
     "sera",
@@ -37,6 +38,19 @@ addon.companions = {
         characterTexCoord = { 0, 1, 0.08, 1 },
         characterHeight = 390,
         voicePath = addon.mediaPath .. "Voice\\Maribel\\",
+    },
+    rowan = {
+        id = "rowan",
+        name = "Rowan Dustwhisper",
+        title = "Westfall Roadside Protector",
+        race = "Human",
+        gender = "Male",
+        color = { 0.86, 0.66, 0.44 },
+        portrait = addon.mediaPath .. "Portraits\\rowan.png",
+        characterArt = addon.mediaPath .. "Portraits\\rowan.png",
+        characterTexCoord = { 0, 1, 0, 1 },
+        characterHeight = 390,
+        voicePath = addon.mediaPath .. "Voice\\Rowan\\",
     },
     cedric = {
         id = "cedric",
@@ -117,7 +131,7 @@ addon.companions = {
 addon.mapCompanions = {
     [37] = { female = "seraphine", male = "cedric" }, -- Elwynn Forest
     [425] = { female = "seraphine", male = "cedric" }, -- Northshire
-    [52] = "maribel", -- Westfall
+    [52] = { female = "maribel", male = "rowan" }, -- Westfall
     [1409] = "elyria", -- Exile's Reach
     [84] = "elyria", -- Stormwind City
     [85] = "mika", -- Orgrimmar

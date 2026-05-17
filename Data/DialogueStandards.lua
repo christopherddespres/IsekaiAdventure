@@ -5,9 +5,11 @@ local function L(text, audio, duration)
 end
 
 local function Set(companionID, key, lines)
-    if addon.dialogue[companionID] then
-        addon.dialogue[companionID][key] = lines
+    if not addon.dialogue[companionID] then
+        addon.dialogue[companionID] = {}
     end
+
+    addon.dialogue[companionID][key] = lines
 end
 
 local function Apply(companionID, linesByKey)
@@ -259,6 +261,88 @@ Apply("maribel", {
     romance_stop = { L("Yeah. All right. I can do that. Give me a minute, then we keep moving.", "romance_stop_01.mp3", 5.0) },
     low_health = {
         L("Hey! Eyes open, hero. Bleed later, move now!", "low_health_01.mp3", 3.7),
+    },
+    death = {
+        L("No. No, get back up. Westfall does not get to take you from me too.", "death_01.mp3", 5.0),
+    },
+    subzone_alexston_farmstead = { L("Alexston Farmstead used to mean work and supper. Now it mostly means watching your back.", "subzone_alexston_farmstead.mp3", 5.4) },
+    subzone_dagger_hills = { L("The Dagger Hills earned that name. Keep low and do not trust a ridge line.", "subzone_dagger_hills.mp3", 4.8) },
+    subzone_dawning_wood_catacombs = { L("Dawning Wood Catacombs. Great. Nothing says safe like stairs into old bones.", "subzone_dawning_wood_catacombs.mp3", 5.1) },
+    subzone_dead_acre = { L("Dead Acre is what happens when a place runs out of chances. We keep moving.", "subzone_dead_acre.mp3", 4.8) },
+    subzone_demonts_place = { L("Demont's Place has the kind of quiet that makes my fingers look for a blade.", "subzone_demonts_place.mp3", 5.0) },
+    subzone_dust_plains = { L("The Dust Plains get into your boots, your throat, and eventually your mood.", "subzone_dust_plains.mp3", 4.8) },
+    subzone_furlbrows_pumpkin_farm = { L("Furlbrow's farm should have been simple. In Westfall, even pumpkins come with grief.", "subzone_furlbrows_pumpkin_farm.mp3", 5.3) },
+    subzone_gold_coast_quarry = { L("Gold Coast Quarry is all hard edges and harder work. Easy place to miss trouble until it echoes.", "subzone_gold_coast_quarry.mp3", 5.6) },
+    subzone_jansen_stead = { L("The Jansen Stead still feels like someone left in a hurry and hoped to come back.", "subzone_jansen_stead.mp3", 5.2) },
+    subzone_jangolode_mine = { L("Jangolode Mine. If the tunnels start sounding too quiet, that is your warning.", "subzone_jangolode_mine.mp3", 5.0) },
+    subzone_molsen_farm = { L("The Molsen Farm has seen better harvests. Most of Westfall has.", "subzone_molsen_farm.mp3", 4.5) },
+    subzone_moonbrook = { L("Moonbrook has too many windows and not enough honest faces. Stay sharp.", "subzone_moonbrook.mp3", 4.7) },
+    subzone_raging_chasm = { L("The Raging Chasm looks like the land finally got tired of holding itself together.", "subzone_raging_chasm.mp3", 5.2) },
+    subzone_saldeans_farm = { L("Saldean's Farm still fights to feed people. That makes it worth protecting.", "subzone_saldeans_farm.mp3", 4.9) },
+    subzone_sentinel_hill = { L("Sentinel Hill is where Westfall tries to stand up straight, even with empty pockets.", "subzone_sentinel_hill.mp3", 5.1) },
+    subzone_shattered_strand = { L("The Shattered Strand is all wreckage and salt wind. Watch where the tide hides teeth.", "subzone_shattered_strand.mp3", 5.2) },
+    subzone_sludge_fields = { L("The Sludge Fields smell like every bad decision someone tried to bury.", "subzone_sludge_fields.mp3", 4.8) },
+    subzone_writhing_haunt = { L("The Writhing Haunt is exactly as welcoming as it sounds. Do not wander.", "subzone_writhing_haunt.mp3", 4.7) },
+    subzone_westfall_lighthouse = { L("Westfall Lighthouse keeps shining even when nobody thanks it. I respect that.", "subzone_westfall_lighthouse.mp3", 4.8) },
+})
+
+Apply("rowan", {
+    summon = {
+        L("Rowan Dustwhisper. I know the roads, the farms, and where trouble likes to hide. Stay close, hero.", "summon_01.mp3", 6.0),
+    },
+    zone_intro = {
+        L("Welcome to Westfall. Keep your eyes on the road and your hand near your weapon. Hunger makes people desperate.", "zone_intro_01.mp3", 6.0),
+        L("Dust, broken fences, and bad odds. Still, this place is home, and I am not ready to bury it yet.", "zone_intro_02.mp3", 6.1),
+    },
+    quest_accept = {
+        L("Another person asking for help with tired eyes. All right, hero. Let us see what they need.", "quest_accept_01.mp3", 5.4),
+        L("In Westfall, simple errands have a bad habit of growing teeth. Best stay sharp.", "quest_accept_02.mp3", 4.9),
+        L("We will help. Just do not promise miracles unless you packed a few in that bag.", "quest_accept_03.mp3", 5.0),
+    },
+    quest_complete = {
+        L("That is one less problem chewing on this place. Not bad, hero.", "quest_complete_01.mp3", 4.6),
+        L("Done and done. Westfall does not hand out easy wins, so take this one.", "quest_complete_02.mp3", 5.0),
+        L("You helped someone who needed it. Out here, that is worth more than pretty speeches.", "quest_complete_03.mp3", 5.3),
+    },
+    kill = {
+        L("Clean hit. Quick work keeps you breathing out here.", "kill_01.mp3", 3.4),
+        L("That one will not be bothering the roads again. Try not to look too proud.", "kill_02.mp3", 4.3),
+        L("Good strike. Westfall rewards hesitation with bruises, so do not start now.", "kill_03.mp3", 4.6),
+    },
+    bond_kill_2 = { L("You are getting quicker. I might stop pretending to be surprised.", "bond_kill_02.mp3", 4.2) },
+    bond_kill_4 = { L("Good. You watched the flank this time. I like a hero who learns.", "bond_kill_04.mp3", 4.6) },
+    bond_kill_6 = { L("Hah. We are getting dangerous together. Westfall should worry less about us and more about them.", "bond_kill_06.mp3", 5.6) },
+    bond_kill_8 = { L("Nobody corners you while I am here. I have gotten attached to keeping you breathing.", "bond_kill_08.mp3", 5.3) },
+    bond_kill_10 = { L("That is my hero. Do not grin like that. Fine, grin a little.", "bond_kill_10.mp3", 4.4) },
+    idle = {
+        L("Smell that? Dust, sun-baked wheat, and somebody cooking soup thin enough to see through.", "idle_01.mp3", 5.8),
+        L("I used to think the wind here sounded lonely. Turns out it just learned to complain from the rest of us.", "idle_02.mp3", 6.1),
+        L("If I tell you to duck, duck first and ask reincarnated-hero questions later.", "idle_03.mp3", 5.1),
+    },
+    bond_idle_1 = { L("You are still here. Either you are loyal, stubborn, or lost. I can work with all three.", "bond_idle_01.mp3", 5.5) },
+    bond_idle_3 = { L("I started packing extra food without thinking about it. Do not make that weird.", "bond_idle_03.mp3", 5.0) },
+    bond_idle_5 = { L("Westfall feels less empty when you are walking beside me. That is all I am saying.", "bond_idle_05.mp3", 5.3) },
+    bond_idle_7 = { L("If anyone asks, I am keeping you alive for practical reasons. Mostly.", "bond_idle_07.mp3", 4.8) },
+    bond_idle_9 = { L("You have become part of how I picture the road ahead. Annoying, but true.", "bond_idle_09.mp3", 5.1) },
+    level_up = {
+        L("Look at you, getting stronger. Try not to let it go to your head.", "level_up_01.mp3", 4.2),
+        L("That is real progress. Westfall hits hard, but you are starting to hit back harder.", "level_up_02.mp3", 4.7),
+    },
+    bond_2 = { L("You have not run off yet. That either means you are brave, stubborn, or bad at reading warning signs.", "bond_02_01.mp3", 5.4) },
+    bond_4 = { L("Do not tell anyone I said this, but you are steady company. Westfall could use more of that.", "bond_04_01.mp3", 5.4) },
+    bond_6 = { L("I keep expecting you to get tired of this dust and hunger. Instead, you keep showing up. That matters.", "bond_06_01.mp3", 6.2) },
+    bond_8 = { L("If the road turns mean, I am still with you. Not because I have to be. Because I choose it.", "bond_08_01.mp3", 5.7) },
+    bond_10 = { L("Westfall taught me not to count on miracles. Then you arrived, impossible and smiling, and ruined my good cynicism.", "bond_10_01.mp3", 6.5) },
+    romance_2 = { L("Huh. So that is the way the wind is blowing. All right, hero. I am listening.", "romance_02_01.mp3", 4.8) },
+    romance_4 = { L("You are getting under my guard, and I am annoyed to report I do not hate it.", "romance_04_01.mp3", 5.0) },
+    romance_6 = { L("I keep saving the better half of my rations for you. If that is not romance in Westfall, I do not know what is.", "romance_06_01.mp3", 6.0) },
+    romance_8 = { L("Do not make me say something soft in all this dust. Fine. I want you here. I want us.", "romance_08_01.mp3", 5.7) },
+    romance_10 = { L("Westfall can keep its hard roads. I have found my reason to keep walking them, and it is you.", "romance_10_01.mp3", 5.8) },
+    romance_not_ready = { L("Easy there. I am not saying no. I am saying earn a little more trust before you come knocking on that door.", "romance_not_ready_01.mp3", 6.0) },
+    romance_repeat = { L("You already got that piece of my heart. Greedy thing, aren't you?", "romance_repeat_01.mp3", 4.5) },
+    romance_stop = { L("Yeah. All right. I can do that. Give me a minute, then we keep moving.", "romance_stop_01.mp3", 5.0) },
+    low_health = {
+        L("Hey. Eyes open, hero. Bleed later, move now.", "low_health_01.mp3", 3.6),
     },
     death = {
         L("No. No, get back up. Westfall does not get to take you from me too.", "death_01.mp3", 5.0),

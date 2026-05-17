@@ -18,6 +18,7 @@ Status key:
 | Northshire | `425` | `seraphine` | Seraphine Applebrook | Human | Female | Done | Done | Done | Female Northshire route. Shares Elwynn companion. |
 | Northshire | `425` | `cedric` | Cedric Applebrook | Human | Male | Done | Planned | Done | Male Northshire route. Shares Elwynn companion. |
 | Westfall | `52` | `maribel` | Maribel Dustwhisper | Human | Female | Done | Done | Done | Voice folder is `Media\Voice\Maribel\`. |
+| Westfall | `52` | `rowan` | Rowan Dustwhisper | Human | Male | Done | Planned | Done | Male Westfall route. Portrait imported; voice folder will be `Media\Voice\Rowan\`. |
 | Exile's Reach | `1409` | `elyria` | Elyria Dawnspell | Human | Female | Partial | Planned | Partial | Placeholder portrait/dialogue. Needs final art and voice. |
 | Stormwind City | `84` | `elyria` | Elyria Dawnspell | Human | Female | Partial | Planned | Partial | City fallback/guide role. |
 | Orgrimmar | `85` | `mika` | Mika Starbloom | Draenei | Female | Partial | Planned | Partial | Temporary mapping; decide if Horde capital should use a Horde-appropriate companion. |
