@@ -65,3 +65,22 @@ Romance is gated by bond, but progresses separately when the player clicks the r
 For a prototype companion, write enough to feel alive: 1 summon, 1 zone intro, 3 quest accept lines, 3 quest complete lines, 3 kill lines, 3 idle lines, 2 level-up lines, and the five bond scenes.
 
 For a finished route companion, fill the full 42-line standard before generating voice. Then add one `subzone_<name>` line for every supported subzone in that companion's zone.
+
+## Generation Columns
+
+The `Voice Lines` sheet includes production columns for ElevenLabs generation:
+
+| Column | Purpose |
+| --- | --- |
+| `Audio Filename` | Expected output filename for this line. |
+| `Expected Path` | Where the generated audio should be saved in the addon tree. |
+| `Created` | `Yes` when the expected file exists locally, otherwise `No`. |
+| `ElevenLabs Voice ID` | Voice ID copied from ElevenLabs after casting the character voice. |
+| `ElevenLabs Model ID` | Default is `eleven_multilingual_v2`; change per companion if needed. |
+| `Output Format` | Default is `mp3_44100_128`. |
+| `Stability` | ElevenLabs voice setting, default `0.5`. |
+| `Similarity Boost` | ElevenLabs voice setting, default `0.75`. |
+| `Style` | ElevenLabs voice setting, default `0`. |
+| `Use Speaker Boost` | ElevenLabs voice setting, default `TRUE`. |
+| `Speed` | ElevenLabs voice setting, default `1`. |
+| `Enable Logging` | Text-to-speech API option, default `TRUE`. |
