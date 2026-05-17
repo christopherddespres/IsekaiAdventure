@@ -53,17 +53,36 @@ local function TryKillChatter()
     end
 end
 
+local function GetPlayerHealthPercent()
+    local ok, healthPercent = pcall(function()
+        local health = UnitHealth("player")
+        local maxHealth = UnitHealthMax("player")
+
+        if not health or not maxHealth or maxHealth <= 0 then
+            return nil
+        end
+
+        return health / maxHealth
+    end)
+
+    if not ok then
+        addon:Debug("skipped low health check; player health value was protected")
+        return nil
+    end
+
+    return healthPercent
+end
+
 local function TryLowHealthChatter()
     if UnitIsDeadOrGhost("player") then
         return
     end
 
-    local maxHealth = UnitHealthMax("player")
-    if not maxHealth or maxHealth <= 0 then
+    local healthPercent = GetPlayerHealthPercent()
+    if not healthPercent then
         return
     end
 
-    local healthPercent = UnitHealth("player") / maxHealth
     if healthPercent > 0.50 then
         addon.lowHealthSpokenRecently = false
         return
