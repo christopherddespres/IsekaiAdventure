@@ -10,6 +10,7 @@ Data\Companions.lua
 Data\Dialogue.lua
 UI.lua
 Dialogue.lua
+Relationships.lua
 Events.lua
 Options.lua
 SlashCommands.lua

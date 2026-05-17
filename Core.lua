@@ -5,7 +5,7 @@ addon.name = addonName
 addon.version = "0.1.0"
 addon.mediaPath = "Interface\\AddOns\\IsekaiAdventure\\Media\\"
 
-local SETTINGS_VERSION = 3
+local SETTINGS_VERSION = 4
 
 local DEFAULT_FRAME = {
     point = "LEFT",
@@ -72,6 +72,8 @@ local defaults = {
     dialogueBoxAlpha = 0.90,
     dialogueBoxColor = { r = 0.02, g = 0.018, b = 0.014 },
     voiceChannel = "Dialog",
+    showBond = true,
+    relationships = {},
     debugTaintLog = false,
     autoStartAutomation = true,
     debugStartup = false,
@@ -149,6 +151,7 @@ function addon:NormalizeDatabase()
     if type(db.debugTaintLog) ~= "boolean" then db.debugTaintLog = defaults.debugTaintLog end
     if type(db.autoStartAutomation) ~= "boolean" then db.autoStartAutomation = defaults.autoStartAutomation end
     if type(db.debugStartup) ~= "boolean" then db.debugStartup = defaults.debugStartup end
+    if type(db.showBond) ~= "boolean" then db.showBond = defaults.showBond end
 
     db.scale = self:Clamp(db.scale, 0.6, 1.8)
     db.idleMinSeconds = self:Clamp(db.idleMinSeconds, 5, 3600)
@@ -197,6 +200,8 @@ function addon:NormalizeDatabase()
     if db.currentCompanionID and not self.companions[db.currentCompanionID] then
         db.currentCompanionID = nil
     end
+
+    if type(db.relationships) ~= "table" then db.relationships = {} end
 end
 
 function addon:GetVoiceChannels()
@@ -214,6 +219,7 @@ function addon:ResetSavedSettings()
     self.queue = {}
     self.isSpeaking = false
     self.idleToken = (self.idleToken or 0) + 1
+    self.bondToken = (self.bondToken or 0) + 1
 
     if self.frame then
         self.frame:ClearAllPoints()
@@ -225,6 +231,9 @@ function addon:ResetSavedSettings()
 
     self:RefreshZoneCompanion("reset")
     self:ScheduleIdleChatter()
+    if self.ScheduleBondTimeTick then
+        self:ScheduleBondTimeTick()
+    end
 end
 
 function addon:Print(message)

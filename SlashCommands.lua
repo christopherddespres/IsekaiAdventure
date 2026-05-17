@@ -7,6 +7,7 @@ local function PrintHelp()
     addon:Print("/isekai start | autostart on/off | debug on/off")
     addon:Print("/isekai layout | layout reset")
     addon:Print("/isekai test | idle | kill | quest | zone")
+    addon:Print("/isekai bond | bond <companion> | bond add <points>")
     addon:Print("/isekai scale 0.8-1.6 | chance kill 0-100 | chance quest 0-100")
     addon:Print("/isekai idleinterval 10 50 | status")
     addon:Print("/isekai taintlog on | off")
@@ -96,6 +97,14 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
         addon:SayQuestAccepted(nil, "A Very Suspicious Quest")
     elseif command == "zone" then
         addon:RefreshZoneCompanion()
+    elseif command == "bond" or command == "relationship" then
+        if words[2] == "add" then
+            local points = addon:Clamp(tonumber(words[3]), 1, 1000)
+            addon:AddBondPoints(addon.db.currentCompanionID, points, "manual")
+            addon:Print("added " .. points .. " bond points to " .. tostring(addon.db.currentCompanionID) .. ".")
+        else
+            addon:PrintBondStatus(words[2])
+        end
     elseif command == "status" or command == "diagnose" then
         local mapID = addon:GetMapID()
         local nextIdle = "none"
@@ -148,6 +157,7 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
         local companionID = words[2]
         if companionID and addon.companions[companionID] then
             addon:SetCompanion(companionID, "manual")
+            addon:AddBondForCurrentCompanion("manual_summon")
             addon:Say("summon")
             addon:Print("companion set to " .. addon.companions[companionID].name .. ".")
         else

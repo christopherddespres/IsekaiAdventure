@@ -26,6 +26,21 @@ addon.dialogue = {
         summon = {
             { text = "Seraphine Applebrook, at your side. Welcome to Elwynn, reincarnated hero.", audio = "summon_01.mp3", duration = 4.9 },
         },
+        bond_2 = {
+            { text = "You are becoming a familiar light on these roads. I find myself looking for your footsteps now.", duration = 5.4 },
+        },
+        bond_4 = {
+            { text = "When I first met you, I thought you were only lost. Now I think Azeroth may have been waiting for you.", duration = 6.0 },
+        },
+        bond_6 = {
+            { text = "Stay beside me a little longer, hero. Elwynn feels warmer when we are walking it together.", duration = 5.6 },
+        },
+        bond_8 = {
+            { text = "If your old world ever calls to your heart, I hope this one answers with my voice.", duration = 5.8 },
+        },
+        bond_10 = {
+            { text = "Whatever fate brought you here, I am grateful. My story is brighter because you are in it.", duration = 6.0 },
+        },
     },
     maribel = {
         zone_intro = {
@@ -61,6 +76,21 @@ addon.dialogue = {
         summon = {
             { text = "Maribel Dustwhisper. I know the roads, the farms, and which smiles mean trouble. Stick close, hero.", audio = "summon_01.mp3", duration = 6.0 },
             { text = "You got yourself reborn into a rough stretch of dirt. Lucky for you, I know how to survive it.", audio = "summon_02.mp3", duration = 5.5 },
+        },
+        bond_2 = {
+            { text = "You have not run off yet. That either means you are brave, stubborn, or bad at reading warning signs.", duration = 5.4 },
+        },
+        bond_4 = {
+            { text = "Do not tell anyone I said this, but you are steady company. Westfall could use more of that.", duration = 5.4 },
+        },
+        bond_6 = {
+            { text = "I keep expecting you to get tired of this dust and hunger. Instead, you keep showing up. That matters.", duration = 6.2 },
+        },
+        bond_8 = {
+            { text = "If the road turns mean, I am still with you. Not because I have to be. Because I choose it.", duration = 5.7 },
+        },
+        bond_10 = {
+            { text = "Westfall taught me not to count on miracles. Then you arrived, impossible and smiling, and ruined my good cynicism.", duration = 6.5 },
         },
     },
     elyria = {

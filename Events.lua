@@ -39,6 +39,7 @@ local function HandleQuestAccepted(...)
     end
 
     addon:SayQuestAccepted(questID, GetQuestTitleFromEvent(questID, questLogIndex))
+    addon:AddBondForCurrentCompanion("quest_accept")
 end
 
 local function TryKillChatter()
@@ -108,9 +109,12 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
     elseif event == "QUEST_ACCEPTED" then
         HandleQuestAccepted(...)
     elseif event == "PLAYER_LEVEL_UP" then
+        addon:AddBondForCurrentCompanion("level_up")
         if addon:Chance(addon.db.levelChance) then
             addon:Say("level_up")
         end
+    elseif event == "QUEST_TURNED_IN" then
+        addon:AddBondForCurrentCompanion("quest_complete")
     elseif event == "PLAYER_REGEN_DISABLED" then
         addon.wasInCombat = true
     elseif event == "PLAYER_REGEN_ENABLED" then
@@ -143,6 +147,7 @@ function addon:RegisterAutomationEvents()
     self:RegisterAutomationEvent("ZONE_CHANGED")
     self:RegisterAutomationEvent("ZONE_CHANGED_INDOORS")
     self:RegisterAutomationEvent("QUEST_ACCEPTED")
+    self:RegisterAutomationEvent("QUEST_TURNED_IN")
     self:RegisterAutomationEvent("PLAYER_LEVEL_UP")
     self:RegisterAutomationEvent("PLAYER_REGEN_DISABLED")
     self:RegisterAutomationEvent("PLAYER_REGEN_ENABLED")
@@ -161,6 +166,9 @@ function addon:StartAutomation(reason)
     self:RefreshZoneCompanion(reason or "login")
     self:Debug("schedule idle")
     self:ScheduleIdleChatter()
+    if self.ScheduleBondTimeTick then
+        self:ScheduleBondTimeTick()
+    end
 end
 
 eventFrame:RegisterEvent("ADDON_LOADED")

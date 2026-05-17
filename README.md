@@ -35,12 +35,15 @@ Then enable **Isekai Adventure** in the in-game addon list.
 /isekai idleinterval 10 50
 /isekai status
 /isekai diagnose
+/isekai bond
 /isekai companion seraphine
 ```
 
 The in-game options panel includes controls for chatter chances/cooldowns, dialogue box opacity and RGB color, subtitle text size, voice playback channel, layout tools, tests, and resetting saved settings.
 
 Companion production status lives in [docs/companion-checklist.md](docs/companion-checklist.md).
+
+Companions also track bond progress from questing, leveling, manual summons, and time spent adventuring together. Bond thresholds can unlock special dialogue keys such as `bond_2`, `bond_4`, `bond_6`, `bond_8`, and `bond_10`.
 
 ## Voice files
 

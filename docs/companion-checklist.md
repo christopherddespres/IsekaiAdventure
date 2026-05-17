@@ -48,5 +48,5 @@ Status key:
 | Portrait | Final image exists under `Media\Portraits\`, preferably with a safe `.tga` copy for WoW. |
 | Voice | Every referenced dialogue audio file exists under the companion voice folder. |
 | Dialogue | Has at least `summon`, `zone_intro`, `quest_accept`, `idle`, `kill`, and `level_up`. |
+| Bond dialogue | Has optional threshold scenes for `bond_2`, `bond_4`, `bond_6`, `bond_8`, and `bond_10`. |
 | Test pass | `/isekai companion <id>`, `/isekai test`, `/isekai idle`, `/isekai kill`, and zone switching all work after `/reload`. |
-

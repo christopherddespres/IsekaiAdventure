@@ -213,6 +213,14 @@ function addon:CreateOptionsPanel()
     end), LEFT + 260, y)
     y = y - ROW_HEIGHT
 
+    controls[#controls + 1] = Place(CreateCheck(panel, "Show bond progress", "Shows companion relationship progress under the name.", function()
+        return addon.db.showBond
+    end, function(value)
+        addon.db.showBond = value
+        addon:UpdateCompanionFrame()
+    end), LEFT, y)
+    y = y - ROW_HEIGHT
+
     controls[#controls + 1] = Place(CreateCheck(panel, "Mute voice playback", "Keeps subtitles but stops audio playback.", function()
         return addon.db.muted
     end, function(value)
