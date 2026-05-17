@@ -13,8 +13,10 @@ Status key:
 
 | Zone | Map IDs | Companion ID | Character | Race | Gender | Portrait | Voice | Dialogue | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Elwynn Forest | `37` | `seraphine` | Seraphine Applebrook | Human | Female | Done | Done | Done | Main starter companion. Uses full art and MP3 voice files. |
-| Northshire | `425` | `seraphine` | Seraphine Applebrook | Human | Female | Done | Done | Done | Shares Elwynn companion. |
+| Elwynn Forest | `37` | `seraphine` | Seraphine Applebrook | Human | Female | Done | Done | Done | Female Elwynn route. Uses full art and MP3 voice files. |
+| Elwynn Forest | `37` | `cedric` | Cedric Applebrook | Human | Male | Done | Planned | Done | Male Elwynn route. Portrait imported; needs voice files. |
+| Northshire | `425` | `seraphine` | Seraphine Applebrook | Human | Female | Done | Done | Done | Female Northshire route. Shares Elwynn companion. |
+| Northshire | `425` | `cedric` | Cedric Applebrook | Human | Male | Done | Planned | Done | Male Northshire route. Shares Elwynn companion. |
 | Westfall | `52` | `maribel` | Maribel Dustwhisper | Human | Female | Done | Done | Done | Voice folder is `Media\Voice\Meribel\` to match current files. |
 | Exile's Reach | `1409` | `elyria` | Elyria Dawnspell | Human | Female | Partial | Planned | Partial | Placeholder portrait/dialogue. Needs final art and voice. |
 | Stormwind City | `84` | `elyria` | Elyria Dawnspell | Human | Female | Partial | Planned | Partial | City fallback/guide role. |

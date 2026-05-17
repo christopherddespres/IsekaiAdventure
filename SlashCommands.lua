@@ -9,9 +9,10 @@ local function PrintHelp()
     addon:Print("/isekai test | idle | kill | quest | zone")
     addon:Print("/isekai bond | bond <companion> | bond add <points>")
     addon:Print("/isekai scale 0.8-1.6 | chance kill 0-100 | chance quest 0-100")
+    addon:Print("/isekai route female | male | both")
     addon:Print("/isekai idleinterval 10 50 | status")
     addon:Print("/isekai taintlog on | off")
-    addon:Print("/isekai companion seraphine/maribel/elyria/mika/sera/kaori/rin/lyra")
+    addon:Print("/isekai companion seraphine/cedric/maribel/elyria/mika/sera/kaori/rin/lyra")
 end
 
 local function Split(input)
@@ -105,6 +106,24 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
         else
             addon:PrintBondStatus(words[2])
         end
+    elseif command == "route" or command == "preference" then
+        local preference = words[2]
+        local valid = false
+        for _, choice in ipairs(addon:GetCompanionPreferenceChoices()) do
+            if choice.value == preference then
+                valid = true
+                break
+            end
+        end
+
+        if valid then
+            addon.db.companionPreference = preference
+            addon:RefreshZoneCompanion("preference")
+            addon:RefreshOptionsPanel()
+            addon:Print("companion route set to " .. addon:GetCompanionPreferenceLabel(preference) .. ".")
+        else
+            addon:Print("usage: /isekai route female, /isekai route male, or /isekai route both")
+        end
     elseif command == "status" or command == "diagnose" then
         local mapID = addon:GetMapID()
         local nextIdle = "none"
@@ -113,7 +132,7 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
         end
 
         addon:Print("started=" .. tostring(addon.started == true) .. ", autostart=" .. tostring(addon.db.autoStartAutomation) .. ", options=" .. tostring(addon.optionsRegistered == true))
-        addon:Print("enabled=" .. tostring(addon.db.enabled) .. ", visible=" .. tostring(addon.db.visible) .. ", muted=" .. tostring(addon.db.muted) .. ", companion=" .. tostring(addon.db.currentCompanionID))
+        addon:Print("enabled=" .. tostring(addon.db.enabled) .. ", visible=" .. tostring(addon.db.visible) .. ", muted=" .. tostring(addon.db.muted) .. ", route=" .. tostring(addon.db.companionPreference) .. ", companion=" .. tostring(addon.db.currentCompanionID))
         addon:Print("mapID=" .. tostring(mapID) .. ", queue=" .. tostring(#addon.queue) .. ", speaking=" .. tostring(addon.isSpeaking == true) .. ", combat=" .. tostring(InCombatLockdown and InCombatLockdown() == true))
         addon:Print("voiceChannel=" .. tostring(addon.db.voiceChannel) .. ", textSize=" .. tostring(addon.db.subtitleFontSize) .. ", boxAlpha=" .. tostring(addon.db.dialogueBoxAlpha))
         addon:Print("idleChatter=" .. tostring(addon.db.idleChatter) .. ", idleCooldown=" .. tostring(addon.db.idleCooldownSeconds) .. " sec, idleInterval=" .. tostring(addon.db.idleMinSeconds) .. "-" .. tostring(addon.db.idleMaxSeconds) .. " sec, nextIdle=" .. nextIdle)
@@ -161,7 +180,7 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
             addon:Say("summon")
             addon:Print("companion set to " .. addon.companions[companionID].name .. ".")
         else
-            addon:Print("unknown companion. Try seraphine, maribel, elyria, mika, sera, kaori, rin, or lyra.")
+            addon:Print("unknown companion. Try seraphine, cedric, maribel, elyria, mika, sera, kaori, rin, or lyra.")
         end
     else
         PrintHelp()

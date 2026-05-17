@@ -185,20 +185,30 @@ function addon:CreateOptionsPanel()
 
     local panel = CreateFrame("Frame", "IsekaiAdventureOptionsPanel")
     panel.name = "Isekai Adventure"
-    panel:SetSize(620, 820)
+    panel:SetSize(620, 720)
 
-    panel.title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-    panel.title:SetPoint("TOPLEFT", LEFT, -20)
+    local scrollFrame = CreateFrame("ScrollFrame", "IsekaiAdventureOptionsScrollFrame", panel, "UIPanelScrollFrameTemplate")
+    scrollFrame:SetPoint("TOPLEFT", panel, "TOPLEFT", 0, 0)
+    scrollFrame:SetPoint("BOTTOMRIGHT", panel, "BOTTOMRIGHT", -28, 0)
+
+    local content = CreateFrame("Frame", "IsekaiAdventureOptionsScrollContent", scrollFrame)
+    content:SetSize(560, 900)
+    scrollFrame:SetScrollChild(content)
+    panel.scrollFrame = scrollFrame
+    panel.content = content
+
+    panel.title = content:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+    panel.title:SetPoint("TOPLEFT", content, "TOPLEFT", LEFT, -20)
     panel.title:SetText("Isekai Adventure")
 
-    panel.subtitle = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+    panel.subtitle = content:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
     panel.subtitle:SetPoint("TOPLEFT", panel.title, "BOTTOMLEFT", 0, -8)
     panel.subtitle:SetText("Companion display, voice, and chatter settings.")
 
     local y = TOP
     local controls = {}
 
-    controls[#controls + 1] = Place(CreateCheck(panel, "Enable companion dialogue", "Turns automatic companion dialogue on or off.", function()
+    controls[#controls + 1] = Place(CreateCheck(content, "Enable companion dialogue", "Turns automatic companion dialogue on or off.", function()
         return addon.db.enabled
     end, function(value)
         addon.db.enabled = value
@@ -206,14 +216,14 @@ function addon:CreateOptionsPanel()
         RefreshIdleTimer()
     end), LEFT, y)
 
-    controls[#controls + 1] = Place(CreateCheck(panel, "Show visual novel overlay", "Shows or hides the companion UI.", function()
+    controls[#controls + 1] = Place(CreateCheck(content, "Show visual novel overlay", "Shows or hides the companion UI.", function()
         return addon.db.visible
     end, function(value)
         addon:SetShownState(value)
     end), LEFT + 260, y)
     y = y - ROW_HEIGHT
 
-    controls[#controls + 1] = Place(CreateCheck(panel, "Show bond progress", "Shows companion relationship progress under the name.", function()
+    controls[#controls + 1] = Place(CreateCheck(content, "Show bond progress", "Shows companion relationship progress under the name.", function()
         return addon.db.showBond
     end, function(value)
         addon.db.showBond = value
@@ -221,20 +231,28 @@ function addon:CreateOptionsPanel()
     end), LEFT, y)
     y = y - ROW_HEIGHT
 
-    controls[#controls + 1] = Place(CreateCheck(panel, "Mute voice playback", "Keeps subtitles but stops audio playback.", function()
+    controls[#controls + 1] = Place(CreateCheck(content, "Mute voice playback", "Keeps subtitles but stops audio playback.", function()
         return addon.db.muted
     end, function(value)
         addon.db.muted = value
     end), LEFT, y)
 
-    controls[#controls + 1] = Place(CreateChoiceButton(panel, "Voice channel", 132, addon:GetVoiceChannels(), function()
+    controls[#controls + 1] = Place(CreateChoiceButton(content, "Voice channel", 132, addon:GetVoiceChannels(), function()
         return addon.db.voiceChannel
     end, function(value)
         addon.db.voiceChannel = value
     end), LEFT + 260, y)
     y = y - ROW_HEIGHT
 
-    controls[#controls + 1] = Place(CreateCheck(panel, "Enable idle chatter", "Allows random out-of-combat chatter.", function()
+    controls[#controls + 1] = Place(CreateChoiceButton(content, "Companion route", 132, addon:GetCompanionPreferenceChoices(), function()
+        return addon.db.companionPreference
+    end, function(value)
+        addon.db.companionPreference = value
+        addon:RefreshZoneCompanion("preference")
+    end), LEFT, y)
+    y = y - ROW_HEIGHT
+
+    controls[#controls + 1] = Place(CreateCheck(content, "Enable idle chatter", "Allows random out-of-combat chatter.", function()
         return addon.db.idleChatter
     end, function(value)
         addon.db.idleChatter = value
@@ -242,7 +260,7 @@ function addon:CreateOptionsPanel()
     end), LEFT, y)
     y = y - 44
 
-    controls[#controls + 1] = Place(CreateCheck(panel, "Start automatically", "Starts zone, quest, kill, and idle chatter after login.", function()
+    controls[#controls + 1] = Place(CreateCheck(content, "Start automatically", "Starts zone, quest, kill, and idle chatter after login.", function()
         return addon.db.autoStartAutomation
     end, function(value)
         addon.db.autoStartAutomation = value
@@ -251,14 +269,14 @@ function addon:CreateOptionsPanel()
         end
     end), LEFT, y)
 
-    controls[#controls + 1] = Place(CreateCheck(panel, "Startup debug messages", "Prints startup diagnostics in chat.", function()
+    controls[#controls + 1] = Place(CreateCheck(content, "Startup debug messages", "Prints startup diagnostics in chat.", function()
         return addon.db.debugStartup
     end, function(value)
         addon.db.debugStartup = value
     end), LEFT + 260, y)
     y = y - ROW_HEIGHT
 
-    controls[#controls + 1] = Place(CreateSlider(panel, "Quest chance", 0, 100, 1, function()
+    controls[#controls + 1] = Place(CreateSlider(content, "Quest chance", 0, 100, 1, function()
         return addon.db.questChance
     end, function(value)
         addon.db.questChance = value
@@ -267,7 +285,7 @@ function addon:CreateOptionsPanel()
     end), LEFT, y)
     y = y - 54
 
-    controls[#controls + 1] = Place(CreateSlider(panel, "Kill chance", 0, 100, 1, function()
+    controls[#controls + 1] = Place(CreateSlider(content, "Kill chance", 0, 100, 1, function()
         return addon.db.killChance
     end, function(value)
         addon.db.killChance = value
@@ -276,7 +294,7 @@ function addon:CreateOptionsPanel()
     end), LEFT, y)
     y = y - 54
 
-    controls[#controls + 1] = Place(CreateSlider(panel, "Idle cooldown", 5, 600, 5, function()
+    controls[#controls + 1] = Place(CreateSlider(content, "Idle cooldown", 5, 600, 5, function()
         return addon.db.idleCooldownSeconds
     end, function(value)
         addon.db.idleCooldownSeconds = value
@@ -292,7 +310,7 @@ function addon:CreateOptionsPanel()
     end), LEFT, y)
     y = y - 54
 
-    controls[#controls + 1] = Place(CreateSlider(panel, "Kill cooldown", 0, 60, 1, function()
+    controls[#controls + 1] = Place(CreateSlider(content, "Kill cooldown", 0, 60, 1, function()
         return addon.db.killCooldownSeconds
     end, function(value)
         addon.db.killCooldownSeconds = value
@@ -301,7 +319,7 @@ function addon:CreateOptionsPanel()
     end), LEFT, y)
     y = y - 54
 
-    controls[#controls + 1] = Place(CreateSlider(panel, "Level chance", 0, 100, 1, function()
+    controls[#controls + 1] = Place(CreateSlider(content, "Level chance", 0, 100, 1, function()
         return addon.db.levelChance
     end, function(value)
         addon.db.levelChance = value
@@ -310,7 +328,7 @@ function addon:CreateOptionsPanel()
     end), LEFT, y)
     y = y - 54
 
-    controls[#controls + 1] = Place(CreateSlider(panel, "Overlay scale", 0.6, 1.8, 0.05, function()
+    controls[#controls + 1] = Place(CreateSlider(content, "Overlay scale", 0.6, 1.8, 0.05, function()
         return addon.db.scale
     end, function(value)
         addon.db.scale = value
@@ -321,7 +339,7 @@ function addon:CreateOptionsPanel()
     end), LEFT, y)
     y = y - 50
 
-    controls[#controls + 1] = Place(CreateSlider(panel, "Dialogue opacity", 0.2, 1, 0.05, function()
+    controls[#controls + 1] = Place(CreateSlider(content, "Dialogue opacity", 0.2, 1, 0.05, function()
         return addon.db.dialogueBoxAlpha
     end, function(value)
         addon.db.dialogueBoxAlpha = value
@@ -331,7 +349,7 @@ function addon:CreateOptionsPanel()
     end), LEFT, y)
     y = y - 54
 
-    controls[#controls + 1] = Place(CreateSlider(panel, "Text size", 10, 24, 1, function()
+    controls[#controls + 1] = Place(CreateSlider(content, "Text size", 10, 24, 1, function()
         return addon.db.subtitleFontSize
     end, function(value)
         addon.db.subtitleFontSize = value
@@ -341,7 +359,7 @@ function addon:CreateOptionsPanel()
     end), LEFT, y)
     y = y - 54
 
-    controls[#controls + 1] = Place(CreateSlider(panel, "Box red", 0, 1, 0.01, function()
+    controls[#controls + 1] = Place(CreateSlider(content, "Box red", 0, 1, 0.01, function()
         return addon.db.dialogueBoxColor.r
     end, function(value)
         addon.db.dialogueBoxColor.r = value
@@ -350,7 +368,7 @@ function addon:CreateOptionsPanel()
         return string.format("%.2f", value)
     end), LEFT, y)
 
-    controls[#controls + 1] = Place(CreateSlider(panel, "Box green", 0, 1, 0.01, function()
+    controls[#controls + 1] = Place(CreateSlider(content, "Box green", 0, 1, 0.01, function()
         return addon.db.dialogueBoxColor.g
     end, function(value)
         addon.db.dialogueBoxColor.g = value
@@ -360,7 +378,7 @@ function addon:CreateOptionsPanel()
     end), LEFT + 260, y)
     y = y - 54
 
-    controls[#controls + 1] = Place(CreateSlider(panel, "Box blue", 0, 1, 0.01, function()
+    controls[#controls + 1] = Place(CreateSlider(content, "Box blue", 0, 1, 0.01, function()
         return addon.db.dialogueBoxColor.b
     end, function(value)
         addon.db.dialogueBoxColor.b = value
@@ -370,7 +388,7 @@ function addon:CreateOptionsPanel()
     end), LEFT, y)
     y = y - 54
 
-    local minBox = CreateEditNumber(panel, "Idle min seconds", 72, function()
+    local minBox = CreateEditNumber(content, "Idle min seconds", 72, function()
         return addon.db.idleMinSeconds
     end, function(value)
         addon.db.idleMinSeconds = addon:Clamp(value, 5, 3600)
@@ -382,7 +400,7 @@ function addon:CreateOptionsPanel()
     end)
     controls[#controls + 1] = Place(minBox, LEFT, y)
 
-    local maxBox = CreateEditNumber(panel, "Idle max seconds", 72, function()
+    local maxBox = CreateEditNumber(content, "Idle max seconds", 72, function()
         return addon.db.idleMaxSeconds
     end, function(value)
         addon.db.idleMaxSeconds = addon:Clamp(value, addon.db.idleMinSeconds, 7200)
@@ -391,35 +409,37 @@ function addon:CreateOptionsPanel()
     controls[#controls + 1] = Place(maxBox, LEFT + 260, y)
     y = y - 44
 
-    controls[#controls + 1] = Place(CreateButton(panel, "Test Summon", 120, function()
+    controls[#controls + 1] = Place(CreateButton(content, "Test Summon", 120, function()
         addon:Say("summon")
     end), LEFT, y)
-    controls[#controls + 1] = Place(CreateButton(panel, "Test Quest", 120, function()
+    controls[#controls + 1] = Place(CreateButton(content, "Test Quest", 120, function()
         addon:SayQuestAccepted(nil, "A Very Suspicious Quest")
     end), LEFT + 130, y)
-    controls[#controls + 1] = Place(CreateButton(panel, "Test Idle", 120, function()
+    controls[#controls + 1] = Place(CreateButton(content, "Test Idle", 120, function()
         addon:Say("idle")
     end), LEFT + 260, y)
-    controls[#controls + 1] = Place(CreateButton(panel, "Test Kill", 120, function()
+    controls[#controls + 1] = Place(CreateButton(content, "Test Kill", 120, function()
         addon:Say("kill")
     end), LEFT + 390, y)
     y = y - 36
 
-    controls[#controls + 1] = Place(CreateButton(panel, "Layout Mode", 120, function()
+    controls[#controls + 1] = Place(CreateButton(content, "Layout Mode", 120, function()
         addon:EnsureCompanionFrame()
         addon:SetLayoutMode(not addon.layoutMode)
     end), LEFT, y)
-    controls[#controls + 1] = Place(CreateButton(panel, "Reset Layout", 120, function()
+    controls[#controls + 1] = Place(CreateButton(content, "Reset Layout", 120, function()
         addon:EnsureCompanionFrame()
         addon:SetLayoutMode(false)
         addon:ResetLayout()
     end), LEFT + 130, y)
 
-    controls[#controls + 1] = Place(CreateButton(panel, "Reset Settings", 132, function()
+    controls[#controls + 1] = Place(CreateButton(content, "Reset Settings", 132, function()
         addon:ResetSavedSettings()
         addon:RefreshOptionsPanel()
         addon:Print("saved settings reset to defaults.")
     end), LEFT + 260, y)
+
+    content:SetHeight(math.abs(y) + 70)
 
     panel.controls = controls
     panel:SetScript("OnShow", function()

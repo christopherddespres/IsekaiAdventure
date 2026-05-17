@@ -42,6 +42,49 @@ addon.dialogue = {
             { text = "Whatever fate brought you here, I am grateful. My story is brighter because you are in it.", duration = 6.0 },
         },
     },
+    cedric = {
+        zone_intro = {
+            { text = "Elwynn Forest, bright as a prayer and twice as easy to underestimate. I will keep my shield near, my friend.", duration = 6.2 },
+            { text = "These roads raised me. They are gentle when they can be, and dangerous when they must. Stay close.", duration = 5.8 },
+        },
+        quest_accept = {
+            { text = "A villager asks, and we answer. That is how small kindness becomes something larger.", duration = 5.4 },
+            { text = "Leave the worrying to me. You handle the heroics, and I will make sure trouble reaches you second.", duration = 5.6 },
+            { text = "Another task for Elwynn. Come on, reincarnated hero. Let us do this properly.", duration = 4.9 },
+        },
+        kill = {
+            { text = "Clean strike. The road is safer for it.", duration = 3.4 },
+            { text = "Well fought. You move like someone destiny is still trying to understand.", duration = 4.5 },
+            { text = "That was brave work. Do not forget to breathe after the brave part.", duration = 4.2 },
+        },
+        idle = {
+            { text = "The abbey bells sound different from the road. Softer, somehow. Like home is waving from a distance.", duration = 6.0 },
+            { text = "If you ever miss your old world, tell me what it was like. I would like to know the place that made you.", duration = 6.4 },
+            { text = "I packed bread, bandages, and a deeply unreasonable amount of optimism.", duration = 4.7 },
+            { text = "Elwynn looks peaceful because people keep choosing to protect it. I suppose that includes us now.", duration = 5.6 },
+        },
+        level_up = {
+            { text = "There it is. You are stronger, steadier. Azeroth is starting to recognize you.", duration = 4.7 },
+        },
+        summon = {
+            { text = "Cedric Applebrook, at your service. If this second life needs a shield, I would be honored to stand beside you.", duration = 6.5 },
+        },
+        bond_2 = {
+            { text = "I used to watch over these roads alone. It is strange how quickly your footsteps became familiar.", duration = 5.6 },
+        },
+        bond_4 = {
+            { text = "You listen when people ask for help. That is rarer than courage, and worth more than polished armor.", duration = 5.8 },
+        },
+        bond_6 = {
+            { text = "If fate brought you here, then I owe fate thanks. Quietly, of course. We must not let it get proud.", duration = 6.0 },
+        },
+        bond_8 = {
+            { text = "I do not know what your first life took from you. I only know I am glad this one brought you here.", duration = 6.0 },
+        },
+        bond_10 = {
+            { text = "Whatever roads wait beyond Elwynn, I will walk them with you. Not from duty now. From my own heart.", duration = 6.3 },
+        },
+    },
     maribel = {
         zone_intro = {
             { text = "Welcome to Westfall, hero. Keep your hood low and your eyes open; hunger makes honest folk desperate.", audio = "zone_intro_01.mp3", duration = 6.2 },

@@ -5,7 +5,7 @@ addon.name = addonName
 addon.version = "0.1.0"
 addon.mediaPath = "Interface\\AddOns\\IsekaiAdventure\\Media\\"
 
-local SETTINGS_VERSION = 4
+local SETTINGS_VERSION = 5
 
 local DEFAULT_FRAME = {
     point = "LEFT",
@@ -46,6 +46,17 @@ for _, channel in ipairs(VOICE_CHANNELS) do
     VALID_VOICE_CHANNELS[channel.value] = channel.label
 end
 
+local COMPANION_PREFERENCES = {
+    { value = "female", label = "Female" },
+    { value = "male", label = "Male" },
+    { value = "both", label = "Both" },
+}
+
+local VALID_COMPANION_PREFERENCES = {}
+for _, preference in ipairs(COMPANION_PREFERENCES) do
+    VALID_COMPANION_PREFERENCES[preference.value] = preference.label
+end
+
 local defaults = {
     settingsVersion = SETTINGS_VERSION,
     enabled = true,
@@ -56,6 +67,7 @@ local defaults = {
     frame = DEFAULT_FRAME,
     layout = DEFAULT_LAYOUT,
     currentCompanionID = nil,
+    companionPreference = "female",
     lastMapID = nil,
     idleChatter = true,
     idleMinSeconds = 240,
@@ -152,6 +164,9 @@ function addon:NormalizeDatabase()
     if type(db.autoStartAutomation) ~= "boolean" then db.autoStartAutomation = defaults.autoStartAutomation end
     if type(db.debugStartup) ~= "boolean" then db.debugStartup = defaults.debugStartup end
     if type(db.showBond) ~= "boolean" then db.showBond = defaults.showBond end
+    if type(db.companionPreference) ~= "string" or not VALID_COMPANION_PREFERENCES[db.companionPreference] then
+        db.companionPreference = defaults.companionPreference
+    end
 
     db.scale = self:Clamp(db.scale, 0.6, 1.8)
     db.idleMinSeconds = self:Clamp(db.idleMinSeconds, 5, 3600)
@@ -210,6 +225,14 @@ end
 
 function addon:GetVoiceChannelLabel(channel)
     return VALID_VOICE_CHANNELS[channel or ""] or tostring(channel or "Dialog")
+end
+
+function addon:GetCompanionPreferenceChoices()
+    return COMPANION_PREFERENCES
+end
+
+function addon:GetCompanionPreferenceLabel(preference)
+    return VALID_COMPANION_PREFERENCES[preference or ""] or tostring(preference or defaults.companionPreference)
 end
 
 function addon:ResetSavedSettings()
@@ -293,8 +316,22 @@ function addon:GetCompanion(companionID)
 end
 
 function addon:GetCompanionForMap(mapID)
-    if mapID and self.mapCompanions[mapID] then
-        return self.mapCompanions[mapID]
+    local mapping = mapID and self.mapCompanions[mapID]
+    if type(mapping) == "string" then
+        return mapping
+    end
+
+    if type(mapping) == "table" then
+        local preference = (self.db and self.db.companionPreference) or defaults.companionPreference
+        if preference == "both" then
+            local current = self.db and self.db.currentCompanionID
+            if current and (mapping.female == current or mapping.male == current or mapping.default == current) then
+                return current
+            end
+            return mapping.default or mapping.female or mapping.male
+        end
+
+        return mapping[preference] or mapping.default or mapping.female or mapping.male
     end
 
     local ordered = self.companionOrder or {}

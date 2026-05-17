@@ -36,14 +36,18 @@ Then enable **Isekai Adventure** in the in-game addon list.
 /isekai status
 /isekai diagnose
 /isekai bond
+/isekai route female
+/isekai route male
+/isekai route both
 /isekai companion seraphine
+/isekai companion cedric
 ```
 
-The in-game options panel includes controls for chatter chances/cooldowns, dialogue box opacity and RGB color, subtitle text size, voice playback channel, layout tools, tests, and resetting saved settings.
+The in-game options panel includes controls for companion route preference, chatter chances/cooldowns, dialogue box opacity and RGB color, subtitle text size, voice playback channel, layout tools, tests, and resetting saved settings.
 
 Companion production status lives in [docs/companion-checklist.md](docs/companion-checklist.md).
 
-Companions also track bond progress from quest completion, leveling, manual summons, and time spent adventuring together. Bond thresholds can unlock special dialogue keys such as `bond_2`, `bond_4`, `bond_6`, `bond_8`, and `bond_10`.
+Companions also track bond progress from quest completion, leveling, manual summons, and time spent adventuring together. Bond is saved per companion ID, so female and male route companions can be swapped without losing progress. Bond thresholds can unlock special dialogue keys such as `bond_2`, `bond_4`, `bond_6`, `bond_8`, and `bond_10`.
 
 ## Voice files
 

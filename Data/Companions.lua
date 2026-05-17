@@ -38,6 +38,19 @@ addon.companions = {
         characterHeight = 390,
         voicePath = addon.mediaPath .. "Voice\\Meribel\\",
     },
+    cedric = {
+        id = "cedric",
+        name = "Cedric Applebrook",
+        title = "Elwynn Novice Protector",
+        race = "Human",
+        gender = "Male",
+        color = { 0.70, 0.86, 1.00 },
+        portrait = addon.mediaPath .. "Portraits\\cedric.tga",
+        characterArt = addon.mediaPath .. "Portraits\\cedric_full.tga",
+        characterTexCoord = { 0, 1, 0.08, 1 },
+        characterHeight = 390,
+        voicePath = addon.mediaPath .. "Voice\\Cedric\\",
+    },
     elyria = {
         id = "elyria",
         name = "Elyria Dawnspell",
@@ -102,8 +115,8 @@ addon.companions = {
 
 -- Explicit zone assignments. Any unmapped zone still gets a stable companion based on mapID.
 addon.mapCompanions = {
-    [37] = "seraphine", -- Elwynn Forest
-    [425] = "seraphine", -- Northshire
+    [37] = { female = "seraphine", male = "cedric" }, -- Elwynn Forest
+    [425] = { female = "seraphine", male = "cedric" }, -- Northshire
     [52] = "maribel", -- Westfall
     [1409] = "elyria", -- Exile's Reach
     [84] = "elyria", -- Stormwind City
