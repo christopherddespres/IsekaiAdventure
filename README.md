@@ -55,6 +55,25 @@ Kill and idle chatter also grow with bond. Lines like `bond_kill_4` and `bond_id
 
 Voice line production lives in [docs/voice-line-tracker.xlsx](docs/voice-line-tracker.xlsx), with count standards documented in [docs/voice-line-standards.md](docs/voice-line-standards.md).
 
+## Generating voice lines
+
+Set your ElevenLabs API key outside the repo:
+
+```powershell
+[Environment]::SetEnvironmentVariable("ELEVENLABS_API_KEY", "your_api_key_here", "User")
+```
+
+Fill `ElevenLabs Voice ID` in `docs\voice-line-tracker.xlsx`, then generate missing rows:
+
+```powershell
+.\tools\setup-voice-generator-runtime.ps1
+node tools\generate-voice-lines.mjs --dry-run --companion seraphine --limit 5
+node tools\generate-voice-lines.mjs --companion seraphine --limit 5 --copy-live
+node tools\generate-voice-lines.mjs --row 9 --copy-live
+```
+
+The script skips `Created = Yes` rows and existing files unless `--force` is passed. It updates the tracker after successful generation.
+
 ## Voice files
 
 WoW addons cannot call ElevenLabs, OpenAI, or any web API while the game is running. Generate audio ahead of time and put it under:
