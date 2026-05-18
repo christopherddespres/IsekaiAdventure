@@ -100,6 +100,22 @@ local defaults = {
     debugStartup = false,
 }
 
+local CHARACTER_DEFAULTS = {
+    currentCompanionID = nil,
+    lastMapID = nil,
+    relationships = {},
+    visitedSubzones = {},
+    introSeen = false,
+}
+
+local CHARACTER_DB_KEYS = {
+    currentCompanionID = true,
+    lastMapID = true,
+    relationships = true,
+    visitedSubzones = true,
+    introSeen = true,
+}
+
 function addon:Debug(message)
     if self.db and self.db.debugStartup then
         self:Print("|cffb0ffb0debug:|r " .. tostring(message))
@@ -115,6 +131,24 @@ addon.queue = {}
 addon.isSpeaking = false
 addon.idleToken = 0
 addon.lastKillLineAt = 0
+
+local function CreateDatabaseProxy(globalDB, characterDB)
+    return setmetatable({}, {
+        __index = function(_, key)
+            if CHARACTER_DB_KEYS[key] then
+                return characterDB[key]
+            end
+            return globalDB[key]
+        end,
+        __newindex = function(_, key, value)
+            if CHARACTER_DB_KEYS[key] then
+                characterDB[key] = value
+            else
+                globalDB[key] = value
+            end
+        end,
+    })
+end
 
 local function CopyDefaults(source, target)
     for key, value in pairs(source) do
@@ -143,6 +177,7 @@ end
 
 function addon:InitializeDatabase()
     IsekaiAdventureDB = IsekaiAdventureDB or {}
+    IsekaiAdventureCharacterDB = IsekaiAdventureCharacterDB or {}
     if (IsekaiAdventureDB.settingsVersion or 0) < SETTINGS_VERSION then
         IsekaiAdventureDB.autoStartAutomation = true
         IsekaiAdventureDB.debugStartup = false
@@ -150,7 +185,10 @@ function addon:InitializeDatabase()
     end
 
     CopyDefaults(defaults, IsekaiAdventureDB)
-    self.db = IsekaiAdventureDB
+    CopyDefaults(CHARACTER_DEFAULTS, IsekaiAdventureCharacterDB)
+    self.globalDB = IsekaiAdventureDB
+    self.characterDB = IsekaiAdventureCharacterDB
+    self.db = CreateDatabaseProxy(IsekaiAdventureDB, IsekaiAdventureCharacterDB)
     self:NormalizeDatabase()
 end
 
@@ -256,7 +294,10 @@ end
 
 function addon:ResetSavedSettings()
     IsekaiAdventureDB = CopyTable(defaults)
-    self.db = IsekaiAdventureDB
+    IsekaiAdventureCharacterDB = CopyTable(CHARACTER_DEFAULTS)
+    self.globalDB = IsekaiAdventureDB
+    self.characterDB = IsekaiAdventureCharacterDB
+    self.db = CreateDatabaseProxy(IsekaiAdventureDB, IsekaiAdventureCharacterDB)
     self:NormalizeDatabase()
     self.queue = {}
     self.isSpeaking = false

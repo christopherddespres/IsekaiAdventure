@@ -4,6 +4,7 @@
 ## Author: Astra + Codex
 ## Version: 0.1.0
 ## SavedVariables: IsekaiAdventureDB
+## SavedVariablesPerCharacter: IsekaiAdventureCharacterDB
 
 Core.lua
 Data\Companions.lua
