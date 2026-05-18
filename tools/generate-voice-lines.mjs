@@ -80,6 +80,13 @@ function numberValue(value, defaultValue) {
   return Number.isFinite(number) ? number : defaultValue;
 }
 
+function estimateMp3DurationSeconds(byteLength, outputFormat = "mp3_44100_128") {
+  const match = String(outputFormat || "").match(/_(\d+)$/);
+  const bitrateKbps = match ? Number(match[1]) : 128;
+  const bitrate = Number.isFinite(bitrateKbps) && bitrateKbps > 0 ? bitrateKbps * 1000 : 128000;
+  return Math.ceil((byteLength * 8 / bitrate) * 10) / 10;
+}
+
 function toRepoPath(expectedPath) {
   return String(expectedPath || "").replace(/[\\/]+/g, path.sep);
 }
@@ -216,6 +223,7 @@ async function main() {
     "ElevenLabs Voice ID",
     "ElevenLabs Model ID",
     "Output Format",
+    "Duration Sec",
   ];
 
   for (const header of requiredHeaders) {
@@ -283,8 +291,10 @@ async function main() {
 
     const fileExists = await exists(job.outputPath);
     if (fileExists && !args.force) {
+      const stat = await fs.stat(job.outputPath);
       job.row[indexes["Created"]] = "Yes";
       job.row[indexes["Voice Status"]] = "Audio exists";
+      job.row[indexes["Duration Sec"]] = estimateMp3DurationSeconds(stat.size, job.outputFormat);
       console.log(`Skipped existing file for row ${job.excelRow}: ${toDisplayPath(job.outputPath)}`);
       await saveTracker();
       continue;
@@ -294,6 +304,7 @@ async function main() {
     const size = await generateAudio(job, apiKey);
     job.row[indexes["Created"]] = "Yes";
     job.row[indexes["Voice Status"]] = "Audio exists";
+    job.row[indexes["Duration Sec"]] = estimateMp3DurationSeconds(size, job.outputFormat);
     job.row[indexes["Generation Notes"]] = `Generated ${new Date().toISOString()} (${size} bytes)`;
 
     if (args.copyLive) {

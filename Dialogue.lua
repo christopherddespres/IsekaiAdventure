@@ -1,10 +1,17 @@
 local _, addon = ...
 
+local LINE_ADVANCE_PADDING_SECONDS = 0.6
+
 local function PickLine(lines)
     if not lines or #lines == 0 then
         return nil
     end
     return lines[addon:Random(#lines)]
+end
+
+function addon:GetLinePlaybackSeconds(line)
+    local baseDuration = tonumber(line and line.duration) or self.db.subtitleSeconds or 7
+    return baseDuration + LINE_ADVANCE_PADDING_SECONDS
 end
 
 function addon:ChooseLine(trigger, companionID)
@@ -94,7 +101,7 @@ function addon:PlayLine(line, trigger, companionID)
     local companion = self:GetCompanion(companionID)
     local name = companion and companion.name or "Companion"
     local text = line.text or ""
-    local duration = tonumber(line.duration) or self.db.subtitleSeconds or 7
+    local duration = self:GetLinePlaybackSeconds(line)
     local token = (self.speakToken or 0) + 1
     self.speakToken = token
 
@@ -214,7 +221,7 @@ function addon:QueueLines(trigger, companionID)
     end
 
     for _, line in ipairs(lines) do
-        totalDuration = totalDuration + (tonumber(line.duration) or self.db.subtitleSeconds or 7)
+        totalDuration = totalDuration + self:GetLinePlaybackSeconds(line)
         self:QueueLine(line, trigger, companionID, true)
     end
 
