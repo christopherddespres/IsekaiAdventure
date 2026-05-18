@@ -60,7 +60,7 @@ Elune uses the same tracker/generator format, but she is a special narrator inst
 
 | Category | Target | Purpose | Filename pattern |
 | --- | ---: | --- | --- |
-| `intro` | 9 | Opening reincarnation scene, played sequentially once on first startup | `intro_01.mp3` through `intro_09.mp3` |
+| `intro` | 12 | Opening reincarnation scene, played sequentially once on first startup | `intro_01.mp3` through `intro_12.mp3` |
 
 ## Optional / Future Categories
 

@@ -36,7 +36,7 @@ Status key:
 
 | Scene | Companion ID | Character | Race | Gender | Portrait | Voice | Dialogue | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Opening reincarnation intro | `elune` | Elune | Eternal | Female | Done | Planned | Done | Plays once on first addon startup, can be replayed with `/isekai intro`, and does not use bond or romance controls. |
+| Opening reincarnation intro | `elune` | Elune | Eternal | Female | Done | Done | Done | Plays once on first addon startup, can be replayed with `/isekai intro`, and does not use bond or romance controls. |
 
 ## Near-Term Backlog
 

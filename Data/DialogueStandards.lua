@@ -21,14 +21,17 @@ end
 Apply("elune", {
     intro = {
         L("Awaken, child of another sky.", "intro_01.mp3", 3.9),
-        L("I am Elune, the moon's eternal light, and I have watched your soul cross a threshold it was never meant to find.", "intro_02.mp3", 14.1),
-        L("Your thread was severed before its hour. In the world that bore you, your life has ended.", "intro_03.mp3", 9.5),
-        L("I cannot return you to that place. The path behind you has closed, and to force it open would wound more than fate.", "intro_04.mp3", 13.8),
-        L("So I have drawn your soul beneath Azeroth's moon, where broken lives may yet find new light.", "intro_05.mp3", 12.3),
-        L("This world is beautiful, wounded, and often unkind. You will need more than courage to endure it.", "intro_06.mp3", 11.3),
-        L("You shall not walk alone. In each land, a heart will find yours, and beside you learn what shape destiny now takes.", "intro_07.mp3", 14.6),
-        L("Go gently, reborn one. Let this second life become more than an apology.", "intro_08.mp3", 8.3),
-        L("Rise now. Azeroth is waiting.", "intro_09.mp3", 3.7),
+        L("I am Elune, the moon's eternal light, and I have watched your soul cross a threshold it was never meant to find.", "intro_02.mp3", 11.3),
+        L("Your thread was severed before its hour. In the world that bore you, your life has ended.", "intro_03.mp3", 10.3),
+        L("I cannot return you to that place. The path behind you has closed, and to force it open would wound more than fate.", "intro_04.mp3", 12.9),
+        L("So I have drawn your soul beneath Azeroth's moon, where broken lives may yet find new light.", "intro_05.mp3", 10.1),
+        L("This world is beautiful, wounded, and often unkind. You will need more than courage to endure it.", "intro_06.mp3", 11.2),
+        L("You are not bound to Azeroth as its children are. Your sight shall rest behind and above your mortal form, as though fate itself has stepped back to guide your hand.", "intro_07.mp3", 16.6),
+        L("I have bestowed this perspective upon you, a gift no other soul in this world can share. Around you, signs will gather: names, wounds, paths, powers, and warnings woven into the air.", "intro_08.mp3", 19.6),
+        L("Where others see only road and shadow, you will see the shape of choice itself. Abilities will answer your will, and unseen knowledge will circle you like stars.", "intro_09.mp3", 15.8),
+        L("You shall not walk alone. In each land, a heart will find yours, and beside you learn what shape destiny now takes.", "intro_10.mp3", 11.5),
+        L("Go gently, reborn one. Let this second life become more than an apology.", "intro_11.mp3", 9.1),
+        L("Rise now. Azeroth is waiting.", "intro_12.mp3", 3.8),
     },
 })
 
