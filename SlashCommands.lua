@@ -4,7 +4,7 @@ local function PrintHelp()
     addon:Print("commands:")
     addon:Print("/isekai show | hide | enable | disable | lock | unlock | mute | unmute")
     addon:Print("/isekai options")
-    addon:Print("/isekai start | autostart on/off | debug on/off")
+    addon:Print("/isekai start | intro | autostart on/off | debug on/off")
     addon:Print("/isekai layout | layout reset")
     addon:Print("/isekai test | idle | kill | quest | questcomplete | lowhealth | death | subzone | zone")
     addon:Print("/isekai bond | bond <companion> | bond add <points> | romance | romance stop")
@@ -40,6 +40,9 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
     elseif command == "start" then
         addon:StartAutomation("manual")
         addon:Print("automation started.")
+    elseif command == "intro" then
+        addon:PlayEluneIntro(true)
+        addon:Print("replaying Elune intro.")
     elseif command == "autostart" then
         addon.db.autoStartAutomation = words[2] == "on"
         addon:Print("automation autostart " .. (addon.db.autoStartAutomation and "enabled." or "disabled."))
@@ -148,7 +151,7 @@ SlashCmdList.ISEKAIADVENTURE = function(input)
         end
 
         addon:Print("started=" .. tostring(addon.started == true) .. ", autostart=" .. tostring(addon.db.autoStartAutomation) .. ", options=" .. tostring(addon.optionsRegistered == true))
-        addon:Print("enabled=" .. tostring(addon.db.enabled) .. ", visible=" .. tostring(addon.db.visible) .. ", muted=" .. tostring(addon.db.muted) .. ", route=" .. tostring(addon.db.companionPreference) .. ", companion=" .. tostring(addon.db.currentCompanionID))
+        addon:Print("enabled=" .. tostring(addon.db.enabled) .. ", visible=" .. tostring(addon.db.visible) .. ", muted=" .. tostring(addon.db.muted) .. ", introSeen=" .. tostring(addon.db.introSeen) .. ", route=" .. tostring(addon.db.companionPreference) .. ", companion=" .. tostring(addon.db.currentCompanionID))
         addon:Print("bond=" .. tostring(addon:GetBondHearts(addon.db.currentCompanionID)) .. " hearts, romanceRank=" .. tostring(addon:GetRomanceRank(addon.db.currentCompanionID)) .. ", nextRomance=" .. tostring(addon:GetNextRomanceThreshold(addon.db.currentCompanionID)))
         addon:Print("mapID=" .. tostring(mapID) .. ", queue=" .. tostring(#addon.queue) .. ", speaking=" .. tostring(addon.isSpeaking == true) .. ", combat=" .. tostring(InCombatLockdown and InCombatLockdown() == true))
         addon:Print("voiceChannel=" .. tostring(addon.db.voiceChannel) .. ", textSize=" .. tostring(addon.db.subtitleFontSize) .. ", boxAlpha=" .. tostring(addon.db.dialogueBoxAlpha))

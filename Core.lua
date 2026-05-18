@@ -5,7 +5,7 @@ addon.name = addonName
 addon.version = "0.1.0"
 addon.mediaPath = "Interface\\AddOns\\IsekaiAdventure\\Media\\"
 
-local SETTINGS_VERSION = 7
+local SETTINGS_VERSION = 8
 
 local DEFAULT_FRAME = {
     point = "LEFT",
@@ -93,6 +93,8 @@ local defaults = {
     showRomanceButton = true,
     relationships = {},
     visitedSubzones = {},
+    introSeen = false,
+    playIntroOnFirstStart = true,
     debugTaintLog = false,
     autoStartAutomation = true,
     debugStartup = false,
@@ -173,6 +175,8 @@ function addon:NormalizeDatabase()
     if type(db.debugStartup) ~= "boolean" then db.debugStartup = defaults.debugStartup end
     if type(db.showBond) ~= "boolean" then db.showBond = defaults.showBond end
     if type(db.showRomanceButton) ~= "boolean" then db.showRomanceButton = defaults.showRomanceButton end
+    if type(db.introSeen) ~= "boolean" then db.introSeen = defaults.introSeen end
+    if type(db.playIntroOnFirstStart) ~= "boolean" then db.playIntroOnFirstStart = defaults.playIntroOnFirstStart end
     if type(db.companionPreference) ~= "string" or not VALID_COMPANION_PREFERENCES[db.companionPreference] then
         db.companionPreference = defaults.companionPreference
     end

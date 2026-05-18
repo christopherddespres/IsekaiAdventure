@@ -14,11 +14,11 @@ Status key:
 | Zone | Map IDs | Companion ID | Character | Race | Gender | Portrait | Voice | Dialogue | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Elwynn Forest | `37` | `seraphine` | Seraphine Applebrook | Human | Female | Done | Done | Done | Female Elwynn route. Uses full art and MP3 voice files. |
-| Elwynn Forest | `37` | `cedric` | Cedric Applebrook | Human | Male | Done | Planned | Done | Male Elwynn route. Portrait imported; needs voice files. |
+| Elwynn Forest | `37` | `cedric` | Cedric Applebrook | Human | Male | Done | Done | Done | Male Elwynn route. Uses full art and MP3 voice files. |
 | Northshire | `425` | `seraphine` | Seraphine Applebrook | Human | Female | Done | Done | Done | Female Northshire route. Shares Elwynn companion. |
-| Northshire | `425` | `cedric` | Cedric Applebrook | Human | Male | Done | Planned | Done | Male Northshire route. Shares Elwynn companion. |
+| Northshire | `425` | `cedric` | Cedric Applebrook | Human | Male | Done | Done | Done | Male Northshire route. Shares Elwynn companion. |
 | Westfall | `52` | `maribel` | Maribel Dustwhisper | Human | Female | Done | Done | Done | Voice folder is `Media\Voice\Maribel\`. |
-| Westfall | `52` | `rowan` | Rowan Dustwhisper | Human | Male | Done | Planned | Done | Male Westfall route. Portrait imported; voice folder will be `Media\Voice\Rowan\`. |
+| Westfall | `52` | `rowan` | Rowan Dustwhisper | Human | Male | Done | Done | Done | Male Westfall route. Uses full art and MP3 voice files. |
 | Exile's Reach | `1409` | `elyria` | Elyria Dawnspell | Human | Female | Partial | Planned | Partial | Placeholder portrait/dialogue. Needs final art and voice. |
 | Stormwind City | `84` | `elyria` | Elyria Dawnspell | Human | Female | Partial | Planned | Partial | City fallback/guide role. |
 | Orgrimmar | `85` | `mika` | Mika Starbloom | Draenei | Female | Partial | Planned | Partial | Temporary mapping; decide if Horde capital should use a Horde-appropriate companion. |
@@ -31,6 +31,12 @@ Status key:
 | The Ringing Deeps | `2214` | `elyria` | Elyria Dawnspell | Human | Female | Partial | Planned | Partial | War Within placeholder. |
 | Hallowfall | `2215` | `sera` | Sera Moonvale | Night Elf | Female | Partial | Planned | Partial | War Within placeholder. |
 | Azj-Kahet | `2255` | `kaori` | Kaori Emberheart | Blood Elf | Female | Partial | Planned | Partial | War Within placeholder. |
+
+## Special Narrators
+
+| Scene | Companion ID | Character | Race | Gender | Portrait | Voice | Dialogue | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Opening reincarnation intro | `elune` | Elune | Eternal | Female | Done | Planned | Done | Plays once on first addon startup, can be replayed with `/isekai intro`, and does not use bond or romance controls. |
 
 ## Near-Term Backlog
 

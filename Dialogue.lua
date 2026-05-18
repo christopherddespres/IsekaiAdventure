@@ -85,15 +85,18 @@ local function TryPlaySoundFile(audioPath, channel)
     return ok and willPlay == true
 end
 
-function addon:PlayLine(line, trigger)
+function addon:PlayLine(line, trigger, companionID)
     if not line then
         return
     end
 
-    local companion = self:GetCompanion(self.db.currentCompanionID)
+    companionID = companionID or self.db.currentCompanionID
+    local companion = self:GetCompanion(companionID)
     local name = companion and companion.name or "Companion"
     local text = line.text or ""
     local duration = tonumber(line.duration) or self.db.subtitleSeconds or 7
+    local token = (self.speakToken or 0) + 1
+    self.speakToken = token
 
     self:SetSubtitle(text, duration)
     self:Print("|cffffd6ff" .. name .. ":|r " .. text)
@@ -123,8 +126,10 @@ function addon:PlayLine(line, trigger)
     end
 
     C_Timer.After(duration, function()
-        addon.isSpeaking = false
-        addon:PlayNextQueuedLine()
+        if addon.speakToken == token then
+            addon.isSpeaking = false
+            addon:PlayNextQueuedLine()
+        end
     end)
 end
 
@@ -148,20 +153,20 @@ function addon:PlayNextQueuedLine()
     end
 
     self.isSpeaking = true
-    self:PlayLine(queued.line, queued.trigger)
+    self:PlayLine(queued.line, queued.trigger, queued.companionID)
 end
 
-function addon:QueueLine(line, trigger)
+function addon:QueueLine(line, trigger, companionID, allowOverflow)
     if not line or not self.db.enabled then
         return
     end
 
     local maxQueuedLines = self.db.maxQueuedLines or 6
-    while #self.queue >= maxQueuedLines do
+    while not allowOverflow and #self.queue >= maxQueuedLines do
         table.remove(self.queue, 1)
     end
 
-    local queued = { line = line, trigger = trigger, queuedAt = GetTime and GetTime() or 0 }
+    local queued = { line = line, trigger = trigger, companionID = companionID, queuedAt = GetTime and GetTime() or 0 }
     if trigger == "low_health" or trigger == "death" then
         table.insert(self.queue, 1, queued)
     else
@@ -182,7 +187,7 @@ function addon:Say(trigger)
     end
 
     local line = self:ChooseLine(trigger)
-    self:QueueLine(line, trigger)
+    self:QueueLine(line, trigger, self.db.currentCompanionID)
 end
 
 function addon:SayText(text, duration, trigger)
@@ -193,7 +198,58 @@ function addon:SayText(text, duration, trigger)
     self:QueueLine({
         text = text,
         duration = duration or self.db.subtitleSeconds or 7,
-    }, trigger or "manual")
+    }, trigger or "manual", self.db.currentCompanionID)
+end
+
+function addon:QueueLines(trigger, companionID)
+    if not self.db.enabled then
+        return 0
+    end
+
+    companionID = companionID or self.db.currentCompanionID
+    local lines = self:GetLines(trigger, companionID)
+    local totalDuration = 0
+    if not lines or #lines == 0 then
+        return 0
+    end
+
+    for _, line in ipairs(lines) do
+        totalDuration = totalDuration + (tonumber(line.duration) or self.db.subtitleSeconds or 7)
+        self:QueueLine(line, trigger, companionID, true)
+    end
+
+    return totalDuration
+end
+
+function addon:ShouldPlayIntro()
+    return self.db and self.db.playIntroOnFirstStart and not self.db.introSeen
+end
+
+function addon:PlayEluneIntro(forceReplay)
+    if not self.db.enabled then
+        return
+    end
+
+    local previousCompanionID = self.db.currentCompanionID or self:GetCompanionForMap(self:GetMapID())
+    self:EnsureCompanionFrame()
+    self:SetShownState(true)
+    self.queue = {}
+    self.isSpeaking = false
+    self.speakToken = (self.speakToken or 0) + 1
+    self:SetCompanion("elune", "intro")
+
+    local totalDuration = self:QueueLines("intro", "elune")
+    if totalDuration <= 0 then
+        self:SetCompanion(previousCompanionID, "intro_restore")
+        return
+    end
+
+    self.db.introSeen = true
+    C_Timer.After(totalDuration + 0.25, function()
+        if addon.db and addon.db.currentCompanionID == "elune" then
+            addon:SetCompanion(previousCompanionID, "intro_restore")
+        end
+    end)
 end
 
 function addon:SayQuestAccepted(questID, questTitle)
@@ -216,7 +272,7 @@ function addon:SayQuestAccepted(questID, questTitle)
         }
     end
 
-    self:QueueLine(line, "quest_accept")
+    self:QueueLine(line, "quest_accept", self.db.currentCompanionID)
 end
 
 function addon:SayQuestComplete(questID)
@@ -231,7 +287,7 @@ function addon:SayQuestComplete(questID)
         line = self:ChooseLine("quest_complete")
     end
 
-    self:QueueLine(line, "quest_complete")
+    self:QueueLine(line, "quest_complete", self.db.currentCompanionID)
 end
 
 function addon:ScheduleIdleChatter()
@@ -338,7 +394,7 @@ function addon:TrySubzoneVisitLine()
     if not visited then
         self:MarkSubzoneVisited(companionID, mapID, key)
         self.lastSubzoneLineAt = now
-        self:QueueLine(line, key)
+        self:QueueLine(line, key, companionID)
         return
     end
 
@@ -348,6 +404,6 @@ function addon:TrySubzoneVisitLine()
 
     if self:Chance(self.db.subzoneChance) then
         self.lastSubzoneLineAt = now
-        self:QueueLine(line, key)
+        self:QueueLine(line, key, companionID)
     end
 end

@@ -120,6 +120,10 @@ function addon:TryRomanceCurrentCompanion()
     if not companion then
         return
     end
+    if companion.isNarrator then
+        self:Print(companion.name .. " is guiding the introduction right now.")
+        return
+    end
 
     local relationship = self:GetRelationship(companionID)
     local now = GetTime and GetTime() or 0
@@ -135,7 +139,7 @@ function addon:TryRomanceCurrentCompanion()
     if not nextThreshold then
         local line = self:ChooseLine("romance_repeat", companionID)
         if line then
-            self:QueueLine(line, "romance_repeat")
+            self:QueueLine(line, "romance_repeat", companionID)
         else
             QueueRomanceFallback("romance_repeat")
         end
@@ -146,7 +150,7 @@ function addon:TryRomanceCurrentCompanion()
     if hearts < nextThreshold then
         local line = self:ChooseLine("romance_not_ready", companionID)
         if line then
-            self:QueueLine(line, "romance_not_ready")
+            self:QueueLine(line, "romance_not_ready", companionID)
         else
             QueueRomanceFallback("romance_not_ready", nextThreshold)
         end
@@ -159,7 +163,7 @@ function addon:TryRomanceCurrentCompanion()
 
     local line = self:ChooseLine(key, companionID)
     if line then
-        self:QueueLine(line, key)
+        self:QueueLine(line, key, companionID)
     else
         QueueRomanceFallback(key, nextThreshold)
     end
@@ -180,6 +184,10 @@ function addon:StopRomanceCurrentCompanion()
     if not companion then
         return
     end
+    if companion.isNarrator then
+        self:Print(companion.name .. " is not a romance companion.")
+        return
+    end
 
     local relationship = self:GetRelationship(companionID)
     if (relationship.romanceRank or 0) <= 0 then
@@ -193,7 +201,7 @@ function addon:StopRomanceCurrentCompanion()
 
     local line = self:ChooseLine("romance_stop", companionID)
     if line then
-        self:QueueLine(line, "romance_stop")
+        self:QueueLine(line, "romance_stop", companionID)
     else
         QueueRomanceFallback("romance_stop")
     end
@@ -222,7 +230,7 @@ function addon:UnlockBondDialogue(companionID, oldHearts, newHearts)
     end
 end
 function addon:AddBondPoints(companionID, points, reason)
-    if not companionID or not self.companions[companionID] then
+    if not companionID or not self.companions[companionID] or self.companions[companionID].isNarrator then
         return
     end
 

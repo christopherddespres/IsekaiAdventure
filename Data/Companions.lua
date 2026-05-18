@@ -13,6 +13,20 @@ addon.companionOrder = {
 }
 
 addon.companions = {
+    elune = {
+        id = "elune",
+        name = "Elune",
+        title = "The Moon's Eternal Light",
+        race = "Eternal",
+        gender = "Female",
+        color = { 0.78, 0.84, 1.00 },
+        portrait = addon.mediaPath .. "Portraits\\elune.tga",
+        characterArt = addon.mediaPath .. "Portraits\\elune_full.tga",
+        characterTexCoord = { 0, 1, 0, 1 },
+        characterHeight = 390,
+        voicePath = addon.mediaPath .. "Voice\\Elune\\",
+        isNarrator = true,
+    },
     seraphine = {
         id = "seraphine",
         name = "Seraphine Applebrook",

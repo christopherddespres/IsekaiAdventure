@@ -18,6 +18,20 @@ local function Apply(companionID, linesByKey)
     end
 end
 
+Apply("elune", {
+    intro = {
+        L("Awaken, child of another sky.", "intro_01.mp3", 3.2),
+        L("I am Elune, the moon's eternal light, and I have watched your soul cross a threshold it was never meant to find.", "intro_02.mp3", 7.2),
+        L("Your thread was severed before its hour. In the world that bore you, your life has ended.", "intro_03.mp3", 6.3),
+        L("I cannot return you to that place. The path behind you has closed, and to force it open would wound more than fate.", "intro_04.mp3", 7.5),
+        L("So I have drawn your soul beneath Azeroth's moon, where broken lives may yet find new light.", "intro_05.mp3", 6.2),
+        L("This world is beautiful, wounded, and often unkind. You will need more than courage to endure it.", "intro_06.mp3", 6.3),
+        L("You shall not walk alone. In each land, a heart will find yours, and beside you learn what shape destiny now takes.", "intro_07.mp3", 7.0),
+        L("Go gently, reborn one. Let this second life become more than an apology.", "intro_08.mp3", 5.6),
+        L("Rise now. Azeroth is waiting.", "intro_09.mp3", 3.6),
+    },
+})
+
 Apply("seraphine", {
     summon = {
         L("Seraphine Applebrook, at your side. Welcome to Elwynn, reincarnated hero.", "summon_01.mp3", 4.9),

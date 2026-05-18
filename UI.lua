@@ -301,9 +301,10 @@ function addon:UpdateCompanionFrame()
     end
 
     local color = companion.color or { 1, 0.8, 1 }
+    local showRelationshipControls = not companion.isNarrator
     self.frame.name:SetText(companion.name or "Unknown Companion")
     self.frame.name:SetTextColor(color[1], color[2], color[3])
-    if self.db.showBond and self.GetDisplayedBondHearts then
+    if showRelationshipControls and self.db.showBond and self.GetDisplayedBondHearts then
         local filledHearts = self:GetDisplayedBondHearts(companion.id)
         for index, heart in ipairs(self.frame.bondHearts) do
             if index <= filledHearts then
@@ -319,14 +320,14 @@ function addon:UpdateCompanionFrame()
         self.frame.bondFrame:Hide()
     end
 
-    if self.db.showRomanceButton and self.db.showBond and self.TryRomanceCurrentCompanion then
+    if showRelationshipControls and self.db.showRomanceButton and self.db.showBond and self.TryRomanceCurrentCompanion then
         self.frame.romanceButton:SetText("Romance " .. (companion.name or "Companion"))
         self.frame.romanceButton:Show()
     else
         self.frame.romanceButton:Hide()
     end
 
-    if self.db.showRomanceButton and self.db.showBond and self.StopRomanceCurrentCompanion and self:GetRomanceRank(companion.id) > 0 then
+    if showRelationshipControls and self.db.showRomanceButton and self.db.showBond and self.StopRomanceCurrentCompanion and self:GetRomanceRank(companion.id) > 0 then
         self.frame.stopRomanceButton:SetText("Stop Romancing " .. (companion.name or "Companion"))
         self.frame.stopRomanceButton:Show()
     else

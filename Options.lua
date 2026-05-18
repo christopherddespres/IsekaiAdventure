@@ -283,6 +283,17 @@ function addon:CreateOptionsPanel()
     end), LEFT + 260, y)
     y = y - ROW_HEIGHT
 
+    controls[#controls + 1] = Place(CreateCheck(content, "Play Elune intro once", "Shows the opening reincarnation scene the first time the addon starts.", function()
+        return addon.db.playIntroOnFirstStart
+    end, function(value)
+        addon.db.playIntroOnFirstStart = value
+    end), LEFT, y)
+
+    controls[#controls + 1] = Place(CreateButton(content, "Replay Elune Intro", 150, function()
+        addon:PlayEluneIntro(true)
+    end), LEFT + 260, y)
+    y = y - 44
+
     controls[#controls + 1] = Place(CreateSlider(content, "Quest chance", 0, 100, 1, function()
         return addon.db.questChance
     end, function(value)

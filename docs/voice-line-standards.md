@@ -54,6 +54,14 @@ Romance is gated by bond, but progresses separately when the player clicks the r
 | `death` | 1 | Player death line | `death_01.mp3` |
 | `subzone_<name>` | 1 each | First addon visit to each supported subzone | `subzone_<name>.mp3` |
 
+## Intro Narrator Target
+
+Elune uses the same tracker/generator format, but she is a special narrator instead of a zone romance companion.
+
+| Category | Target | Purpose | Filename pattern |
+| --- | ---: | --- | --- |
+| `intro` | 9 | Opening reincarnation scene, played sequentially once on first startup | `intro_01.mp3` through `intro_09.mp3` |
+
 ## Optional / Future Categories
 
 | Category | Target | Purpose |

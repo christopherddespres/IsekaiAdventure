@@ -236,6 +236,15 @@ function addon:StartAutomation(reason)
     if self.ScheduleBondTimeTick then
         self:ScheduleBondTimeTick()
     end
+    if self.ShouldPlayIntro and self:ShouldPlayIntro() and not self.introScheduled then
+        self.introScheduled = true
+        C_Timer.After(1, function()
+            addon.introScheduled = false
+            if addon.ShouldPlayIntro and addon:ShouldPlayIntro() and addon.PlayEluneIntro then
+                addon:PlayEluneIntro(false)
+            end
+        end)
+    end
 end
 
 eventFrame:RegisterEvent("ADDON_LOADED")
