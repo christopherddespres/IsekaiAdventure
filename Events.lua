@@ -5,6 +5,9 @@ addon.eventFrame = eventFrame
 addon.recentDamage = addon.recentDamage or {}
 addon.automationRegistered = false
 
+local STARTUP_INTRO_DELAY_SECONDS = 28
+local POST_CINEMATIC_INTRO_DELAY_SECONDS = 6
+
 local function GetQuestTitleFromEvent(questID, questLogIndex)
     if questID and C_QuestLog and C_QuestLog.GetTitleForQuestID then
         local title = C_QuestLog.GetTitleForQuestID(questID)
@@ -104,6 +107,30 @@ local function RegisterOptionsPanel()
     end
 end
 
+local function ScheduleStartupIntro(delay)
+    if addon.introScheduled or not addon.ShouldPlayIntro or not addon:ShouldPlayIntro() then
+        return
+    end
+
+    addon.introScheduled = true
+    C_Timer.After(delay or STARTUP_INTRO_DELAY_SECONDS, function()
+        addon.introScheduled = false
+        if not addon.ShouldPlayIntro or not addon:ShouldPlayIntro() or not addon.PlayEluneIntro then
+            return
+        end
+
+        local now = GetTime and GetTime() or 0
+        local lastCinematicAt = addon.lastCinematicAt or 0
+        local cinematicCooldownRemaining = POST_CINEMATIC_INTRO_DELAY_SECONDS - (now - lastCinematicAt)
+        if addon.cinematicActive or cinematicCooldownRemaining > 0 then
+            ScheduleStartupIntro(math.max(POST_CINEMATIC_INTRO_DELAY_SECONDS, cinematicCooldownRemaining))
+            return
+        end
+
+        addon:PlayEluneIntro(false)
+    end)
+end
+
 local function QueueStartup(reason)
     if addon.started or addon.startupScheduled then
         return
@@ -183,8 +210,22 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
         if addon:Chance(addon.db.deathChance) then
             addon:Say("death")
         end
+    elseif event == "CINEMATIC_START" or event == "PLAY_MOVIE" then
+        addon.cinematicActive = true
+        addon.lastCinematicAt = GetTime and GetTime() or 0
+    elseif event == "CINEMATIC_STOP" or event == "STOP_MOVIE" then
+        addon.cinematicActive = false
+        addon.lastCinematicAt = GetTime and GetTime() or 0
+        ScheduleStartupIntro(POST_CINEMATIC_INTRO_DELAY_SECONDS)
     end
 end)
+
+local function RegisterEventSafe(eventName)
+    local ok = pcall(eventFrame.RegisterEvent, eventFrame, eventName)
+    if not ok then
+        addon:Debug("could not register " .. tostring(eventName))
+    end
+end
 
 function addon:RegisterAutomationEvent(eventName)
     if self.registeredAutomationEvents[eventName] then
@@ -192,7 +233,7 @@ function addon:RegisterAutomationEvent(eventName)
     end
 
     self.registeredAutomationEvents[eventName] = true
-    eventFrame:RegisterEvent(eventName)
+    RegisterEventSafe(eventName)
     self:Debug("registered " .. eventName)
 end
 
@@ -236,17 +277,13 @@ function addon:StartAutomation(reason)
     if self.ScheduleBondTimeTick then
         self:ScheduleBondTimeTick()
     end
-    if self.ShouldPlayIntro and self:ShouldPlayIntro() and not self.introScheduled then
-        self.introScheduled = true
-        C_Timer.After(1, function()
-            addon.introScheduled = false
-            if addon.ShouldPlayIntro and addon:ShouldPlayIntro() and addon.PlayEluneIntro then
-                addon:PlayEluneIntro(false)
-            end
-        end)
-    end
+    ScheduleStartupIntro(STARTUP_INTRO_DELAY_SECONDS)
 end
 
-eventFrame:RegisterEvent("ADDON_LOADED")
-eventFrame:RegisterEvent("PLAYER_LOGIN")
-eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+RegisterEventSafe("ADDON_LOADED")
+RegisterEventSafe("PLAYER_LOGIN")
+RegisterEventSafe("PLAYER_ENTERING_WORLD")
+RegisterEventSafe("CINEMATIC_START")
+RegisterEventSafe("CINEMATIC_STOP")
+RegisterEventSafe("PLAY_MOVIE")
+RegisterEventSafe("STOP_MOVIE")
